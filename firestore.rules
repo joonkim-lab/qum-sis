@@ -28,7 +28,7 @@ service cloud.firestore {
       match /students/{id} {
         allow read: if isStaff(sid) || isSelf(sid, id);
         allow create, delete: if isManager(sid);
-        allow update: if isManager(sid) || isSelf(sid, id);
+        allow update: if isManager(sid) || (isSelf(sid, id) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['needsReview','reviewedBy','reviewedAt']));   // 학생은 '확인'만, 수정은 requests로
       }
       match /accounts/{id} {           // 로그인 ID 등 — 행정 전용
         allow read, write: if isManager(sid);
@@ -52,6 +52,11 @@ service cloud.firestore {
       }
       match /comments/{id} {           // 세특·교사 코멘트
         allow read, write: if isStaff(sid);
+      }
+      match /requests/{id} {           // 학생 수정 요청
+        allow read: if isManager(sid) || isSelf(sid, resource.data.studentId);
+        allow create: if isSelf(sid, request.resource.data.studentId);
+        allow update, delete: if isManager(sid);
       }
       match /payments/{id} {
         allow read, write: if isManager(sid);
