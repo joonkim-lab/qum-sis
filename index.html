@@ -738,11 +738,11 @@ async function viewTranscript(id){
     </div>
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
     <div class="sign"><div class="left" id="trNote">* This transcript is unofficial unless signed and sealed by a School Official.</div>
-      <div><div class="sp"></div><div class="line" id="trSig" style="border-top:0">Issued ${us(today)}</div></div></div>
+      <div><div class="sp"></div><div class="line" id="trSig" style="border-top:0">Printed on ${us(today)}</div></div></div>
   </div>`;
   const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=on?"Official Transcript":"Unofficial Transcript";
     $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
-    $("#trSig").textContent=on?`${school.principal}, General Principal Rev.     Date: ____________`:`Issued ${us(today)}`; $("#trSig").style.borderTop=on?"1px solid #000":"0"; };
+    $("#trSig").textContent=on?`${school.principal}, General Principal Rev.     Date: ____________`:`Printed on ${us(today)}`; $("#trSig").style.borderTop=on?"1px solid #000":"0"; };
   const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incRows").hidden=true; $("#incBlank").hidden=false; } };
   if (io) io.onchange=()=>{ $("#incRows").hidden=!io.checked; $("#incBlank").hidden=io.checked; };
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
