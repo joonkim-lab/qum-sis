@@ -525,6 +525,39 @@ async function viewStudentGrades(id){
     toast("추가"); viewStudentGrades(id); };
 }
 
+/* ---------- 징계 규정 (학생 생활·징계 규정 제14조, 서식집 Part 2) ---------- */
+const DISC = {
+ "1":{label:"Action 1 · 개인(경미)", disp:"Lines (Incident Report) — 상담·주의, 2일 오후 봉사", record:false, cats:{
+   "출결·시간":["무단결석 2일","수업 시작 후 상습 지각(월 3회 이상)","조회·종례 무단 불참"],
+   "수업 태도":["수업 준비물·교재 상습 미지참","수업 중 반복적으로 엎드려 자기","수업 중 허가 없이 휴대전화 사용으로 수업 방해","과제·슬립 등 제출물 미이행"],
+   "생활 규정":["지정 복장·용모 규정 위반","지정 구역 외 취식","사물함·공용 공간 정리 미흡"],
+   "공중도덕·안전":["교내 쓰레기 무단 투기·소란","본인 안전을 소홀히 한 무단 이탈(단독)","무단 가출"]}},
+ "2":{label:"Action 2 · 개인+타인", disp:"Detention 5일 — 오후 수업 불참·오후 봉사, 보호자 고지, SAC 소집", record:null, cats:{
+   "대인 관계":["동료에게 불손한 언행·반말","별명·놀림으로 불쾌감 유발","허위사실 유포(뒷담화)"],
+   "공동 규칙":["단체 행사·훈련에 고의로 불응","모둠 과제 반복적 무임승차"],
+   "학업 정직성":["시험·과제 부정행위","대리 출석"],
+   "출결 심화":["무단 지각·결석 상습","무단결석 5일"],
+   "금지 행위":["흡연·음주 적발","출입 금지 구역 무단 출입","불법 집회·폭력 성격 동아리 가입"],
+   "디지털":["타인 사진·정보 무단 촬영·공유(경미)"]}},
+ "3":{label:"Action 3 · 개인+타인+공동체", disp:"Suspension 10일 — 교내 지정 장소 학습·봉사(13–17시), 리더십 박탈, 보호자 소환, SAC", record:null, cats:{
+   "학교 명예":["교외 불미스러운 일로 학교 명예 훼손","민원을 야기할 정도의 불량 언행"],
+   "문서·정직":["증명서·서류 위조","출결·성적 서류 변조"],
+   "금전":["금품 절취·강탈·사취","갈취(금품 요구)"],
+   "디지털 심화":["타인 계정 도용·악성 게시물 유포","단체 대화방에서 특정인 지속 조롱"],
+   "공동체":["공공장소 부적절한 애정 행위로 면학 분위기 훼손"],
+   "시설·출결":["학교 기물 고의 파손","무단결석 10일"]}},
+ "4":{label:"Action 4 · 중대·상습", disp:"Suspension 20일 — 교외 지정 장소 학습, 리더십 박탈(1년), 보호자 소환, SAC, 공식 기록", record:true, cats:{
+   "반복성":["Action 1~3 위반 3회 이상 반복","감경·서약 후 동일·유사 위반 재범"],
+   "선동·집단":["다수 선동하여 수업 거부·집단행동 주도","공동체 질서 중대 훼손"],
+   "중대 피해":["위조·사취 등으로 재산·신뢰에 중대한 피해"],
+   "법적·안전":["사법기관에 구속·연행","위험물 반입 등 안전 위협 행위"]}},
+ "5":{label:"Action 5 · 교사 권위 침해", disp:"Suspension 40일 — 학교 출입 금지, 교내 리더십 영구 제한, 보호자 소환, SAC, 공식 기록", record:true, cats:{
+   "교사 대상":["교사에게 폭언·욕설","교사의 정당한 지도에 지속적 불응","교사에 대한 허위 민원·명예훼손","교사 지시 조직적 거부"]}},
+ "6":{label:"Action 6 · 교장 권위 침해 / 회복 불가", disp:"Exclusion (퇴학) — 보호자 소환, SAC, 교육청 협의, 공식 기록", record:true, cats:{
+   "교장 대상 / 존속 위협":["교장의 정당한 지시 불이행","반복적 중대 위반으로 정상 교육 불가","공동체 존속 위협·신뢰 회복 불가"]}},
+};
+const DISP_OPTS=["Lines (Incident Report)","Detention 5일","Suspension 10일","Suspension 20일","Suspension 40일","Exclusion (퇴학)","상담·주의(처분 없음)","감경 1단계","가중 1단계"];
+
 /* ---------- 출결 ---------- */
 const ATT_CODES={"u.t":"무단 지각","u.a":"무단 결석","e.t":"사유 지각","e.a":"사유 결석"};
 const termOf = d => { const [y,m]=String(d).split("-").map(Number); return m>=8 ? `${y}F` : `${y}S`; };
@@ -585,9 +618,24 @@ async function viewStudentAttendance(id){
     <table style="max-width:520px;margin-bottom:18px"><thead><tr><th>학기</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${tk.map(t=>`<tr><td>${termLabel(t)}</td><td>${terms[t]["e.a"]}</td><td>${terms[t]["e.t"]}</td><td>${terms[t]["u.a"]}</td><td>${terms[t]["u.t"]}</td></tr>`).join("")||"<tr><td colspan=5 class=muted>기록 없음</td></tr>"}</tbody></table>
     <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div>
     ${staff?`<h3 style="font-size:15px;color:var(--brand);margin:22px 0 8px">징계·사건 기록 (Incident Reports)</h3>
-    ${can.manage()?`<form id="incf" class="row" style="margin-bottom:10px;background:var(--paper);padding:10px;border-radius:8px"><input type="date" name="date" value="${todayISO()}" style="max-width:160px" required><input name="description" placeholder="사건 내용" style="flex:1;min-width:220px" required><input name="action" placeholder="조치 (경고·정학 등)" style="max-width:220px"><button class="btn sm">추가</button></form>`:""}
-    <table><thead><tr><th>날짜</th><th>내용</th><th>조치</th><th>기록자</th><th></th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${r.date}</td><td>${esc(r.description)}</td><td>${esc(r.action)}</td><td class="muted">${esc(r.by)}</td><td>${can.manage()?`<button class="btn sm ghost" data-idel="${r.id}">×</button>`:""}</td></tr>`).join("")||`<tr><td colspan=5 class=muted>없음</td></tr>`}</tbody></table>`:""}</div>`;
-  const incf=$("#incf"); if (incf) incf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(incf); await setDoc(doc(col("incidents")),{studentId:String(id),date:v.date,termCode:termOf(v.date),description:v.description,action:v.action,by:me.email,at:serverTimestamp()}); toast("저장"); viewStudentAttendance(id); };
+    ${can.manage()?`<form id="incf" style="margin-bottom:10px;background:var(--paper);padding:12px;border-radius:8px"><div class="grid" style="grid-template-columns:150px 1.2fr 1fr 1.6fr">
+      <div><label>날짜</label><input type="date" name="date" value="${todayISO()}" required></div>
+      <div><label>단계</label><select name="action" id="dAct"><option value="">선택</option>${Object.entries(DISC).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
+      <div><label>카테고리</label><select name="category" id="dCat" disabled><option value="">먼저 단계 선택</option></select></div>
+      <div><label>해당 행위</label><select name="behavior" id="dBeh" disabled><option value="">먼저 카테고리 선택</option></select></div>
+      <div style="grid-column:1/3"><label>처분</label><select name="disposition" id="dDisp">${DISP_OPTS.map(o=>`<option>${o}</option>`).join("")}</select><div class="muted" id="dHint" style="font-size:12px;margin-top:3px"></div></div>
+      <div style="grid-column:3/5"><label>메모 (경위·소명·SAC 의결·최종 결과)</label><input name="note" placeholder="예: 10/23 SAC 의결, 보호자 고지 완료, 11/1 복귀"></div>
+      <div><label>성적표 기록</label><select name="record"><option value="N">기록 안 함</option><option value="Y">기록</option></select></div>
+      </div><div class="row" style="margin-top:10px"><button class="btn sm">추가</button><span class="muted">Action 1은 성적표 미기록 · 2~3은 SAC 결정 · 4 이상은 반드시 기록 (규정 제16조)</span></div></form>`:""}
+    <table><thead><tr><th>날짜</th><th>단계</th><th>카테고리</th><th>행위</th><th>처분</th><th>메모</th><th>기록</th><th>기록자</th><th></th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td>${esc(r.behavior||r.description)}</td><td>${esc(r.disposition)}</td><td class="muted">${esc(r.note)}</td><td>${r.record?'<span class="tag warn">기록</span>':''}</td><td class="muted">${esc(r.by)}</td><td>${can.manage()?`<button class="btn sm ghost" data-idel="${r.id}">×</button>`:""}</td></tr>`).join("")||`<tr><td colspan=9 class=muted>없음</td></tr>`}</tbody></table>`:""}</div>`;
+  const incf=$("#incf"); if (incf){
+    const act=$("#dAct"), cat=$("#dCat"), beh=$("#dBeh"), disp=$("#dDisp"), rec=incf.querySelector("[name=record]");
+    act.onchange=()=>{ const D=DISC[act.value]; cat.innerHTML=D?`<option value="">선택</option>`+Object.keys(D.cats).map(c=>`<option>${c}</option>`).join(""):`<option value="">먼저 단계 선택</option>`; cat.disabled=!D; beh.innerHTML=`<option value="">먼저 카테고리 선택</option>`; beh.disabled=true;
+      if (D){ disp.value=DISP_OPTS[+act.value-1]; $("#dHint").textContent=D.disp; rec.value=D.record===true?"Y":"N"; } };
+    cat.onchange=()=>{ const L=DISC[act.value]?.cats[cat.value]||[]; beh.innerHTML=`<option value="">선택</option>`+L.map(b=>`<option>${b}</option>`).join("")+`<option value="__other">기타(메모에 적기)</option>`; beh.disabled=!L.length; };
+    incf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(incf); if(!v.action||!v.category) return toast("단계와 카테고리를 고르세요");
+      await setDoc(doc(col("incidents")),{studentId:String(id),date:v.date,termCode:termOf(v.date),action:v.action,category:v.category,behavior:v.behavior==="__other"?"기타":v.behavior,disposition:v.disposition,note:v.note,record:v.record==="Y",by:me.email,at:serverTimestamp()}); toast("저장"); viewStudentAttendance(id); };
+  }
   document.querySelectorAll("[data-idel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("incidents",b.dataset.idel)); viewStudentAttendance(id); });
 }
 
@@ -651,7 +699,8 @@ async function viewTranscript(id){
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
   const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
-  const incHtml = inc.length?`<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Description</th><th>Action</th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${us(r.date)}</td><td>${esc(r.description)}</td><td>${esc(r.action)}</td></tr>`).join("")}</tbody></table></div>`:"";
+  const incR = inc.filter(r=>r.record);
+  const incHtml = incR.length?`<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead><tbody>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td>${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Only incidents designated for the official record are shown.</div></div>`:"";
   const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div></div>${incHtml}</div>`:"";
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
