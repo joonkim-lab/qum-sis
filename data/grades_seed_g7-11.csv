@@ -1,0 +1,596 @@
+studentId,code,title,school,gLevel,termCode,grade,credit,weighted,source,semHint
+774,7201,AP® Psychology,Elite Open School,6,2023F,A,0.5,Y,past,no-sem
+774,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9197,Creative Arts and Design,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9210,"Discovering Connections: Land, People, and Society",Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,2101,English 7 Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+774,2101,English 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+774,9193,Exploring Historical Figures,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9211,Exploring Microscopic Life,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9214,Foundations of Analytical Reasoning,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9108,Getting Googlified,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,3101,Math 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+774,3200,Pre-Algebra Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+774,3200,Pre-Algebra Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+774,9208,Reading to Write: Vocabulary Mastery,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9188,Sports Science,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,9187,Vocabulary Building and Reading Skills,Elite Open School,7,2024F,A,0.25,,past,no-sem
+774,3202,Algebra I Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+774,3202,Algebra I Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+774,2102,English 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+774,2102,English 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+774,3102,Math 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+774,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+776,3202,Algebra I Sem 1,Elite Open School,9,2024F,F,1.0,,past,
+776,4200,Biology Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+776,4200,Biology Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+776,9209,Language Mechanics and Reading Skills,Elite Open School,9,2024F,A,0.25,,past,no-sem
+776,3200,Pre-Algebra Sem 1,Elite Open School,9,2024F,B,0.5,,past,
+776,3200,Pre-Algebra Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+776,2204,Reading Around the World,Elite Open School,9,2024F,A,0.5,,past,no-sem
+776,2206,Speed Reading,Elite Open School,9,2024F,B,0.5,,past,no-sem
+776,9187,Vocabulary Building and Reading Skills,Elite Open School,9,2024F,A,0.25,,past,no-sem
+776,3202,Algebra I Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+776,4300,Chemistry Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+776,2400,English 10 Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+776,2300,English 9,Elite Open School,10,2025F,A,1.0,,past,no-sem
+776,1202,"World History, Culture and Geography Sem 1",Elite Open School,10,2025F,A,0.5,,past,
+776,1500,Economics,Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+776,2400,English 10 Sem 2,Elite Open School,11,2027S,IP,0.0,,apex,
+776,2500,English 11 Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+776,3300,Geometry Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+776,6300,Music Appreciation Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+776,8301,Physical Education,Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+776,4404,Physical Science Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+776,5100,Spanish I Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+776,1301,United States History and Geography Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+779,4600,Earth Science Sem 1,Elite Open School,9,2024F,B,1.0,,past,
+779,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+779,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+779,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+779,3300,Geometry Sem 1,Elite Open School,9,2024F,A,1.0,,past,
+779,3300,Geometry Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+779,9108,Getting Googlified,Elite Open School,9,2024F,A,0.25,,past,no-sem
+779,9207,Introduction to Block Coding,Elite Open School,9,2024F,A,0.25,,past,no-sem
+779,9111,Literacy Appreciation 1 Sem 1,Elite Open School,9,2024F,A,0.25,,past,
+779,9111,Literacy Appreciation 1 Sem 2,Elite Open School,9,2025S,A,0.25,,past,
+779,9202,Valorant Concepts & Analysis I,Elite Open School,9,2024F,A,0.25,,past,no-sem
+779,9205,Valorant Concepts & Analysis II,Elite Open School,9,2024F,A,0.25,,past,no-sem
+779,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+779,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+779,3210,Algebra II Honors Sem 1,Elite Open School,10,2025F,B,0.5,Y,past,
+779,3210,Algebra II Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+779,4201,Biology Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+779,4201,Biology Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+779,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+779,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+779,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+779,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+779,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+779,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+779,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,B,0.5,,past,
+779,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+811,2102,English 8 Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+811,3102,Math 8 Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+811,3202,Algebra I Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+811,3202,Algebra I Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+811,4600,Earth Science Sem 1,Elite Open School,9,2024F,A,1.0,,past,
+811,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+811,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+811,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+811,9108,Getting Googlified,Elite Open School,9,2024F,A,0.25,,past,no-sem
+811,9207,Introduction to Block Coding,Elite Open School,9,2024F,A,0.25,,past,no-sem
+811,9201,League of Legends Concepts & Analysis I,Elite Open School,9,2024F,A,0.25,,past,no-sem
+811,9203,League of Legends Concepts & Analysis II,Elite Open School,9,2024F,A,0.25,,past,no-sem
+811,9111,Literacy Appreciation 1 Sem 1,Elite Open School,9,2024F,A,0.25,,past,
+811,9111,Literacy Appreciation 1 Sem 2,Elite Open School,9,2025S,A,0.25,,past,
+811,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+811,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+811,4201,Biology Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+811,4201,Biology Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+811,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+811,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+811,3300,Geometry Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+811,3300,Geometry Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+811,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+811,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+811,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+811,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+819,2100,English 6 Sem 2,Elite Open School,6,2024S,A,0.5,,past,
+819,3100,Math 6 Sem 2,Elite Open School,6,2024S,A,0.5,,past,
+819,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9215,Critical Composition: Persuasive Essay,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9210,"Discovering Connections: Land, People, and Society",Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,2101,English 7 Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+819,2101,English 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+819,9193,Exploring Historical Figures,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9211,Exploring Microscopic Life,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9214,Foundations of Analytical Reasoning,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9108,Getting Googlified,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,3101,Math 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+819,1101,MS Contemporary World Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+819,1101,MS Contemporary World Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+819,3200,Pre-Algebra Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+819,3200,Pre-Algebra Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+819,9188,Sports Science,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,9187,Vocabulary Building and Reading Skills,Elite Open School,7,2024F,A,0.25,,past,no-sem
+819,3202,Algebra I Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+819,3202,Algebra I Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+819,2102,English 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+819,2102,English 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+819,3102,Math 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+819,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+820,3202,Algebra I Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+820,2102,English 8 Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+820,4706,AP® Computer Science Principles,Elite Open School,9,2024F,F,1.0,Y,past,no-sem
+820,7201,AP® Psychology,Elite Open School,9,2024F,A,0.5,Y,past,no-sem
+820,9196,Critical Composition: Argumentative Essay,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,9215,Critical Composition: Persuasive Essay,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,9212,Developing AI-Powered Study Tools,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,4600,Earth Science Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+820,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+820,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+820,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+820,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,3300,Geometry Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+820,3300,Geometry Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+820,9108,Getting Googlified,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,9188,Sports Science,Elite Open School,9,2024F,A,0.25,,past,no-sem
+820,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+820,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+820,3210,Algebra II Honors Sem 1,Elite Open School,10,2025F,C,0.5,Y,past,
+820,3210,Algebra II Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+820,4201,Biology Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+820,4201,Biology Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+820,1500,Economics,Elite Open School,10,2025F,A,0.5,,past,no-sem
+820,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+820,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+820,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+820,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+820,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+820,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+820,3401,Precalculus Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+820,3401,Precalculus Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+820,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+820,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+821,2100,English 6 Sem 2,Elite Open School,6,2024S,A,0.5,,past,
+821,3100,Math 6 Sem 2,Elite Open School,6,2024S,A,0.5,,past,
+821,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9210,"Discovering Connections: Land, People, and Society",Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9195,Engineering Design,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,2101,English 7 Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+821,2101,English 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+821,9193,Exploring Historical Figures,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9211,Exploring Microscopic Life,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9214,Foundations of Analytical Reasoning,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9108,Getting Googlified,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9207,Introduction to Block Coding,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,3101,Math 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+821,3200,Pre-Algebra Sem 1,Elite Open School,7,2024F,A,0.5,,past,
+821,3200,Pre-Algebra Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+821,9208,Reading to Write: Vocabulary Mastery,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,9187,Vocabulary Building and Reading Skills,Elite Open School,7,2024F,A,0.25,,past,no-sem
+821,3202,Algebra I Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+821,3202,Algebra I Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+821,2102,English 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+821,2102,English 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+821,3102,Math 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+821,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+823,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9197,Creative Arts and Design,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9210,"Discovering Connections: Land, People, and Society",Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,2100,English 6 Sem 1,Elite Open School,6,2024F,A,0.5,,past,
+823,2100,English 6 Sem 2,Elite Open School,6,2025S,A,0.5,,past,
+823,9193,Exploring Historical Figures,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9211,Exploring Microscopic Life,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9214,Foundations of Analytical Reasoning,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9108,Getting Googlified,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9207,Introduction to Block Coding,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,3100,Math 6 Sem 1,Elite Open School,6,2024F,A,0.5,,past,
+823,9208,Reading to Write: Vocabulary Mastery,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,9187,Vocabulary Building and Reading Skills,Elite Open School,6,2024F,A,0.25,,past,no-sem
+823,2101,English 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+823,2101,English 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+823,3101,Math 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+823,3101,Math 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+823,3200,Pre-Algebra Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+823,3200,Pre-Algebra Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+823,3202,Algebra I Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+823,2102,English 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+823,3102,Math 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+826,7201,AP® Psychology,Elite Open School,9,2024F,A,0.5,Y,past,no-sem
+826,9197,Creative Arts and Design,Elite Open School,9,2024F,A,0.25,,past,no-sem
+826,4600,Earth Science Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+826,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+826,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+826,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+826,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,B,0.25,,past,no-sem
+826,3300,Geometry Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+826,3300,Geometry Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+826,9108,Getting Googlified,Elite Open School,9,2024F,A,0.25,,past,no-sem
+826,9207,Introduction to Block Coding,Elite Open School,9,2024F,A,0.25,,past,no-sem
+826,9188,Sports Science,Elite Open School,9,2024F,A,0.25,,past,no-sem
+826,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+826,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+826,3210,Algebra II Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+826,3210,Algebra II Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+826,4202,AP® Biology Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+826,4202,AP® Biology Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+826,1500,Economics,Elite Open School,10,2025F,A,0.5,,past,no-sem
+826,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+826,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+826,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+826,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+826,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+826,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+826,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+826,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+831,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,8,2024F,A,0.25,,past,no-sem
+831,9210,"Discovering Connections: Land, People, and Society",Elite Open School,8,2024F,A,0.25,,past,no-sem
+831,2102,English 8 Sem 1,Elite Open School,8,2024F,A,0.5,,past,
+831,2102,English 8 Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+831,9193,Exploring Historical Figures,Elite Open School,8,2024F,A,0.25,,past,no-sem
+831,9211,Exploring Microscopic Life,Elite Open School,8,2024F,A,0.25,,past,no-sem
+831,3102,Math 8 Sem 1,Elite Open School,8,2024F,A,0.5,,past,
+831,3202,Algebra I Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+831,3202,Algebra I Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+831,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+831,4600,Earth Science Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+831,2300,English 9 Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+831,2300,English 9 Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+831,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,A,0.5,,past,
+831,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2026S,A,0.5,,past,
+831,4201,Biology Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+831,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+831,2401,English 10 Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+831,3300,Geometry Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+831,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+831,6300,Music Appreciation Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+831,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+834,2101,English 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+834,3101,Math 7 Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+834,3200,Pre-Algebra Sem 2,Elite Open School,7,2025S,A,0.5,,past,
+834,3202,Algebra I Sem 1,Elite Open School,8,2025F,C,0.5,,past,
+834,2102,English 8 Sem 1,Elite Open School,8,2025F,C,0.5,,past,
+834,3102,Math 8 Sem 1,Elite Open School,8,2025F,C,0.5,,past,
+834,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+834,3202,Algebra I Sem 2,Elite Open School,9,2027S,A,0.5,,past,
+834,2102,English 8 Sem 2,Elite Open School,9,2027S,C,0.0,,past,
+834,2300,English 9 Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+834,3300,Geometry Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+836,3205,Algebra II Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+836,4501,AP® Environmental Science Sem 2,Elite Open School,9,2025S,A,0.5,Y,past,
+836,9197,Creative Arts and Design,Elite Open School,9,2024F,A,0.25,,past,no-sem
+836,9216,Engineering Minds,Elite Open School,9,2024F,A,0.25,,past,no-sem
+836,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+836,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,A,0.25,,past,no-sem
+836,9207,Introduction to Block Coding,Elite Open School,9,2024F,A,0.25,,past,no-sem
+836,9188,Sports Science,Elite Open School,9,2024F,A,0.25,,past,no-sem
+836,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+836,4202,AP® Biology Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+836,4301,Chemistry Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+836,4301,Chemistry Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+836,1500,Economics,Elite Open School,10,2025F,A,0.5,,past,no-sem
+836,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+836,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+836,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+836,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+836,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+836,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+836,3401,Precalculus Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+836,3401,Precalculus Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+836,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+836,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+836,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,2026S,A,0.5,,past,
+837,9210,"Discovering Connections: Land, People, and Society",Elite Open School,8,2024F,A,0.25,,past,no-sem
+837,2102,English 8 Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+837,9211,Exploring Microscopic Life,Elite Open School,8,2024F,A,0.25,,past,no-sem
+837,3102,Math 8 Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+837,3202,Algebra I Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+837,3202,Algebra I Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+837,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+837,4600,Earth Science Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+837,2300,English 9 Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+837,2300,English 9 Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+837,,Literacy Appreciation 1 Sem 1,Elite Open School,9,2025F,A,0.25,,past,
+837,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,A,0.5,,past,
+837,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2026S,A,0.5,,past,
+837,4201,Biology Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+837,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+837,2401,English 10 Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+837,3300,Geometry Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+837,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+837,6300,Music Appreciation Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+837,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+839,7201,AP® Psychology,Elite Open School,9,2024F,A,0.5,Y,past,no-sem
+839,9215,Critical Composition: Persuasive Essay,Elite Open School,9,2024F,A,0.25,,past,no-sem
+839,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+839,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,A,0.25,,past,no-sem
+839,3300,Geometry Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+839,3300,Geometry Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+839,9188,Sports Science,Elite Open School,9,2024F,A,0.25,,past,no-sem
+839,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+839,3210,Algebra II Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+839,3210,Algebra II Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+839,4202,AP® Biology Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+839,4202,AP® Biology Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+839,1500,Economics,Elite Open School,10,2025F,A,0.5,,past,no-sem
+839,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+839,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+839,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+839,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+839,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+839,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+839,3401,Precalculus Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+839,3401,Precalculus Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+839,5100,Spanish I Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+839,5100,Spanish I Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+839,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+839,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+839,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,2026S,A,0.5,,past,
+840,3202,Algebra I Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+840,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+840,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,A,0.25,,past,no-sem
+840,9111,Literacy Appreciation 1 Sem 2,Elite Open School,9,2025S,A,0.25,,past,
+840,9208,Reading to Write: Vocabulary Mastery,Elite Open School,9,2024F,A,0.25,,past,no-sem
+840,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+840,3202,Algebra I Sem 2,Elite Open School,10,2026S,C,0.5,,past,
+840,4201,Biology Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+840,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,B,0.5,Y,past,
+840,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+840,2300,English 9 Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+840,3300,Geometry Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+840,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,D,0.5,,past,
+840,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+840,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,2026S,A,0.5,,past,
+840,3205,Algebra II Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+840,2700,AP® English Language and Composition Sem 1,Elite Open School,11,2026F,IP,0.0,Y,apex,
+840,4201,Biology Honors Sem 2,Elite Open School,11,2027S,IP,0.0,Y,apex,
+840,4300,Chemistry Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+840,1500,Economics,Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+840,3300,Geometry Sem 2,Elite Open School,11,2027S,A,0.5,,past,
+840,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+840,5100,Spanish I Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+844,3210,Algebra II Honors Sem 1,Elite Open School,9,2025F,B,0.5,Y,past,
+844,3210,Algebra II Honors Sem 2,Elite Open School,9,2026S,A,0.5,Y,past,
+844,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+844,4600,Earth Science Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+844,2301,English 9 Honors Sem 1,Elite Open School,9,2025F,A,0.5,Y,past,
+844,2301,English 9 Honors Sem 2,Elite Open School,9,2026S,A,0.5,Y,past,
+844,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,C,0.5,,past,
+844,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2026S,A,0.5,,past,
+844,4201,Biology Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+844,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+844,2401,English 10 Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+844,6300,Music Appreciation Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+844,8301,Physical Education,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+844,3401,Precalculus Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+844,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+845,2101,English 7 Sem 1,Elite Open School,7,2025F,B,0.5,,past,
+845,2101,English 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+845,3101,Math 7 Sem 1,Elite Open School,7,2025F,B,0.5,,past,
+845,3101,Math 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+845,3200,Pre-Algebra Sem 1,Elite Open School,7,2025F,B,0.5,,past,
+845,3200,Pre-Algebra Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+845,3202,Algebra I Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+845,2102,English 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+845,3102,Math 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+846,3202,Algebra I Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+846,3202,Algebra I Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+846,2102,English 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+846,2102,English 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+846,3102,Math 8 Sem 1,Elite Open School,8,2025F,A,0.5,,past,
+846,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+846,4600,Earth Science Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+846,2301,English 9 Honors Sem 1,Elite Open School,9,2026F,IP,0.0,Y,apex,
+846,3303,Geometry Honors Sem 1,Elite Open School,9,2026F,IP,0.0,Y,apex,
+846,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+846,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2026F,IP,0.0,,apex,
+849,2100,English 6 Sem 1,Elite Open School,6,2025F,B,0.5,,past,
+849,2100,English 6 Sem 2,Elite Open School,6,2026S,B,0.5,,past,
+849,,Literacy Appreciation 1 Sem 1,Elite Open School,6,2025F,A,0.25,,past,
+849,3100,Math 6 Sem 1,Elite Open School,6,2025F,A,0.5,,past,
+849,3100,Math 6 Sem 2,Elite Open School,6,2026S,A,0.5,,past,
+849,2101,English 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+849,3101,Math 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+849,3200,Pre-Algebra Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+860,2100,English 6 Sem 1,Elite Open School,6,2022F,A,0.5,,past,
+860,2100,English 6 Sem 2,Elite Open School,6,2023S,A,0.5,,past,
+860,3200,Pre-Algebra Sem 1,Elite Open School,6,2022F,A,0.5,,past,
+860,3200,Pre-Algebra Sem 2,Elite Open School,6,2023S,A,0.5,,past,
+860,3202,Algebra I Sem 1,Elite Open School,7,2023F,A,0.5,,past,
+860,3202,Algebra I Sem 2,Elite Open School,7,2024S,A,0.5,,past,
+860,2101,English 7 Sem 1,Elite Open School,7,2023F,A,0.5,,past,
+860,2101,English 7 Sem 2,Elite Open School,7,2024S,A,0.5,,past,
+860,4104,MS Life Science Sem 1,Elite Open School,7,2023F,A,0.5,,past,
+860,9198,Chemical Adventures: Unleashing the Elements,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9210,"Discovering Connections: Land, People, and Society",Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9195,Engineering Design,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9216,Engineering Minds,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,2102,English 8 Sem 1,Elite Open School,8,2024F,A,0.5,,past,
+860,2102,English 8 Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+860,9193,Exploring Historical Figures,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9211,Exploring Microscopic Life,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9214,Foundations of Analytical Reasoning,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,3300,Geometry Sem 1,Elite Open School,8,2024F,A,0.5,,past,
+860,3300,Geometry Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+860,9108,Getting Googlified,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,9207,Introduction to Block Coding,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,4709,Introduction to Computer Science in JavaScript Honors,Elite Open School,8,2024F,A,1.0,Y,past,no-sem
+860,1101,MS Contemporary World Sem 1,Elite Open School,8,2024F,A,0.5,,past,
+860,4104,MS Life Science Sem 2,Elite Open School,8,2025S,A,0.5,,past,
+860,9188,Sports Science,Elite Open School,8,2024F,A,0.25,,past,no-sem
+860,3210,Algebra II Honors Sem 1,Elite Open School,9,2025F,C,0.5,Y,past,
+860,3210,Algebra II Honors Sem 2,Elite Open School,9,2026S,A,0.5,Y,past,
+860,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+860,4600,Earth Science Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+860,2301,English 9 Honors Sem 1,Elite Open School,9,2025F,A,0.5,Y,past,
+860,2301,English 9 Honors Sem 2,Elite Open School,9,2026S,A,0.5,Y,past,
+860,3401,Precalculus Honors Sem 1,Elite Open School,9,2025F,A,0.5,Y,past,
+860,3401,Precalculus Honors Sem 2,Elite Open School,9,2026S,A,0.5,Y,past,
+860,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,A,0.5,,past,
+860,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2026S,A,0.5,,past,
+864,3202,Algebra I Sem 1,Elite Open School,7,2022F,A,0.5,,past,
+864,3202,Algebra I Sem 2,Elite Open School,7,2023S,A,0.5,,past,
+864,2101,English 7 Sem 1,Elite Open School,7,2022F,A,0.5,,past,
+864,2101,English 7 Sem 2,Elite Open School,7,2023S,A,0.5,,past,
+864,2102,English 8 Sem 1,Elite Open School,8,2023F,A,0.5,,past,
+864,2102,English 8 Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+864,3300,Geometry Sem 1,Elite Open School,8,2023F,A,0.5,,past,
+864,3300,Geometry Sem 2,Elite Open School,8,2024S,A,0.5,,past,
+864,3205,Algebra II Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+864,3205,Algebra II Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+864,7201,AP® Psychology,Elite Open School,9,2024F,A,0.5,Y,past,no-sem
+864,9196,Critical Composition: Argumentative Essay,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,9212,Developing AI-Powered Study Tools,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,4600,Earth Science Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+864,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+864,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+864,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+864,9214,Foundations of Analytical Reasoning,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,9108,Getting Googlified,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,9207,Introduction to Block Coding,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,4709,Introduction to Computer Science in JavaScript Honors,Elite Open School,9,2024F,A,1.0,Y,past,no-sem
+864,9208,Reading to Write: Vocabulary Mastery,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,9188,Sports Science,Elite Open School,9,2024F,A,0.25,,past,no-sem
+864,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+864,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+864,4201,Biology Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+864,4201,Biology Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+864,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,fixed-genius-err
+864,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+864,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+864,8100,Health Opportunities through Physical Education (HOPE) Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+864,6300,Music Appreciation Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+864,6300,Music Appreciation Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+864,3400,Precalculus Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+864,3400,Precalculus Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+864,1301,United States History and Geography Sem 1,Elite Open School,10,2025F,A,0.5,,past,fixed-genius-err
+864,1301,United States History and Geography Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+865,3202,Algebra I Sem 1,Elite Open School,7,2022F,A,0.5,,past,
+865,3202,Algebra I Sem 2,Elite Open School,7,2023S,A,0.5,,past,
+865,2101,English 7 Sem 1,Elite Open School,7,2022F,A,0.5,,past,
+865,2101,English 7 Sem 2,Elite Open School,7,2023S,A,0.5,,past,
+865,1100,MS World History and Geography Sem 1,Elite Open School,7,2022F,A,0.5,,past,
+865,1100,MS World History and Geography Sem 2,Elite Open School,7,2023S,A,0.5,,past,
+865,2102,English 8 Sem 1,Elite Open School,8,2023F,A,0.5,,past,
+865,2102,English 8 Sem 2,Elite Open School,8,2024S,B,0.5,,past,
+865,3300,Geometry Sem 1,Elite Open School,8,2023F,A,0.5,,past,
+865,3300,Geometry Sem 2,Elite Open School,8,2024S,B,0.5,,past,
+865,3205,Algebra II Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+865,3205,Algebra II Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+865,4600,Earth Science Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+865,4600,Earth Science Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+865,2300,English 9 Sem 1,Elite Open School,9,2024F,A,0.5,,past,
+865,2300,English 9 Sem 2,Elite Open School,9,2025S,A,0.5,,past,
+865,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2024F,A,0.5,,past,
+865,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2025S,A,0.5,,past,
+865,2401,English 10 Honors Sem 1,Elite Open School,10,2025F,C,0.5,Y,past,
+865,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+865,3400,Precalculus Sem 1,Elite Open School,10,2025F,A,0.5,,past,
+865,3400,Precalculus Sem 2,Elite Open School,10,2026S,A,0.5,,past,
+865,4205,Biology Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+865,4407,Physical Science,Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+865,2206,Speed Reading (Open Initiative),Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+880,2100,English 6 Sem 2,Elite Open School,6,2025S,B,0.5,,past,
+880,3100,Math 6 Sem 2,Elite Open School,6,2025S,A,0.5,,past,
+880,2101,English 7 Sem 1,Elite Open School,7,2025F,B,0.5,,past,
+880,2101,English 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+880,3101,Math 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+880,3101,Math 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+880,3200,Pre-Algebra Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+880,3200,Pre-Algebra Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+880,3202,Algebra I Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+880,2102,English 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+880,3102,Math 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+891,2101,English 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+891,2101,English 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+891,3101,Math 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+891,3101,Math 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+891,3200,Pre-Algebra Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+891,3200,Pre-Algebra Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+891,3202,Algebra I Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+891,2102,English 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+891,3102,Math 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+4227,3202,Algebra I Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+4227,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+4227,2300,English 9 Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+4227,2300,English 9 Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+4227,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,A,0.5,,past,
+4227,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,2026S,A,0.5,,past,
+4227,3202,Algebra I Sem 2,Elite Open School,10,2027S,A,0.5,,past,
+4227,4201,Biology Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+4227,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+4227,2401,English 10 Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+4227,3300,Geometry Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4227,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4227,6300,Music Appreciation Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4227,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4236,3202,Algebra I Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+4236,3202,Algebra I Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+4236,2101,English 7 Sem 1,Elite Open School,7,2025F,A,0.5,,past,
+4236,2101,English 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+4236,3101,Math 7 Sem 1,Elite Open School,7,2025F,P,0.5,,past,
+4236,3101,Math 7 Sem 2,Elite Open School,7,2026S,A,0.5,,past,
+4236,8301,Physical Education,Elite Open School,7,2025F,A,0.5,,past,no-sem
+4236,2102,English 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+4236,3300,Geometry Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+4236,3102,Math 8 Sem 1,Elite Open School,8,2026F,IP,0.0,,apex,
+4368,3207,Algebra I Sem 1,Elite Open School,9,2025F,B,0.5,,past,
+4368,7606,Leadership,Elite Open School,9,2025F,B,0.5,,past,no-sem
+4368,2205,Reading Comprehension,Elite Open School,9,2025F,B,0.5,,past,no-sem
+4368,3207,Algebra I Sem 2,Elite Open School,10,2027S,IP,0.0,,apex,
+4368,4407,Physical Science,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+4368,2206,Speed Reading (Open Initiative),Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+4407,2102,English 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+4407,3102,Math 8 Sem 2,Elite Open School,8,2026S,A,0.5,,past,
+4407,3202,Algebra I Sem 2,Elite Open School,9,2027S,A,0.5,,past,
+4407,4600,Earth Science Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+4407,2300,English 9 Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+4407,3300,Geometry Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+4407,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+4407,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2026F,IP,0.0,,apex,
+4409,4600,Earth Science Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+4409,2300,English 9 Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+4409,3300,Geometry Sem 1,Elite Open School,9,2025F,A,0.5,,past,
+4409,3300,Geometry Sem 2,Elite Open School,9,2026S,A,0.5,,past,
+4409,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2025F,A,0.5,,past,
+4409,3210,Algebra II Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+4409,4202,AP® Biology Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+4409,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+4409,2401,English 10 Honors Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+4409,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4409,6300,Music Appreciation Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4409,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+4409,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,2027S,A,0.5,,past,
+4434,2100,English 6 Sem 2,Elite Open School,6,2026S,A,0.5,,past,
+4434,3100,Math 6 Sem 2,Elite Open School,6,2026S,A,0.5,,past,
+4434,2101,English 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+4434,3101,Math 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+4434,3200,Pre-Algebra Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+4446,3210,Algebra II Honors Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+4446,1203,AP® World History Sem 1,Elite Open School,10,2025F,A,0.5,Y,past,
+4446,4301,Chemistry Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+4446,1500,Economics,Elite Open School,10,2025F,A,0.5,,past,no-sem
+4446,2401,English 10 Honors Sem 2,Elite Open School,10,2026S,A,0.5,Y,past,
+4446,3210,Algebra II Honors Sem 2,Elite Open School,11,2027S,A,0.5,Y,past,
+4446,4302,AP® Chemistry Sem 1,Elite Open School,11,2026F,IP,0.0,Y,apex,
+4446,2700,AP® English Language and Composition Sem 1,Elite Open School,11,2026F,IP,0.0,Y,apex,
+4446,1302,AP® U.S. History Sem 1,Elite Open School,11,2026F,IP,0.0,Y,apex,
+4446,1203,AP® World History Sem 2,Elite Open School,11,2027S,A,0.5,Y,past,
+4446,8301,Physical Education,Elite Open School,11,2026F,IP,0.0,,apex,no-sem
+4446,3401,Precalculus Honors Sem 1,Elite Open School,11,2026F,IP,0.0,Y,apex,
+4446,5100,Spanish I Sem 1,Elite Open School,11,2026F,IP,0.0,,apex,
+7955,3202,Algebra I Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+7955,4600,Earth Science Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+7955,2300,English 9 Sem 1,Elite Open School,9,2026F,IP,0.0,,apex,
+7955,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,2026F,IP,0.0,,apex,
+7956,2101,English 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+7956,3101,Math 7 Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+7956,3200,Pre-Algebra Sem 1,Elite Open School,7,2026F,IP,0.0,,apex,
+7990,4202,AP® Biology Sem 1,Elite Open School,10,2026F,IP,0.0,Y,apex,
+7990,1500,Economics,Elite Open School,10,2026F,IP,0.0,,apex,no-sem
+7990,2300,English 9 Sem 2,Elite Open School,10,2027S,IP,0.0,,apex,
+7990,3303,Geometry Honors Sem 2,Elite Open School,10,2027S,IP,0.0,Y,apex,
+7990,8100,Health Opportunities through Physical Education (HOPE) Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
+7990,1301,United States History and Geography Sem 1,Elite Open School,10,2026F,IP,0.0,,apex,
