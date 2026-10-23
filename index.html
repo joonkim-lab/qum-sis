@@ -705,9 +705,11 @@ async function viewRequests(){
 /* ---------- Transcript ---------- */
 async function viewTranscript(id){
   const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
-  const [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
+  let [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
-  const d=s.data(), g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
+  const d=s.data(); const level=(location.hash.split("/")[3]||"hs");
+  rows = level==="ms" ? rows.filter(r=>r.gLevel>=6&&r.gLevel<=8) : rows.filter(r=>!(r.gLevel>=6&&r.gLevel<=8));
+  const g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
   const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
@@ -722,9 +724,9 @@ async function viewTranscript(id){
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
-    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
+    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial ${level==="ms"?"Middle School ":""}Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
       <div><b>Student ID</b>${esc(id)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div>
       <div class="addr"><b>Address</b>${esc(d.address_en)}</div></div>
@@ -745,12 +747,13 @@ async function viewTranscript(id){
     <div class="sign"><div class="left" id="trNote">* This transcript is unofficial unless signed and sealed by a School Official.</div>
       <div><div class="sp"></div><div class="line" id="trSig" style="border-top:0">Printed on ${us(today)}</div></div></div>
   </div>`;
-  const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=on?"Official Transcript":"Unofficial Transcript";
+  $("#trLevel").onchange=e=>{ location.hash=`#/transcript/${id}/${e.target.value}`; };
+  const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=(on?"Official ":"Unofficial ")+(level==="ms"?"Middle School ":"")+"Transcript";
     $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
     $("#trSig").innerHTML=on?`<b>${esc(school.principal)}</b>, General Principal Rev. &nbsp;&nbsp; ${us(today)}`:`Printed on ${us(today)}`; $("#trSig").style.borderTop=on?"1px solid #000":"0"; };
   const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incRows").hidden=true; $("#incBlank").hidden=false; } };
   if (io) io.onchange=()=>{ $("#incRows").hidden=!io.checked; $("#incBlank").hidden=io.checked; };
-  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
+  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}${level==="ms"?"MS":""}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
 /* ---------- 학생 본인 ---------- */
