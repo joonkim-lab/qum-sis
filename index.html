@@ -215,6 +215,8 @@ const routes = {
   "":        {label:"현황",       show:()=>true,          view:viewHome},
   "students":{label:"학생",       show:()=>can.manage() || me.role==="teacher", view:viewStudents},
   "courses": {label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
+  "attendance":{label:"출결",     show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
+  "slips":   {label:"슬립 승인",  show:()=>can.manage(),  view:viewSlips},
   "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
   "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
   "settings":{label:"학교 설정",  show:()=>can.settings(),view:viewSettings},
@@ -230,7 +232,7 @@ async function route(){
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
-  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : viewStudent(arg);
+  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : viewStudent(arg);
   if (k==="transcript" && arg) return viewTranscript(arg);
   const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
   await r.view();
@@ -336,6 +338,7 @@ async function viewNew(){
 const IMPORT_TYPES = {
   students:{label:"학생 명부", key:"id", cols:["id","last_en","first_en","name_ko","grade","dob","gender","address_en","address_ko","postal","email","genius_login","curriculum","apex_id","iready_id","status","note"], hint:"students_seed.csv 형식. 계정 열(genius_login·apex_id·iready_id)은 계정 컬렉션으로 따로 저장됩니다."},
   courses:{label:"과목", key:"code", cols:["code","title","area","weighted","credit","platform","active","note"], hint:"courses_seed.csv 형식. code가 비어 있으면 title로 식별(학교 선택과목)."},
+  attendance:{label:"출결", key:"studentId", cols:["studentId","date","termCode","code","note","slipNo","approved","source"], hint:"attendance_seed.csv 형식. code는 u.t/u.a/e.t/e.a. 같은 학생·날짜는 덮어씀."},
   grades:{label:"성적", key:"studentId", cols:["studentId","code","title","school","gLevel","termCode","grade","credit","weighted","source"], hint:"grades_seed_g12.csv 형식. termCode는 2026F/2026S/2026U. 같은 학생·학기·과목은 덮어씀."},
 };
 let importRows = [], importType = "students";
@@ -375,6 +378,9 @@ async function viewImport(){
       } else if (importType==="courses"){
         const cid = courseId(r); if (!cid){skipped++;continue;}
         batch.set(ref("courses",cid), {...r, credit:parseFloat(r.credit)||0, active:r.active!=="N", updatedAt:serverTimestamp()}, {merge:true}); ops++;
+      } else if (importType==="attendance"){
+        if (!r.studentId || !r.date || !r.code){skipped++;continue;}
+        batch.set(ref("attendance",`${r.studentId}_${r.date}`), {studentId:String(r.studentId), date:r.date, termCode:r.termCode||termOf(r.date), code:r.code.trim().toLowerCase(), note:r.note||"", slipNo:r.slipNo||"", approved:/^(Y|1|true)$/i.test(r.approved||""), source:r.source||"sheet", importedAt:serverTimestamp(), importedBy:me.email}, {merge:true}); ops++;
       } else if (importType==="grades"){
         if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
         const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
@@ -383,7 +389,7 @@ async function viewImport(){
       n++; if (ops>=400) await flush();
     }
     await flush();
-    toast(`${n}줄 저장${skipped?`, ${skipped}줄 건너뜀`:""}`); location.hash = importType==="courses" ? "#/courses" : "#/students";
+    toast(`${n}줄 저장${skipped?`, ${skipped}줄 건너뜀`:""}`); location.hash = importType==="courses" ? "#/courses" : importType==="attendance" ? "#/attendance" : "#/students";
   };
 }
 function parseDelimited(text){
@@ -420,7 +426,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -487,6 +493,65 @@ async function viewStudentGrades(id){
     const title=c.title+(v.sem?" "+v.sem.replace(/^(\d)$/,"Sem $1"):""); const cid=c.id; const gid=`${id}_${v.termCode}_${cid}_${slug(v.sem||"")}`.replace(/[\/\s]/g,"_");
     await setDoc(ref("grades",gid),{studentId:String(id),courseId:cid,code:c.code||"",title,school:school.schoolName,gLevel:parseInt(v.gLevel)||null,termCode:v.termCode,grade:v.grade,credit:c.credit||0,weighted:!!c.weighted,source:v.source,needsReview:false,createdBy:me.email,createdAt:serverTimestamp()});
     toast("추가"); viewStudentGrades(id); };
+}
+
+/* ---------- 출결 ---------- */
+const ATT_CODES={"u.t":"무단 지각","u.a":"무단 결석","e.t":"사유 지각","e.a":"사유 결석"};
+const termOf = d => { const [y,m]=String(d).split("-").map(Number); return m>=8 ? `${y}F` : `${y}S`; };
+const finalCode = a => a.approved ? a.code.replace("u.","e.") : a.code;
+const todayISO = () => { const t=new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return t.toISOString().slice(0,10); };
+async function viewAttendance(dateSel){
+  const date = dateSel || todayISO();
+  const [ss, as] = await Promise.all([getDocs(col("students")), getDocs(query(col("attendance"), where("date","==",date)))]);
+  const gnum=g=>parseInt(g)||99;
+  const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>s.status==="active"||!s.status).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
+  const recs={}; as.docs.forEach(d=>recs[d.data().studentId]=d.data());
+  const day=["일","월","화","수","목","금","토"][new Date(date+"T00:00:00").getDay()];
+  $("#view").innerHTML=`<div class="card"><h2>출결 입력</h2>
+    <div class="row" style="margin-bottom:12px"><input type="date" id="dt" value="${date}" style="max-width:170px"><span class="tag">${day}요일 · ${termLabel(termOf(date))}</span><span class="muted">아무 표시 없음 = 출석. 지각·결석만 누르세요. 누르면 바로 저장.</span></div>
+    <div class="scroll" style="max-height:75vh"><table><thead><tr><th>학년</th><th>이름</th><th>트랙</th><th>출결</th><th>메모</th></tr></thead><tbody>
+    ${studs.map(s=>{ const r=recs[s.id]||{}; return `<tr data-s="${s.id}"><td>${esc(s.grade)}</td><td>${esc(s.last_en)}, ${esc(s.first_en)} <span class="muted">${esc(s.name_ko||"")}</span></td><td class="muted">${esc(s.track||"")}</td>
+      <td class="nw">${Object.entries(ATT_CODES).map(([c,l])=>`<button class="btn sm ${r.code===c?"":"ghost"}" data-c="${c}" title="${l}">${c}</button>`).join(" ")}</td>
+      <td><input data-note value="${esc(r.note||"")}" placeholder="사유" ${r.code?"":"disabled"} style="padding:4px 8px"></td></tr>`; }).join("")}
+    </tbody></table></div></div>`;
+  $("#dt").onchange=e=>viewAttendance(e.target.value);
+  document.querySelectorAll("tr[data-s]").forEach(tr=>{
+    const sid=tr.dataset.s, note=tr.querySelector("[data-note]");
+    tr.querySelectorAll("[data-c]").forEach(b=>b.onclick=async()=>{
+      const on=!b.classList.contains("ghost"); const id=`${sid}_${date}`;
+      if (on){ await deleteDoc(ref("attendance",id)); tr.querySelectorAll("[data-c]").forEach(x=>x.classList.add("ghost")); note.disabled=true; }
+      else { await setDoc(ref("attendance",id),{studentId:sid,date,termCode:termOf(date),code:b.dataset.c,note:note.value,approved:false,slipNo:"",source:"app",by:me.email,at:serverTimestamp()},{merge:true});
+        tr.querySelectorAll("[data-c]").forEach(x=>x.classList.toggle("ghost",x!==b)); note.disabled=false; }
+    });
+    note.onchange=async()=>{ await updateDoc(ref("attendance",`${sid}_${date}`),{note:note.value}); toast("저장"); };
+  });
+}
+async function viewSlips(){
+  const term=school.termCode;
+  const [as, ss]=await Promise.all([getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(col("students"))]);
+  const names={}; ss.docs.forEach(d=>names[d.id]=`${d.data().last_en}, ${d.data().first_en}`);
+  const rows=as.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.code.startsWith("u.")).sort((a,b)=>b.date.localeCompare(a.date));
+  const q=(l)=> l.length? `<table><thead><tr><th>날짜</th><th>학생</th><th>코드</th><th>메모</th><th>서류번호</th><th>승인</th><th>최종</th></tr></thead><tbody>${l.map(r=>`<tr>
+    <td class="nw">${r.date}</td><td>${esc(names[r.studentId]||r.studentId)}</td><td>${r.code}</td><td class="muted">${esc(r.note)}</td>
+    <td><input data-slip="${r.id}" value="${esc(r.slipNo)}" placeholder="26F-Q1-013" style="max-width:130px;padding:4px 8px"></td>
+    <td><input type="checkbox" data-ok="${r.id}" ${r.approved?"checked":""} style="width:auto"></td><td>${finalCode(r)}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">없음</p>`;
+  const pending=rows.filter(r=>r.slipNo&&!r.approved), open=rows.filter(r=>!r.slipNo&&!r.approved), done=rows.filter(r=>r.approved);
+  $("#view").innerHTML=`<div class="card"><h2>슬립 승인 · ${termLabel(term)}</h2><p class="muted">종이 슬립에 찍은 번호를 넣고 승인하면 u.t→e.t, u.a→e.a로 바뀝니다. 원본 기록은 남습니다.</p>
+    <h3 style="font-size:14px;color:var(--pending);margin:14px 0 6px">접수됨 · 검토 중 (${pending.length})</h3>${q(pending)}
+    <h3 style="font-size:14px;color:var(--warn);margin:14px 0 6px">슬립 없음 (${open.length})</h3>${q(open)}
+    <h3 style="font-size:14px;color:var(--ok);margin:14px 0 6px">승인 완료 (${done.length})</h3>${q(done)}</div>`;
+  document.querySelectorAll("[data-slip]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.slip),{slipNo:el.value.trim(),slipAt:serverTimestamp()}); toast("저장"); });
+  document.querySelectorAll("[data-ok]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.ok),{approved:el.checked,approvedBy:me.email,approvedAt:serverTimestamp()}); viewSlips(); });
+}
+async function viewStudentAttendance(id){
+  const [s, as]=await Promise.all([getDoc(ref("students",id)), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
+  if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=s.data(), rows=as.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date));
+  const terms={}; rows.forEach(r=>{ const t=terms[r.termCode]=terms[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
+  const tk=Object.keys(terms).sort((a,b)=>termKey(a)-termKey(b));
+  $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"att")}
+    <table style="max-width:520px;margin-bottom:18px"><thead><tr><th>학기</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${tk.map(t=>`<tr><td>${termLabel(t)}</td><td>${terms[t]["e.a"]}</td><td>${terms[t]["e.t"]}</td><td>${terms[t]["u.a"]}</td><td>${terms[t]["u.t"]}</td></tr>`).join("")||"<tr><td colspan=5 class=muted>기록 없음</td></tr>"}</tbody></table>
+    <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div></div>`;
 }
 
 /* ---------- Transcript ---------- */
