@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -8,10 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#6b1f2a;        /* 踰꾧굔??*/
+  --brand:#6b1f2a;        /* 버건디 */
   --brand-ink:#3f1118;
-  --accent:#b8923a;       /* 怨⑤뱶 */
-  --paper:#f6f1e7;        /* 紐⑤옒 ?щ┝ */
+  --accent:#b8923a;       /* 골드 */
+  --paper:#f6f1e7;        /* 모래 크림 */
   --paper-2:#ede5d6;
   --ink:#2a2420;
   --muted:#7a6f66;
@@ -77,8 +77,8 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
   <div class="box">
     <img id="loginLogo" src="" alt="" hidden>
     <h1 id="loginTitle">Qum Academic System</h1>
-    <p id="loginSub">?숆탳 援ш? 怨꾩젙?쇰줈 濡쒓렇?명븯?몄슂</p>
-    <button class="btn" id="btnLogin">Google 濡쒓렇??/button>
+    <p id="loginSub">학교 구글 계정으로 로그인하세요</p>
+    <button class="btn" id="btnLogin">Google 로그인</button>
     <div class="foot">Educclesia Group</div>
   </div>
 </div>
@@ -86,7 +86,7 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
   <header id="top">
     <div class="logo"><img id="topLogo" src="" alt="" hidden><h1 id="topTitle">Qum Academic System</h1></div>
     <nav id="nav"></nav>
-    <div class="me"><span id="meName"></span><span class="tag" id="meRole"></span><button id="btnOut">?섍?湲?/button></div>
+    <div class="me"><span id="meName"></span><span class="tag" id="meRole"></span><button id="btnOut">나가기</button></div>
   </header>
   <main id="view"></main>
   <div class="foot">Educclesia Group</div>
@@ -106,7 +106,7 @@ const firebaseConfig = {
   messagingSenderId: "324861037215",
   appId: "1:324861037215:web:32f3e749d2fcac93d430aa"
 };
-const OWNER = "joon.kim@educclesia.com";   // ?뚮옯???뚯쑀???먮??대젅?쒖븘)
+const OWNER = "joon.kim@educclesia.com";   // 플랫폼 소유자(에듀클레시아)
 const DEFAULT_SCHOOL = "qum";
 
 const app = initializeApp(firebaseConfig);
@@ -117,14 +117,14 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let toastT; const toast = m => { const t=$("#toast"); t.textContent=m; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600); };
 
-/* ---------- ?몄뀡 ---------- */
+/* ---------- 세션 ---------- */
 let me = null;          // {email, name, role, schoolId, studentId}
 let school = null;      // settings doc
 let sid = DEFAULT_SCHOOL;
 const col = name => collection(db, "schools", sid, name);
 const ref = (name, id) => doc(db, "schools", sid, name, String(id));
 
-const ROLES = { owner:"?뚯쑀??, admin:"?됱젙", principal:"援먯옣", teacher:"援먯궗", student:"?숈깮" };
+const ROLES = { owner:"소유자", admin:"행정", principal:"교장", teacher:"교사", student:"학생" };
 const can = {
   manage: () => ["owner","admin","principal"].includes(me.role),
   settings: () => ["owner","principal"].includes(me.role),
@@ -133,12 +133,13 @@ const can = {
 async function resolveMember(user){
   const email = user.email.toLowerCase();
   if (email === OWNER) {
-    // ?뚯쑀??泥?濡쒓렇?? ?숆탳쨌硫ㅻ쾭???놁쑝硫?留뚮뱺??    const m = await getDoc(doc(db,"memberships",email));
+    // 소유자 첫 로그인: 학교·멤버십 없으면 만든다
+    const m = await getDoc(doc(db,"memberships",email));
     if (!m.exists()) await setDoc(doc(db,"memberships",email), {schoolId:DEFAULT_SCHOOL, role:"owner", createdAt:serverTimestamp()});
     sid = m.exists() ? m.data().schoolId : DEFAULT_SCHOOL;
     const s = await getDoc(doc(db,"schools",sid));
     if (!s.exists()) await setDoc(doc(db,"schools",sid), {
-      name:"Qum Academic System", nameKo:"荑??꾩뭅?곕? ?쒖뒪??, schoolName:"Qum Educlesia", schoolNameKo:"?댁삤?먯뒪 誘몃옒 由щ뜑??,
+      name:"Qum Academic System", nameKo:"쿰 아카데믹 시스템", schoolName:"Qum Educlesia", schoolNameKo:"이오에스 미래 리더스",
       logoUrl:"", color:"#6b1f2a", accent:"#b8923a", address:"", phone:"", ceeb:"", principal:"Joon Kim",
       termCode:"2026F", nextId:9001, createdAt:serverTimestamp()
     });
@@ -159,27 +160,27 @@ async function loadSchool(){
   for (const id of ["topLogo","loginLogo"]) { const el=$("#"+id); el.hidden=!school.logoUrl; el.src=school.logoUrl||""; }
 }
 
-/* ---------- 濡쒓렇??---------- */
-$("#btnLogin").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e=>toast("濡쒓렇???ㅽ뙣: "+e.code));
+/* ---------- 로그인 ---------- */
+$("#btnLogin").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e=>toast("로그인 실패: "+e.code));
 $("#btnOut").onclick = () => signOut(auth);
 onAuthStateChanged(auth, async user => {
   if (!user) { $("#login").hidden=false; $("#app").hidden=true; return; }
   const m = await resolveMember(user);
-  if (!m) { toast("??怨꾩젙? ?꾩쭅 ?깅줉?섏? ?딆븯?듬땲?? ?숆탳??臾몄쓽?섏꽭??"); await signOut(auth); return; }
+  if (!m) { toast("이 계정은 아직 등록되지 않았습니다. 학교에 문의하세요."); await signOut(auth); return; }
   me = m; await loadSchool();
   $("#meName").textContent = me.name || me.email; $("#meRole").textContent = ROLES[me.role] || me.role;
   $("#login").hidden=true; $("#app").hidden=false;
   buildNav(); route();
 });
 
-/* ---------- ?쇱슦??---------- */
+/* ---------- 라우터 ---------- */
 const routes = {
-  "":        {label:"?꾪솴",       show:()=>true,          view:viewHome},
-  "students":{label:"?숈깮",       show:()=>can.manage() || me.role==="teacher", view:viewStudents},
-  "new":     {label:"?좎엯???깅줉", show:()=>can.manage(),  view:viewNew},
-  "import":  {label:"媛?몄삤湲?,   show:()=>can.manage(),  view:viewImport},
-  "settings":{label:"?숆탳 ?ㅼ젙",  show:()=>can.settings(),view:viewSettings},
-  "me":      {label:"???뺣낫",    show:()=>me.role==="student", view:viewMe},
+  "":        {label:"현황",       show:()=>true,          view:viewHome},
+  "students":{label:"학생",       show:()=>can.manage() || me.role==="teacher", view:viewStudents},
+  "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
+  "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
+  "settings":{label:"학교 설정",  show:()=>can.settings(),view:viewSettings},
+  "me":      {label:"내 정보",    show:()=>me.role==="student", view:viewMe},
 };
 function buildNav(){
   $("#nav").innerHTML = Object.entries(routes).filter(([k,r])=>r.show()).map(([k,r])=>`<a href="#/${k}" data-k="${k}">${r.label}</a>`).join("");
@@ -189,13 +190,13 @@ async function route(){
   if (!me) return;
   const [k, arg] = location.hash.replace(/^#\/?/,"").split("/");
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
-  const v = $("#view"); v.innerHTML = `<p class="muted">遺덈윭?ㅻ뒗 以묅?/p>`;
+  const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   if (k==="students" && arg) return viewStudent(arg);
-  const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>沅뚰븳???놁뒿?덈떎.</p>"; return; }
+  const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
   await r.view();
 }
 
-/* ---------- ?꾪솴 ---------- */
+/* ---------- 현황 ---------- */
 async function viewHome(){
   const snap = await getDocs(col("students"));
   const all = snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -203,28 +204,28 @@ async function viewHome(){
   for (const s of all){ byGrade[s.grade]=(byGrade[s.grade]||0)+1; if (s.needsReview) review++; if (s.status==="pending") pending++; }
   const grades = Object.keys(byGrade).sort((a,b)=>(parseInt(a)||99)-(parseInt(b)||99));
   $("#view").innerHTML = `
-  <div class="card"><h2>${esc(school.schoolName)} 쨌 ${esc(school.termCode)}</h2>
+  <div class="card"><h2>${esc(school.schoolName)} · ${esc(school.termCode)}</h2>
     <div class="stat">
-      <div><b>${all.length}</b><span>?숈깮 ?꾩껜</span></div>
-      ${grades.map(g=>`<div><b>${byGrade[g]}</b><span>${g}?숇뀈</span></div>`).join("")}
-      <div><b style="color:var(--pending)">${review}</b><span>?뺤씤 ?꾩슂</span></div>
-      <div><b style="color:var(--warn)">${pending}</b><span>?뺣낫 誘몄엯??/span></div>
+      <div><b>${all.length}</b><span>학생 전체</span></div>
+      ${grades.map(g=>`<div><b>${byGrade[g]}</b><span>${g}학년</span></div>`).join("")}
+      <div><b style="color:var(--pending)">${review}</b><span>확인 필요</span></div>
+      <div><b style="color:var(--warn)">${pending}</b><span>정보 미입력</span></div>
     </div></div>
-  <div class="card"><h2>?ㅼ쓬 ?④퀎</h2>
-    <p class="muted">1?④퀎: ?숈깮 紐낅? ??怨쇰ぉ쨌?깆쟻 ??Transcript 諛쒗뻾. 2?④퀎: 異쒓껐. 3?④퀎: ?숈깮 ?먭린 ?낅젰(?섏긽쨌?쒕룞). 4?④퀎: ?숈뒿?깆옣湲곕줉遺. 5?④퀎: ?숆탳 ?ㅼ젙쨌濡쒓퀬.</p></div>`;
+  <div class="card"><h2>다음 단계</h2>
+    <p class="muted">1단계: 학생 명부 → 과목·성적 → Transcript 발행. 2단계: 출결. 3단계: 학생 자기 입력(수상·활동). 4단계: 학습성장기록부. 5단계: 학교 설정·로고.</p></div>`;
 }
 
-/* ---------- ?숈깮 紐⑸줉 ---------- */
+/* ---------- 학생 목록 ---------- */
 async function viewStudents(){
   const snap = await getDocs(col("students"));
   const gnum = g => parseInt(g) || 99;
   const all = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>gnum(a.grade)-gnum(b.grade) || String(a.last_en).localeCompare(b.last_en));
   const v=$("#view");
-  v.innerHTML = `<div class="card"><h2>?숈깮 ${all.length}紐?/h2>
-    <div class="row" style="margin-bottom:12px"><input id="q" placeholder="?대쫫쨌ID쨌?대찓??寃?? style="max-width:280px">
-    <select id="g" style="max-width:140px"><option value="">???숇뀈</option>${[...new Set(all.map(s=>s.grade))].map(g=>`<option>${g}</option>`).join("")}</select>
-    <label style="font-size:13px"><input type="checkbox" id="onlyReview" style="width:auto"> ?뺤씤 ?꾩슂留?/label></div>
-    <div class="scroll"><table><thead><tr><th>ID</th><th>?대쫫</th><th>?숇뀈</th><th>?앸뀈?붿씪</th><th>?대찓??/th><th>怨쇱젙</th><th>?곹깭</th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
+  v.innerHTML = `<div class="card"><h2>학생 ${all.length}명</h2>
+    <div class="row" style="margin-bottom:12px"><input id="q" placeholder="이름·ID·이메일 검색" style="max-width:280px">
+    <select id="g" style="max-width:140px"><option value="">전 학년</option>${[...new Set(all.map(s=>s.grade))].map(g=>`<option>${g}</option>`).join("")}</select>
+    <label style="font-size:13px"><input type="checkbox" id="onlyReview" style="width:auto"> 확인 필요만</label></div>
+    <div class="scroll"><table><thead><tr><th>ID</th><th>이름</th><th>학년</th><th>생년월일</th><th>이메일</th><th>과정</th><th>상태</th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
   const draw=()=>{
     const q=$("#q").value.toLowerCase(), g=$("#g").value, r=$("#onlyReview").checked;
     $("#tb").innerHTML = all.filter(s=>(!g||String(s.grade)===g)&&(!r||s.needsReview)&&(!q||[s.id,s.last_en,s.first_en,s.name_ko,s.email].join(" ").toLowerCase().includes(q)))
@@ -232,18 +233,18 @@ async function viewStudents(){
   };
   ["q","g","onlyReview"].forEach(i=>$("#"+i).oninput=draw); draw();
 }
-const statusTag = s => s.status==="pending"?`<span class="tag warn">誘몄엯??/span>`: s.needsReview?`<span class="tag pend">?뺤씤 ?꾩슂</span>`:`<span class="tag ok">${s.status==="active"?"?ы븰":esc(s.status)}</span>`;
+const statusTag = s => s.status==="pending"?`<span class="tag warn">미입력</span>`: s.needsReview?`<span class="tag pend">확인 필요</span>`:`<span class="tag ok">${s.status==="active"?"재학":esc(s.status)}</span>`;
 
-/* ---------- ?숈깮 ?꾨뱶 ?뺤쓽(??怨녹뿉??愿由? ---------- */
+/* ---------- 학생 필드 정의(한 곳에서 관리) ---------- */
 const FIELDS = [
-  ["湲곕낯",[["last_en","?곷Ц ??],["first_en","?곷Ц ?대쫫"],["name_ko","?쒓? ?대쫫"],["dob","?앸뀈?붿씪","date"],["gender","?깅퀎","select",["","F","M"]],["grade","?숇뀈"],["gradYear","議몄뾽?곕룄"],["track","?몃옓","select",["","CAI","CEI","UI"]]]],
-  ["?숈쟻",[["status","?곹깭","select",["active","pending","graduated","transferred","leave"]],["enrollDate","?낇븰??,"date"],["endDate","醫낅즺??,"date"],["prevSchool","?꾩엯?숆탳"],["curriculum","怨쇱젙(Apex/Buzz/CW)"],["distinctions","Distinctions"]]],
-  ["?곕씫",[["email","?숆탳 ?대찓??],["phone","?숈깮 ?대???],["address_en","二쇱냼(?곷Ц)"],["address_ko","二쇱냼(?쒓?)"],["postal","?고렪踰덊샇"]]],
-  ["蹂댄샇??,[["g1_name","蹂댄샇?? ?대쫫"],["g1_rel","愿怨?],["g1_phone","?대???],["g1_email","?대찓??],["g2_name","蹂댄샇?? ?대쫫"],["g2_rel","愿怨?],["g2_phone","?대???],["smsConsent","?뚮┝ ?섏떊 ?숈쓽","select",["","Y","N"]]]],
-  ["留곹겕",[["infoSheetUrl","Student Information Sheet"],["resumeUrl","Resume"],["driveUrl","?쒕씪?대툕 ?대뜑"]]],
-  ["硫붾え",[["note","硫붾え"]]],
+  ["기본",[["last_en","영문 성"],["first_en","영문 이름"],["name_ko","한글 이름"],["dob","생년월일","date"],["gender","성별","select",["","F","M"]],["grade","학년"],["gradYear","졸업연도"],["track","트랙","select",["","CAI","CEI","UI"]]]],
+  ["학적",[["status","상태","select",["active","pending","graduated","transferred","leave"]],["enrollDate","입학일","date"],["endDate","종료일","date"],["prevSchool","전입학교"],["curriculum","과정(Apex/Buzz/CW)"],["distinctions","Distinctions"]]],
+  ["연락",[["email","학교 이메일"],["phone","학생 휴대폰"],["address_en","주소(영문)"],["address_ko","주소(한글)"],["postal","우편번호"]]],
+  ["보호자",[["g1_name","보호자1 이름"],["g1_rel","관계"],["g1_phone","휴대폰"],["g1_email","이메일"],["g2_name","보호자2 이름"],["g2_rel","관계"],["g2_phone","휴대폰"],["smsConsent","알림 수신 동의","select",["","Y","N"]]]],
+  ["링크",[["infoSheetUrl","Student Information Sheet"],["resumeUrl","Resume"],["driveUrl","드라이브 폴더"]]],
+  ["메모",[["note","메모"]]],
 ];
-const ACCOUNT_FIELDS = [["genius_login","Genius 濡쒓렇??],["apex_id","Apex/Buzz ID"],["cw_id","Courseware ID"],["iready_id","iReady ID"]];
+const ACCOUNT_FIELDS = [["genius_login","Genius 로그인"],["apex_id","Apex/Buzz ID"],["cw_id","Courseware ID"],["iready_id","iReady ID"]];
 function fieldHtml(f, val){
   const [k,label,type,opts]=f;
   if (type==="select") return `<div><label>${label}</label><select name="${k}">${opts.map(o=>`<option ${o===(val??"")?"selected":""}>${o}</option>`).join("")}</select></div>`;
@@ -251,72 +252,72 @@ function fieldHtml(f, val){
 }
 const readForm = form => Object.fromEntries([...form.querySelectorAll("[name]")].map(e=>[e.name,e.value.trim()]));
 
-/* ---------- ?숈깮 ?곸꽭 ---------- */
+/* ---------- 학생 상세 ---------- */
 async function viewStudent(id){
   const [s, a] = await Promise.all([getDoc(ref("students",id)), getDoc(ref("accounts",id))]);
-  if (!s.exists()) { $("#view").innerHTML="<p>?녿뒗 ?숈깮?낅땲??</p>"; return; }
+  if (!s.exists()) { $("#view").innerHTML="<p>없는 학생입니다.</p>"; return; }
   const d = s.data(), acct = a.exists()? a.data():{};
   $("#view").innerHTML = `<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span> ${statusTag({...d})}</h2>
     <form id="f">${FIELDS.map(([g,fs])=>`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">${g}</h3><div class="grid">${fs.map(f=>fieldHtml(f,d[f[0]])).join("")}</div>`).join("")}
-    ${can.manage()?`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">怨꾩젙 (?됱젙 ?꾩슜)</h3><div class="grid">${ACCOUNT_FIELDS.map(f=>`<div><label>${f[1]}</label><input data-acct name="${f[0]}" value="${esc(acct[f[0]])}"></div>`).join("")}</div>`:""}
-    <div class="row" style="margin-top:18px"><button class="btn" type="submit">???/button>
-    ${d.needsReview?`<button class="btn ghost" type="button" id="confirm">?뺤씤 ?꾨즺</button>`:""}
-    <a class="muted" href="#/students">紐⑸줉?쇰줈</a></div></form></div>`;
+    ${can.manage()?`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">계정 (행정 전용)</h3><div class="grid">${ACCOUNT_FIELDS.map(f=>`<div><label>${f[1]}</label><input data-acct name="${f[0]}" value="${esc(acct[f[0]])}"></div>`).join("")}</div>`:""}
+    <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button>
+    ${d.needsReview?`<button class="btn ghost" type="button" id="confirm">확인 완료</button>`:""}
+    <a class="muted" href="#/students">목록으로</a></div></form></div>`;
   $("#f").onsubmit = async e => {
     e.preventDefault();
     const all = readForm($("#f")); const acc={}; const stu={};
     for (const [k,v] of Object.entries(all)) (ACCOUNT_FIELDS.some(f=>f[0]===k) ? acc : stu)[k]=v;
     await updateDoc(ref("students",id), {...stu, updatedAt:serverTimestamp(), updatedBy:me.email});
     if (can.manage()) await setDoc(ref("accounts",id), acc, {merge:true});
-    toast("??ν뻽?듬땲??);
+    toast("저장했습니다");
   };
-  const c=$("#confirm"); if (c) c.onclick = async ()=>{ await updateDoc(ref("students",id),{needsReview:false, reviewedBy:me.email, reviewedAt:serverTimestamp()}); toast("?뺤씤 ?꾨즺"); viewStudent(id); };
+  const c=$("#confirm"); if (c) c.onclick = async ()=>{ await updateDoc(ref("students",id),{needsReview:false, reviewedBy:me.email, reviewedAt:serverTimestamp()}); toast("확인 완료"); viewStudent(id); };
 }
 
-/* ---------- ?좎엯???깅줉 ---------- */
+/* ---------- 신입생 등록 ---------- */
 async function viewNew(){
   const sref = doc(db,"schools",sid); const next = (await getDoc(sref)).data().nextId || 9001;
-  $("#view").innerHTML = `<div class="card"><h2>?좎엯???깅줉</h2>
-    <form id="f"><div class="grid"><div><label>?숈깮 ID</label><input name="id" value="${next}"><div class="muted">蹂몄궗 Genius ID媛 ?덉쑝硫?洹멸구濡?諛붽퓭 ?ｌ쑝?몄슂. ?놁쑝硫?${next}.</div></div></div>
+  $("#view").innerHTML = `<div class="card"><h2>신입생 등록</h2>
+    <form id="f"><div class="grid"><div><label>학생 ID</label><input name="id" value="${next}"><div class="muted">본사 Genius ID가 있으면 그걸로 바꿔 넣으세요. 없으면 ${next}.</div></div></div>
     ${FIELDS.map(([g,fs])=>`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">${g}</h3><div class="grid">${fs.map(f=>fieldHtml(f,f[0]==="status"?"active":"")).join("")}</div>`).join("")}
-    <div class="row" style="margin-top:18px"><button class="btn" type="submit">?깅줉</button></div></form></div>`;
+    <div class="row" style="margin-top:18px"><button class="btn" type="submit">등록</button></div></form></div>`;
   $("#f").onsubmit = async e => {
     e.preventDefault(); const d = readForm($("#f")); const id = d.id; delete d.id;
-    if (!id || !d.last_en || !d.first_en) return toast("ID? ?곷Ц ?대쫫? ?꾩닔?낅땲??);
-    if ((await getDoc(ref("students",id))).exists()) return toast("?대? ?덈뒗 ID?낅땲??);
+    if (!id || !d.last_en || !d.first_en) return toast("ID와 영문 이름은 필수입니다");
+    if ((await getDoc(ref("students",id))).exists()) return toast("이미 있는 ID입니다");
     await setDoc(ref("students",id), {...d, needsReview:false, createdAt:serverTimestamp(), createdBy:me.email});
     if (String(id)===String(next)) await updateDoc(sref,{nextId:next+1});
-    toast("?깅줉?덉뒿?덈떎"); location.hash = "#/students/"+id;
+    toast("등록했습니다"); location.hash = "#/students/"+id;
   };
 }
 
-/* ---------- 媛?몄삤湲?---------- */
+/* ---------- 가져오기 ---------- */
 const IMPORT_TYPES = {
-  students:{label:"?숈깮 紐낅?", key:"id", cols:["id","last_en","first_en","name_ko","grade","dob","gender","address_en","address_ko","postal","email","genius_login","curriculum","apex_id","iready_id","status","note"], hint:"students_seed.csv ?뺤떇. 怨꾩젙 ??genius_login쨌apex_id쨌iready_id)? 怨꾩젙 而щ젆?섏쑝濡??곕줈 ??λ맗?덈떎."},
-  // grades / attendance / activities ???ㅼ쓬 ?④퀎?먯꽌 異붽?
+  students:{label:"학생 명부", key:"id", cols:["id","last_en","first_en","name_ko","grade","dob","gender","address_en","address_ko","postal","email","genius_login","curriculum","apex_id","iready_id","status","note"], hint:"students_seed.csv 형식. 계정 열(genius_login·apex_id·iready_id)은 계정 컬렉션으로 따로 저장됩니다."},
+  // grades / attendance / activities 는 다음 단계에서 추가
 };
 let importRows = [], importType = "students";
 async function viewImport(){
-  $("#view").innerHTML = `<div class="card"><h2>媛?몄삤湲?/h2>
+  $("#view").innerHTML = `<div class="card"><h2>가져오기</h2>
     <div class="tabs">${Object.entries(IMPORT_TYPES).map(([k,t])=>`<button data-t="${k}" class="${k===importType?"on":""}">${t.label}</button>`).join("")}</div>
     <p class="muted" id="hint">${IMPORT_TYPES[importType].hint}</p>
-    <div class="row"><input type="file" id="file" accept=".csv,.tsv,.txt" style="max-width:320px"><span class="muted">?먮뒗 ?꾨옒??遺숈뿬?ｊ린</span></div>
-    <textarea id="paste" rows="5" placeholder="CSV ?먮뒗 ??援щ텇 ?띿뒪?몃? 遺숈뿬?ｌ쑝?몄슂 (泥?以꾩? ???대쫫)" style="margin-top:8px"></textarea>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" id="parse">誘몃━蹂닿린</button></div></div>
-    <div class="card" id="preview" hidden><h2>誘몃━蹂닿린 ??????뚮윭 諛붾줈 怨좎튌 ???덉뒿?덈떎</h2>
+    <div class="row"><input type="file" id="file" accept=".csv,.tsv,.txt" style="max-width:320px"><span class="muted">또는 아래에 붙여넣기</span></div>
+    <textarea id="paste" rows="5" placeholder="CSV 또는 탭 구분 텍스트를 붙여넣으세요 (첫 줄은 열 이름)" style="margin-top:8px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn ghost" id="parse">미리보기</button></div></div>
+    <div class="card" id="preview" hidden><h2>미리보기 — 셀을 눌러 바로 고칠 수 있습니다</h2>
     <div class="scroll"><table id="pt"></table></div>
-    <div class="row" style="margin-top:12px"><button class="btn" id="save">???(紐⑤몢 '?뺤씤 ?꾩슂'濡??쒖떆)</button><span class="muted" id="cnt"></span></div></div>`;
+    <div class="row" style="margin-top:12px"><button class="btn" id="save">저장 (모두 '확인 필요'로 표시)</button><span class="muted" id="cnt"></span></div></div>`;
   document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{importType=b.dataset.t; viewImport();});
   $("#file").onchange = async e => { $("#paste").value = await e.target.files[0].text(); };
   $("#parse").onclick = () => {
     importRows = parseDelimited($("#paste").value);
-    if (!importRows.length) return toast("?쎌쓣 以꾩씠 ?놁뒿?덈떎");
+    if (!importRows.length) return toast("읽을 줄이 없습니다");
     const cols = IMPORT_TYPES[importType].cols;
     const have = Object.keys(importRows[0]); const missing = cols.filter(c=>!have.includes(c));
-    $("#pt").innerHTML = `<thead><tr>${cols.map(c=>`<th>${c}${have.includes(c)?"":" <span class='tag warn'>?놁쓬</span>"}</th>`).join("")}</tr></thead>
+    $("#pt").innerHTML = `<thead><tr>${cols.map(c=>`<th>${c}${have.includes(c)?"":" <span class='tag warn'>없음</span>"}</th>`).join("")}</tr></thead>
       <tbody>${importRows.map((r,i)=>`<tr>${cols.map(c=>`<td contenteditable data-i="${i}" data-c="${c}">${esc(r[c])}</td>`).join("")}</tr>`).join("")}</tbody>`;
     $("#pt").oninput = e => { const td=e.target.closest("td"); if (td) importRows[td.dataset.i][td.dataset.c]=td.textContent.trim(); };
-    $("#cnt").textContent = `${importRows.length}以? + (missing.length?` 쨌 ?녿뒗 ?? ${missing.join(", ")}`:"");
+    $("#cnt").textContent = `${importRows.length}줄` + (missing.length?` · 없는 열: ${missing.join(", ")}`:"");
     $("#preview").hidden=false;
   };
   $("#save").onclick = async () => {
@@ -332,7 +333,7 @@ async function viewImport(){
       if (ops>=400){ await batch.commit(); batch=writeBatch(db); ops=0; }
     }
     if (ops) await batch.commit();
-    toast(`${n}紐????{skipped?`, ID ?녿뒗 ${skipped}以?嫄대꼫?`:""}`); location.hash="#/students";
+    toast(`${n}명 저장${skipped?`, ID 없는 ${skipped}줄 건너뜀`:""}`); location.hash="#/students";
   };
 }
 function parseDelimited(text){
@@ -350,27 +351,27 @@ function parseDelimited(text){
   return rows.filter(r=>r.some(c=>c.trim())).map(r=>Object.fromEntries(hdr.map((h,i)=>[h,(r[i]||"").trim()])));
 }
 
-/* ---------- ?숆탳 ?ㅼ젙 ---------- */
+/* ---------- 학교 설정 ---------- */
 async function viewSettings(){
   const s = school;
-  const F = [["name","?쒖뒪???대쫫(泥??붾㈃)"],["nameKo","?쒖뒪???대쫫(?쒓?)"],["schoolName","?숆탳 ?대쫫(?곷Ц, ?깆쟻?쒖슜)"],["schoolNameKo","?숆탳 ?대쫫(?쒓?)"],["logoUrl","濡쒓퀬 URL"],["color","二??됱긽","color"],["accent","?ъ씤???됱긽","color"],["address","二쇱냼(?깆쟻?쒖슜)"],["phone","?꾪솕"],["ceeb","CEEB 肄붾뱶"],["principal","援먯옣 ?곷Ц紐??쒕챸?)"],["termCode","?꾩옱 ?숆린 肄붾뱶(2026F)"],["nextId","?ㅼ쓬 ?좎엯??ID","number"]];
+  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
   const members = await getDocs(query(collection(db,"memberships"), where("schoolId","==",sid)));
-  $("#view").innerHTML = `<div class="card"><h2>?숆탳 ?ㅼ젙</h2><form id="f"><div class="grid">${F.map(([k,l,t])=>`<div><label>${l}</label><input name="${k}" type="${t||"text"}" value="${esc(s[k])}"></div>`).join("")}</div>
-    <div class="row" style="margin-top:18px"><button class="btn" type="submit">???/button></div></form></div>
-    <div class="card"><h2>?ъ슜??沅뚰븳</h2>
-    <table><thead><tr><th>?대찓??/th><th>??븷</th><th>?숈깮 ID</th><th></th></tr></thead><tbody>
-    ${members.docs.map(d=>`<tr><td>${esc(d.id)}</td><td>${ROLES[d.data().role]||d.data().role}</td><td>${esc(d.data().studentId)}</td><td>${d.id===OWNER?"":`<button class="btn sm ghost" data-del="${d.id}">??젣</button>`}</td></tr>`).join("")}
+  $("#view").innerHTML = `<div class="card"><h2>학교 설정</h2><form id="f"><div class="grid">${F.map(([k,l,t])=>`<div><label>${l}</label><input name="${k}" type="${t||"text"}" value="${esc(s[k])}"></div>`).join("")}</div>
+    <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button></div></form></div>
+    <div class="card"><h2>사용자 권한</h2>
+    <table><thead><tr><th>이메일</th><th>역할</th><th>학생 ID</th><th></th></tr></thead><tbody>
+    ${members.docs.map(d=>`<tr><td>${esc(d.id)}</td><td>${ROLES[d.data().role]||d.data().role}</td><td>${esc(d.data().studentId)}</td><td>${d.id===OWNER?"":`<button class="btn sm ghost" data-del="${d.id}">삭제</button>`}</td></tr>`).join("")}
     </tbody></table>
-    <form id="addm" class="row" style="margin-top:12px"><input name="email" placeholder="?대찓?? style="max-width:260px"><select name="role" style="max-width:120px">${Object.entries(ROLES).filter(([k])=>k!=="owner").map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><input name="studentId" placeholder="?숈깮?대㈃ ID" style="max-width:120px"><button class="btn sm">異붽?</button></form>
-    <p class="muted">?숈깮? ?먭린 ID留?蹂닿퀬 怨좎튌 ???덇퀬, 援먯궗??蹂닿린留? ?됱젙쨌援먯옣? ?꾩껜.</p></div>`;
-  $("#f").onsubmit = async e => { e.preventDefault(); const d=readForm($("#f")); d.nextId=parseInt(d.nextId)||9001; await updateDoc(doc(db,"schools",sid), d); toast("??ν뻽?듬땲??); await loadSchool(); };
-  $("#addm").onsubmit = async e => { e.preventDefault(); const d=readForm($("#addm")); if(!d.email) return; await setDoc(doc(db,"memberships",d.email.toLowerCase()),{schoolId:sid,role:d.role,studentId:d.studentId||null,createdAt:serverTimestamp()}); toast("異붽??덉뒿?덈떎"); viewSettings(); };
-  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm(b.dataset.del+" ??젣?")) return; await setDoc(doc(db,"memberships",b.dataset.del),{schoolId:"",role:"removed"}); viewSettings(); });
+    <form id="addm" class="row" style="margin-top:12px"><input name="email" placeholder="이메일" style="max-width:260px"><select name="role" style="max-width:120px">${Object.entries(ROLES).filter(([k])=>k!=="owner").map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><input name="studentId" placeholder="학생이면 ID" style="max-width:120px"><button class="btn sm">추가</button></form>
+    <p class="muted">학생은 자기 ID만 보고 고칠 수 있고, 교사는 보기만, 행정·교장은 전체.</p></div>`;
+  $("#f").onsubmit = async e => { e.preventDefault(); const d=readForm($("#f")); d.nextId=parseInt(d.nextId)||9001; await updateDoc(doc(db,"schools",sid), d); toast("저장했습니다"); await loadSchool(); };
+  $("#addm").onsubmit = async e => { e.preventDefault(); const d=readForm($("#addm")); if(!d.email) return; await setDoc(doc(db,"memberships",d.email.toLowerCase()),{schoolId:sid,role:d.role,studentId:d.studentId||null,createdAt:serverTimestamp()}); toast("추가했습니다"); viewSettings(); };
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm(b.dataset.del+" 삭제?")) return; await setDoc(doc(db,"memberships",b.dataset.del),{schoolId:"",role:"removed"}); viewSettings(); });
 }
 
-/* ---------- ?숈깮 蹂몄씤 ---------- */
+/* ---------- 학생 본인 ---------- */
 async function viewMe(){
-  if (!me.studentId) { $("#view").innerHTML="<p>?숈깮 ID媛 ?곌껐?섏? ?딆븯?듬땲?? ?숆탳??臾몄쓽?섏꽭??</p>"; return; }
+  if (!me.studentId) { $("#view").innerHTML="<p>학생 ID가 연결되지 않았습니다. 학교에 문의하세요.</p>"; return; }
   return viewStudent(me.studentId);
 }
 </script>
