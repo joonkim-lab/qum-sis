@@ -83,7 +83,8 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr td.nw,.tr th.nw{white-space:nowrap}
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
 .tr td.c{text-align:center}
-.tr .side{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;margin:0 0 12px}
+.tr .side{display:grid;grid-template-columns:2fr 3fr;gap:4px 18px;align-items:start;margin:0 0 12px}
+.tr .side .ft{font-size:8pt;color:#555}
 .tr .side>div{min-width:0}
 .tr .side table{width:100%}
 .tr td{padding:3px 5px;border-bottom:0}
@@ -705,8 +706,11 @@ async function viewTranscript(id){
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
   const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
   const incR = inc.filter(r=>r.record);
-  const incHtml = incR.length?`<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead><tbody>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td>${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Only incidents designated for the official record are shown.</div></div>`:"";
-  const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div></div>${incHtml}</div>`:"";
+  const staffV = can.manage()||me.role==="teacher";
+  const incTable = `<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead><tbody>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td class="nw">${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody></table></div>`;
+  const incHtml = staffV ? incTable : "";
+  const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table></div>${incHtml||"<div></div>"}
+    <div class="ft">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div><div class="ft" id="incFt" hidden>Only incidents designated for the official record are shown.</div></div>`:"";
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
@@ -736,8 +740,8 @@ async function viewTranscript(id){
   const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=on?"Official Transcript":"Unofficial Transcript";
     $("#trNote").textContent=on?"This is an official transcript issued and sealed by the school.":"This transcript is unofficial unless signed and sealed by a School Official.";
     $("#trSig").innerHTML=on?`<div style="height:34px"></div>${esc(school.principal)}, Principal`:"Signature of School Official / Title / Date"; };
-  const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incBox").hidden=true; } };
-  if (io) io.onchange=()=>{ $("#incBox").hidden=!io.checked; };
+  const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incBox").hidden=true; $("#incFt").hidden=true; } };
+  if (io) io.onchange=()=>{ $("#incBox").hidden=!io.checked; $("#incFt").hidden=!io.checked; };
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
