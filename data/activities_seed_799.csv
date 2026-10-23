@@ -1,0 +1,29 @@
+studentId,kind,awardType,name,date,description,test,subject,score,category,inside,position,rank,startDate,endDate,givenBy,hours,approved
+799,award,School,UI vs T1 Valorant competition,2024-10-15,,,,,,,,,,,,,Y
+799,award,School,School Valorant competition,,,,,,,,,,,,,,Y
+799,award,School,Entrepreneurial Excellence Award,2025-12-19,,,,,,,,,,,,,Y
+799,award,School,MVP PASS,2025-02-12,,,,,,,,,,,,,Y
+799,award,School,MVP PASS,2025-04-02,,,,,,,,,,,,,Y
+799,award,School,ESL Debate win award,,,,,,,,,,,,,,Y
+799,award,School,MVP PASS,2025-11-18,,,,,,,,,,,,,Y
+799,award,School,Subject Pass,2026-04-14,,,,,,,,,,,,,Y
+799,award,School,Best Prefect Award,2025-02-06,,,,,,,,,,,,,Y
+799,award,School,Academic Achievement Award,2025-04-06,English,,,,,,,,,,,,Y
+799,award,School,Academic Achievement Award,2024-12-20,ESL,,,,,,,,,,,,Y
+799,test,,,2025-08,,Duolingo,,120,,,,,,,,,Y
+799,test,,,2025-11,,Duolingo,,115,,,,,,,,,Y
+799,test,,,2026-03,,Duolingo,,120,,,,,,,,,Y
+799,activity,,MK Project,,,,,,Personal Project,Inside,Designer,,2022-08-01,,,,Y
+799,activity,,Children forest activity,,Helped workers. Played with children. Helped preparing materials for children.,,,,Clubs,Inside,Volunteer,,2024-10-01,,,,Y
+799,activity,,Delivery of side dishes for the elderly living alone,,Helped delivering side dishes for the elderly living alone,,,,Clubs,Outside,Volunteer,,2025-04-25,,,,Y
+799,activity,,Internship (EuMW exhibition),,"Day 1: Helped set up the booth at the EuMW exhibition, divided roles, trained in customer service.
+Day 2: Collected PCB-related brochures from other companies; observed PCB design, high-frequency circuits, manufacturing methods and industry trends.
+Day 3: Observed GaN MMICs, GaN discrete devices, GaAs MMICs, microwave generators and frequency bands (S/X/Ku/Ka) and their uses in communications, aerospace, defense, satellite internet.",,,,Internship,Outside,Internship worker,,2025-10-22,2025-10-27,,,Y
+799,activity,,독거노인 일반찬 배달 및 말벗 봉사,,I delivered side dishes to the elderly and became a friend.,,,,Clubs,Inside,Volunteer,,2025-02-22,,,,Y
+799,activity,,독거노인 일반찬 배달 및 말벗 봉사,,I delivered side dishes to the elderly and became a friend.,,,,Clubs,Inside,Volunteer,,2025-01-01,,,,Y
+799,activity,,Brawl Stars competition,,I entered the Brawl Stars competition.,,,,Competitions,Inside,Player,,2025-01-01,,,,Y
+799,activity,,EOS Valorant competition (Power Rangers Valofors Tournament),,Ended the tournament at third place.,,,,Competitions,Inside,Player,3rd place,2025-02-15,,,,Y
+799,activity,,Valorant Deathmatch competition,,Participated in a deathmatch competition,,,,Competitions,Inside,Player,,2024-01-01,,,,Y
+799,activity,,Valorant Online Battle League,,Qualified for the semifinals but lost the next match.,,,,Competitions,Outside,Player,Semifinals,2025-04-19,,,,Y
+799,activity,,Valorant GGAGGA Cup (Gen.G Competition),,Failed to qualify in the preliminaries.,,,,Competitions,Outside,Player,,2025-03-02,,,,Y
+799,activity,,Valorant Arete Esports League,,Eliminated in Round of 32,,,,Competitions,Outside,Player,Round of 32,2025-03-02,,,,Y

@@ -218,10 +218,11 @@ const routes = {
   "courses": {label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
   "attendance":{label:"출결",     show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
   "slips":   {label:"슬립 승인",  show:()=>can.manage(),  view:viewSlips},
+  "requests":{label:"수정 요청",  show:()=>can.manage(),  view:viewRequests},
   "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
   "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
   "settings":{label:"학교 설정",  show:()=>can.settings(),view:viewSettings},
-  "me":      {label:"내 정보",    show:()=>me.role==="student", view:viewMe},
+  "me":      {label:"내 정보 · 성적 · 출결 · 활동", show:()=>me.role==="student", view:viewMe},
 };
 function buildNav(){
   $("#nav").innerHTML = Object.entries(routes).filter(([k,r])=>r.show()).map(([k,r])=>`<a href="#/${k}" data-k="${k}">${r.label}</a>`).join("");
@@ -233,7 +234,7 @@ async function route(){
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
-  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : viewStudent(arg);
+  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg);
   if (k==="transcript" && arg) return viewTranscript(arg);
   const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
   await r.view();
@@ -300,13 +301,23 @@ async function viewStudent(id){
   const [s, a] = await Promise.all([getDoc(ref("students",id)), getDoc(ref("accounts",id))]);
   if (!s.exists()) { $("#view").innerHTML="<p>없는 학생입니다.</p>"; return; }
   const d = s.data(), acct = a.exists()? a.data():{};
+  const ro = !can.manage();   // 학생·교사는 보기만
   $("#view").innerHTML = `<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span> ${statusTag({...d})}</h2>
     ${subNav(id,"info")}
     <form id="f">${FIELDS.map(([g,fs])=>`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">${g}</h3><div class="grid">${fs.map(f=>fieldHtml(f,d[f[0]])).join("")}</div>`).join("")}
     ${can.manage()?`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">계정 (행정 전용)</h3><div class="grid">${ACCOUNT_FIELDS.map(f=>`<div><label>${f[1]}</label><input data-acct name="${f[0]}" value="${esc(acct[f[0]])}"></div>`).join("")}</div>`:""}
-    <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button>
-    ${d.needsReview?`<button class="btn ghost" type="button" id="confirm">확인 완료</button>`:""}
-    <a class="muted" href="#/students">목록으로</a></div></form></div>`;
+    <div class="row" style="margin-top:18px">${ro?"":`<button class="btn" type="submit">저장</button>`}
+    ${d.needsReview&&(can.manage()||me.role==="student")?`<button class="btn ghost" type="button" id="confirm">내용이 맞습니다 (확인)</button>`:""}
+    ${can.manage()?`<a class="muted" href="#/students">목록으로</a>`:""}</div></form>
+    ${me.role==="student"?`<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"><h3 style="font-size:14px;color:var(--brand);margin:0 0 6px">틀린 곳이 있으면 수정 요청</h3>
+      <form id="rq" class="row"><input name="message" placeholder="예: 주소가 바뀌었어요 → 서울 강남구 …" style="flex:1;min-width:260px" required><button class="btn sm">요청 보내기</button></form>
+      <div id="rqList" class="muted" style="margin-top:8px"></div></div>`:""}</div>`;
+  if (ro) $("#f").querySelectorAll("input,select").forEach(el=>el.disabled=true);
+  if (me.role==="student"){
+    const rs=await getDocs(query(col("requests"), where("studentId","==",String(id))));
+    $("#rqList").innerHTML = rs.docs.map(x=>x.data()).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).map(r=>`<div>${r.status==="done"?"✓ 처리됨":"· 접수"} — ${esc(r.message)}</div>`).join("");
+    $("#rq").onsubmit=async e=>{ e.preventDefault(); const v=readForm($("#rq")); await setDoc(doc(col("requests")),{studentId:String(id),message:v.message,status:"open",createdAt:serverTimestamp(),createdBy:me.email}); toast("요청을 보냈습니다"); viewStudent(id); };
+  }
   $("#f").onsubmit = async e => {
     e.preventDefault();
     const all = readForm($("#f")); const acc={}; const stu={};
@@ -340,6 +351,7 @@ const IMPORT_TYPES = {
   students:{label:"학생 명부", key:"id", cols:["id","last_en","first_en","name_ko","grade","dob","gender","address_en","address_ko","postal","email","genius_login","curriculum","apex_id","iready_id","status","note"], hint:"students_seed.csv 형식. 계정 열(genius_login·apex_id·iready_id)은 계정 컬렉션으로 따로 저장됩니다."},
   courses:{label:"과목", key:"code", cols:["code","title","area","weighted","credit","platform","active","note"], hint:"courses_seed.csv 형식. code가 비어 있으면 title로 식별(학교 선택과목)."},
   attendance:{label:"출결", key:"studentId", cols:["studentId","date","termCode","code","note","slipNo","approved","source"], hint:"attendance_seed.csv 형식. code는 u.t/u.a/e.t/e.a. 같은 학생·날짜는 덮어씀."},
+  activities:{label:"수상·활동", key:"studentId", cols:["studentId","kind","awardType","name","date","description","test","subject","score","category","inside","position","rank","startDate","endDate","givenBy","hours","approved"], hint:"kind = award / test / activity / volunteer. 박재영 Student Information Sheet 양식 그대로."},
   grades:{label:"성적", key:"studentId", cols:["studentId","code","title","school","gLevel","termCode","grade","credit","weighted","source"], hint:"grades_seed_g12.csv 형식. termCode는 2026F/2026S/2026U. 같은 학생·학기·과목은 덮어씀."},
 };
 let importRows = [], importType = "students";
@@ -382,6 +394,10 @@ async function viewImport(){
       } else if (importType==="attendance"){
         if (!r.studentId || !r.date || !r.code){skipped++;continue;}
         batch.set(ref("attendance",`${r.studentId}_${r.date}`), {studentId:String(r.studentId), date:r.date, termCode:r.termCode||termOf(r.date), code:r.code.trim().toLowerCase(), note:r.note||"", slipNo:r.slipNo||"", approved:/^(Y|1|true)$/i.test(r.approved||""), source:r.source||"sheet", importedAt:serverTimestamp(), importedBy:me.email}, {merge:true}); ops++;
+      } else if (importType==="activities"){
+        if (!r.studentId || !r.kind){skipped++;continue;}
+        const o={}; for (const [k,v] of Object.entries(r)) if (v!=="") o[k]=v;
+        batch.set(doc(col("activities")),{...o,studentId:String(r.studentId),approved:/^(Y|1|true)$/i.test(r.approved||""),source:"sheet",importedAt:serverTimestamp(),importedBy:me.email}); ops++;
       } else if (importType==="grades"){
         if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
         const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
@@ -420,14 +436,19 @@ async function viewSettings(){
     ${members.docs.map(d=>`<tr><td>${esc(d.id)}</td><td>${ROLES[d.data().role]||d.data().role}</td><td>${esc(d.data().studentId)}</td><td>${d.id===OWNER?"":`<button class="btn sm ghost" data-del="${d.id}">삭제</button>`}</td></tr>`).join("")}
     </tbody></table>
     <form id="addm" class="row" style="margin-top:12px"><input name="email" placeholder="이메일" style="max-width:260px"><select name="role" style="max-width:120px">${Object.entries(ROLES).filter(([k])=>k!=="owner").map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><input name="studentId" placeholder="학생이면 ID" style="max-width:120px"><button class="btn sm">추가</button></form>
-    <p class="muted">학생은 자기 ID만 보고 고칠 수 있고, 교사는 보기만, 행정·교장은 전체.</p></div>`;
+    <p class="muted">학생은 자기 ID만 보고 고칠 수 있고, 교사는 보기만, 행정·교장은 전체.</p>
+    <div class="row" style="margin-top:8px"><button class="btn sm ghost" id="bulkStu">재학생 전원 학생 계정 만들기 (학교 이메일 기준)</button><span class="muted">이미 있는 계정은 건너뜀</span></div></div>`;
+  $("#bulkStu").onclick=async()=>{ const ss=await getDocs(col("students")); let n=0,b=writeBatch(db);
+    for (const d of ss.docs){ const st=d.data(); if(!st.email||(st.status&&st.status!=="active")) continue; const em=st.email.toLowerCase(); if (members.docs.some(m=>m.id===em)) continue;
+      b.set(doc(db,"memberships",em),{schoolId:sid,role:"student",studentId:d.id,createdAt:serverTimestamp()}); n++; }
+    await b.commit(); toast(`${n}명 계정 생성`); viewSettings(); };
   $("#f").onsubmit = async e => { e.preventDefault(); const d=readForm($("#f")); d.nextId=parseInt(d.nextId)||9001; await updateDoc(doc(db,"schools",sid), d); toast("저장했습니다"); await loadSchool(); };
   $("#addm").onsubmit = async e => { e.preventDefault(); const d=readForm($("#addm")); if(!d.email) return; await setDoc(doc(db,"memberships",d.email.toLowerCase()),{schoolId:sid,role:d.role,studentId:d.studentId||null,createdAt:serverTimestamp()}); toast("추가했습니다"); viewSettings(); };
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm(b.dataset.del+" 삭제?")) return; await setDoc(doc(db,"memberships",b.dataset.del),{schoolId:"",role:"removed"}); viewSettings(); });
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -553,6 +574,57 @@ async function viewStudentAttendance(id){
   $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"att")}
     <table style="max-width:520px;margin-bottom:18px"><thead><tr><th>학기</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${tk.map(t=>`<tr><td>${termLabel(t)}</td><td>${terms[t]["e.a"]}</td><td>${terms[t]["e.t"]}</td><td>${terms[t]["u.a"]}</td><td>${terms[t]["u.t"]}</td></tr>`).join("")||"<tr><td colspan=5 class=muted>기록 없음</td></tr>"}</tbody></table>
     <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div></div>`;
+}
+
+/* ---------- 수상·활동 (학생 자기 입력) ---------- */
+const ACT_KINDS = {
+  award:{label:"수상 Awards", fields:[["awardType","구분","select",["School","Outside"]],["name","상 이름"],["date","날짜","date"],["description","설명"]], cols:["awardType","name","date","description"]},
+  test:{label:"공인 시험 Test Scores", fields:[["test","시험","select",["Duolingo","TOEFL","IELTS","SAT","ACT","AP","Other"]],["date","응시일","month"],["subject","과목(AP)"],["score","점수"]], cols:["test","date","subject","score"]},
+  activity:{label:"활동 Extracurricular", fields:[["category","분류","select",["Personal Project","Clubs","Competitions","Internship","Leadership","Arts","Sports","Other"]],["inside","학교 안/밖","select",["Inside","Outside"]],["name","활동 이름"],["position","역할"],["rank","순위·결과"],["startDate","시작","date"],["endDate","끝","date"],["description","무엇을 했나 (3줄 이상)","textarea"]], cols:["category","inside","name","position","rank","startDate","endDate","description"]},
+  volunteer:{label:"교내 봉사 In-School Volunteer", fields:[["date","날짜","date"],["givenBy","담당 교사"],["name","행사·내용"],["hours","시간","number"]], cols:["date","givenBy","name","hours"]},
+};
+let actKind="award";
+async function viewStudentActivities(id){
+  const isSelf = me.role==="student" && me.studentId===String(id);
+  const staff = can.manage()||me.role==="teacher";
+  const [s, as] = await Promise.all([getDoc(ref("students",id)), getDocs(query(col("activities"), where("studentId","==",String(id))))]);
+  if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=s.data(), all=as.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>String(b.date||b.startDate||"").localeCompare(String(a.date||a.startDate||"")));
+  const K=ACT_KINDS[actKind], rows=all.filter(r=>r.kind===actKind);
+  const canAdd = isSelf || can.manage();
+  const fh=(f,v)=> f[2]==="select"?`<div><label>${f[1]}</label><select name="${f[0]}">${f[3].map(o=>`<option ${o===(v??"")?"selected":""}>${o}</option>`).join("")}</select></div>`
+    : f[2]==="textarea"?`<div style="grid-column:1/-1"><label>${f[1]}</label><textarea name="${f[0]}" rows="3">${esc(v)}</textarea></div>`
+    : `<div><label>${f[1]}</label><input name="${f[0]}" type="${f[2]||"text"}" value="${esc(v)}"></div>`;
+  $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"act")}
+    <div class="tabs">${Object.entries(ACT_KINDS).map(([k,v])=>`<button data-k="${k}" class="${k===actKind?"on":""}">${v.label} <span class="tag">${all.filter(r=>r.kind===k).length}</span></button>`).join("")}</div>
+    ${canAdd?`<form id="af" class="card" style="background:var(--paper)"><div class="grid">${K.fields.map(f=>fh(f,"")).join("")}</div><input type="hidden" name="_id"><div class="row" style="margin-top:10px"><button class="btn sm" id="afBtn">추가</button><button type="button" class="btn sm ghost" id="afReset" hidden>취소</button></div></form>`:""}
+    <div class="scroll"><table><thead><tr>${K.fields.map(f=>`<th>${f[1]}</th>`).join("")}<th>상태</th><th></th></tr></thead><tbody>
+    ${rows.map(r=>`<tr>${K.fields.map(f=>`<td>${esc(r[f[0]]).replace(/\n/g,"<br>")}</td>`).join("")}<td class="nw">${r.approved?`<span class="tag ok">승인</span>`:`<span class="tag pend">대기</span>`}</td>
+      <td class="nw">${staff&&can.manage()?`<label><input type="checkbox" data-ok="${r.id}" ${r.approved?"checked":""} style="width:auto"> 승인</label> `:""}${(can.manage()||(isSelf&&!r.approved))?`<button class="btn sm ghost" data-e="${r.id}">수정</button> <button class="btn sm ghost" data-del="${r.id}">×</button>`:""}</td></tr>`).join("")||`<tr><td colspan="${K.fields.length+2}" class="muted">아직 없음</td></tr>`}
+    </tbody></table></div>
+    ${isSelf?`<p class="muted" style="margin-top:10px">입력한 내용은 선생님이 확인한 뒤 성적표·기록부에 실립니다. 승인된 항목은 학교에 수정을 요청하세요.</p>`:""}</div>`;
+  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{actKind=b.dataset.k; viewStudentActivities(id);});
+  const af=$("#af"); if (af){
+    af.onsubmit=async e=>{ e.preventDefault(); const v=readForm(af); const aid=v._id; delete v._id;
+      if (!v.name && !v.test) return toast("이름은 필수");
+      if (aid) await updateDoc(ref("activities",aid),{...v,updatedAt:serverTimestamp(),updatedBy:me.email});
+      else await setDoc(doc(col("activities")),{...v,kind:actKind,studentId:String(id),approved:false,createdAt:serverTimestamp(),createdBy:me.email});
+      toast("저장"); viewStudentActivities(id); };
+    $("#afReset").onclick=()=>viewStudentActivities(id);
+    document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>{ const r=rows.find(x=>x.id===b.dataset.e); K.fields.forEach(f=>{ const el=af.querySelector(`[name="${f[0]}"]`); if(el) el.value=r[f[0]]||""; }); af.querySelector("[name=_id]").value=r.id; $("#afBtn").textContent="수정 저장"; $("#afReset").hidden=false; window.scrollTo({top:0,behavior:"smooth"}); });
+  }
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("activities",b.dataset.del)); viewStudentActivities(id); });
+  document.querySelectorAll("[data-ok]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("activities",el.dataset.ok),{approved:el.checked,approvedBy:me.email,approvedAt:serverTimestamp()}); viewStudentActivities(id); });
+}
+
+/* ---------- 수정 요청 (학생 → 행정) ---------- */
+async function viewRequests(){
+  const [rs, ss]=await Promise.all([getDocs(col("requests")), getDocs(col("students"))]);
+  const names={}; ss.docs.forEach(d=>names[d.id]=`${d.data().last_en}, ${d.data().first_en}`);
+  const rows=rs.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.status==="done")-(b.status==="done") || (b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  $("#view").innerHTML=`<div class="card"><h2>학생 수정 요청 ${rows.filter(r=>r.status!=="done").length}건 대기</h2>
+    <table><thead><tr><th>날짜</th><th>학생</th><th>요청 내용</th><th>처리</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.createdAt?new Date(r.createdAt.seconds*1000).toISOString().slice(0,10):""}</td><td class="nw"><a href="#/students/${r.studentId}">${esc(names[r.studentId]||r.studentId)}</a></td><td>${esc(r.message)}</td><td class="nw"><label><input type="checkbox" data-done="${r.id}" ${r.status==="done"?"checked":""} style="width:auto"> 처리 완료</label></td></tr>`).join("")||`<tr><td colspan=4 class=muted>없음</td></tr>`}</tbody></table></div>`;
+  document.querySelectorAll("[data-done]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("requests",el.dataset.done),{status:el.checked?"done":"open",doneBy:me.email,doneAt:serverTimestamp()}); });
 }
 
 /* ---------- Transcript ---------- */
