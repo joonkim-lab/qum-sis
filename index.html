@@ -234,10 +234,12 @@ async function route(){
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
-  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg);
-  if (k==="transcript" && arg) return viewTranscript(arg);
+  try {
+    if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg));
+    if (k==="transcript" && arg) return await viewTranscript(arg);
+  } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; return; }
   const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
-  await r.view();
+  try { await r.view(); } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; }
 }
 
 /* ---------- 현황 ---------- */
@@ -298,7 +300,7 @@ const readForm = form => Object.fromEntries([...form.querySelectorAll("[name]")]
 
 /* ---------- 학생 상세 ---------- */
 async function viewStudent(id){
-  const [s, a] = await Promise.all([getDoc(ref("students",id)), getDoc(ref("accounts",id))]);
+  const [s, a] = await Promise.all([getDoc(ref("students",id)), can.manage()? getDoc(ref("accounts",id)) : Promise.resolve({exists:()=>false})]);
   if (!s.exists()) { $("#view").innerHTML="<p>없는 학생입니다.</p>"; return; }
   const d = s.data(), acct = a.exists()? a.data():{};
   const ro = !can.manage();   // 학생·교사는 보기만
