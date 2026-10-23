@@ -557,17 +557,21 @@ async function viewStudentAttendance(id){
 
 /* ---------- Transcript ---------- */
 async function viewTranscript(id){
-  const [s, rows] = await Promise.all([getDoc(ref("students",id)), loadGrades(id)]);
+  const [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(), g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
+  const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
+  const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
+  const attHtml=attTerms.length?`<div id="attBox" hidden style="margin:0 0 12px"><table><thead><tr><th>Attendance</th>${attTerms.map(t=>`<th>${termLabel(t)}</th>`).join("")}</tr></thead><tbody><tr><td class="nw">e.a · e.t · u.a · u.t</td>${attTerms.map(t=>`<td class="nw">${att[t]["e.a"]} · ${att[t]["e.t"]} · ${att[t]["u.a"]} · ${att[t]["u.t"]}</td>`).join("")}</tr></tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div></div>`:"";
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10); const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button><span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1>Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
       <div><b>Address</b>${esc(d.address_en)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div></div>
+    ${attHtml}
     <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
     <table><thead><tr><th>G.Level</th><th>School</th><th>Code</th><th>Course Title</th><th>Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
     ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr);
@@ -583,6 +587,7 @@ async function viewTranscript(id){
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
     <div class="sign"><div><div class="line">Signature of School Official / Title / Date</div><div style="margin-top:4px">This transcript is unofficial unless signed and sealed by a School Official.</div></div><div>${esc(school.principal)} | General Principal Rev. | ${us(today)}</div></div>
   </div>`;
+  const ao=$("#attOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; };
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
