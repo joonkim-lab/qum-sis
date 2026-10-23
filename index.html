@@ -69,7 +69,7 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .sub a{font-size:13px;color:var(--brand);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:14px}
 .sub a.on{background:var(--brand);color:#fff;border-color:var(--brand)}
 /* transcript */
-.tr{background:#fff;color:#000;font-family:"Noto Sans KR",Arial,sans-serif;font-size:10.5pt;max-width:820px;margin:0 auto;padding:28px 34px;border:1px solid var(--line)}
+.tr{background:#fff;color:#000;font-family:"Noto Sans KR",Arial,sans-serif;font-size:10pt;max-width:1000px;margin:0 auto;padding:28px 34px;border:1px solid var(--line)}
 .tr h1{font-family:Georgia,"Noto Serif KR",serif;font-size:20pt;margin:0;color:#000}
 .tr .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #000;padding-bottom:8px}
 .tr .hd img{height:52px}
@@ -77,9 +77,11 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr .info{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2px 14px;margin:10px 0;font-size:9.5pt}
 .tr .info b{display:block;font-size:8.5pt;color:#444;font-weight:600}
 .tr .cum{border:1px solid #000;padding:6px 10px;display:flex;gap:26px;font-size:9.5pt;margin:8px 0 12px}
-.tr table{font-size:9.5pt}
+.tr table{font-size:9pt;table-layout:auto}
+.tr td.ct{letter-spacing:-.2px}
+.tr td.nw,.tr th.nw{white-space:nowrap}
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px}
-.tr td{padding:3px 6px;border-bottom:0}
+.tr td{padding:3px 5px;border-bottom:0}
 .tr tr.tot td{border-top:1px solid #999;font-weight:600;padding-bottom:8px}
 .tr tr:hover td{background:transparent}
 .tr .legend{display:grid;grid-template-columns:1.1fr 1.3fr 1.3fr 1.2fr;gap:14px;margin-top:16px;font-size:8.5pt}
@@ -88,7 +90,7 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr .wasc{font-size:8pt;color:#333;margin-top:14px;line-height:1.4}
 .tr .sign{margin-top:26px;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.5pt}
 .tr .sign .line{border-top:1px solid #000;width:300px;padding-top:3px}
-@media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none} @page{size:A4;margin:14mm 12mm} }
+@media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none;font-size:9pt} .tr table{font-size:8.5pt} .tr h1{font-size:18pt} @page{size:A4;margin:12mm 10mm} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
 #login h1{color:var(--brand);font-size:26px;margin-bottom:6px}
@@ -641,16 +643,16 @@ async function viewTranscript(id){
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10); const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1>Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
       <div><b>Address</b>${esc(d.address_en)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div></div>
     ${attHtml}
     <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
-    <table><thead><tr><th>G.Level</th><th>School</th><th>Code</th><th>Course Title</th><th>Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
+    <table><thead><tr><th class="nw">G.Level</th><th class="nw">School</th><th>Code</th><th>Course Title</th><th class="nw">Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
     ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr);
-      return tr.map(r=>`<tr><td>${r.gLevel??""}</td><td>${esc(r.school)}</td><td>${esc(r.code)}</td><td>${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td>${termLabel(t)}</td><td>${esc(r.grade)}</td><td>${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td>${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
+      return tr.map(r=>`<tr><td>${r.gLevel??""}</td><td class="nw">${esc(r.school)}</td><td>${esc(r.code)}</td><td class="ct">${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td class="nw">${termLabel(t)}</td><td>${esc(r.grade)}</td><td>${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td>${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
         +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td>${f2(tg.w)}</td><td>${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
     </tbody></table>
     <div class="legend">
