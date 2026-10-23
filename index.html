@@ -39,7 +39,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-c
 #top nav a.on,#top nav a:hover{background:rgba(255,255,255,.14);color:#fff}
 #top .me{margin-left:auto;font-size:13px;opacity:.9;display:flex;gap:10px;align-items:center}
 #top .me button{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:5px;padding:4px 10px;font-size:12px}
-main{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+main{max-width:1500px;margin:0 auto;padding:28px 24px 60px}
 .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:18px}
 .card h2{font-size:19px;color:var(--brand);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--paper-2)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px}
@@ -51,7 +51,9 @@ main{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
 .stat span{font-size:12.5px;color:var(--muted)}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th{text-align:left;background:var(--paper-2);padding:8px 8px;font-weight:600;font-size:12.5px;color:var(--brand-ink);position:sticky;top:0;z-index:1}
-td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.nw,th.nw{white-space:nowrap}
+td .btn.sm{padding:2px 7px;font-size:12px}
 tr:hover td{background:#fbf8f2}
 td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var(--accent)}
 .tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:12px;background:var(--paper-2);color:var(--brand-ink)}
@@ -352,12 +354,13 @@ async function viewImport(){
   $("#parse").onclick = () => {
     importRows = parseDelimited($("#paste").value);
     if (!importRows.length) return toast("읽을 줄이 없습니다");
-    const cols = IMPORT_TYPES[importType].cols;
-    const have = Object.keys(importRows[0]); const missing = cols.filter(c=>!have.includes(c));
-    $("#pt").innerHTML = `<thead><tr>${cols.map(c=>`<th>${c}${have.includes(c)?"":" <span class='tag warn'>없음</span>"}</th>`).join("")}</tr></thead>
+    const have = Object.keys(importRows[0]); const known = IMPORT_TYPES[importType].cols; const cols = have;
+    const missing = [IMPORT_TYPES[importType].key].filter(c=>!have.includes(c)); const unknown = have.filter(c=>!known.includes(c));
+    $("#pt").innerHTML = `<thead><tr>${cols.map(c=>`<th>${c}${known.includes(c)?"":" <span class='tag'>추가 열</span>"}</th>`).join("")}</tr></thead>
       <tbody>${importRows.map((r,i)=>`<tr>${cols.map(c=>`<td contenteditable data-i="${i}" data-c="${c}">${esc(r[c])}</td>`).join("")}</tr>`).join("")}</tbody>`;
     $("#pt").oninput = e => { const td=e.target.closest("td"); if (td) importRows[td.dataset.i][td.dataset.c]=td.textContent.trim(); };
-    $("#cnt").textContent = `${importRows.length}줄` + (missing.length?` · 없는 열: ${missing.join(", ")}`:"");
+    $("#cnt").textContent = `${importRows.length}줄` + (missing.length?` · 필수 열 없음: ${missing.join(", ")}`:"") + (unknown.length?` · 그대로 저장되는 추가 열: ${unknown.join(", ")}`:"");
+    $("#save").disabled = missing.length>0;
     $("#preview").hidden=false;
   };
   $("#save").onclick = async () => {
@@ -468,10 +471,10 @@ async function viewStudentGrades(id){
       <input name="gLevel" placeholder="학년" value="${esc(d.grade)}" style="max-width:70px"><select name="grade" style="max-width:80px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option>${x}</option>`).join("")}</select>
       <select name="source" style="max-width:110px">${["elective","apex","cw","miri","past","transfer"].map(x=>`<option>${x}</option>`).join("")}</select><button class="btn sm">추가</button></form>`:""}
     <div class="scroll"><table><thead><tr><th>학기</th><th>학년</th><th>코드</th><th>과목</th><th>학교</th><th>성적</th><th>학점</th><th>가중</th><th>출처</th><th></th></tr></thead><tbody>
-    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr); return tr.map(r=>`<tr class="${r.needsReview?"rv":""}"><td>${termLabel(t)}</td><td>${r.gLevel??""}</td><td>${esc(r.code)}</td><td>${esc(r.title)}</td><td class="muted">${esc(r.school)}</td>
+    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr); return tr.map(r=>`<tr class="${r.needsReview?"rv":""}"><td class="nw">${termLabel(t)}</td><td>${r.gLevel??""}</td><td>${esc(r.code)}</td><td>${esc(r.title)}</td><td class="muted nw" title="${esc(r.school)}">${r.school===school.schoolName?"EOS":esc(r.school)}</td>
       <td>${editable?`<select data-g="${r.id}" style="width:70px;padding:3px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option ${x===r.grade?"selected":""}>${x}</option>`).join("")}</select>`:esc(r.grade)}</td>
       <td>${editable?`<input data-c="${r.id}" value="${r.credit}" style="width:60px;padding:3px">`:r.credit}</td><td>${r.weighted?"+":""}</td><td class="muted">${esc(r.source)}</td>
-      <td>${r.needsReview?`<span class="tag pend">확인</span>`:""} ${can.manage()?`<button class="btn sm ghost" data-del="${r.id}">×</button>`:""}</td></tr>`).join("")+`<tr class="tot"><td colspan="5" style="text-align:right">Semester Totals</td><td>${f2(tg.u)} / ${f2(tg.w)}</td><td>${tg.credits}</td><td colspan="3"></td></tr>`; }).join("")}
+      <td class="nw">${r.needsReview?`<span class="tag pend">확인</span>`:""} ${can.manage()?`<button class="btn sm ghost" data-del="${r.id}">×</button>`:""}</td></tr>`).join("")+`<tr class="tot"><td colspan="5" style="text-align:right">Semester Totals</td><td>${f2(tg.u)} / ${f2(tg.w)}</td><td>${tg.credits}</td><td colspan="3"></td></tr>`; }).join("")}
     </tbody></table></div>
     ${rows.some(r=>r.needsReview)&&editable?`<div class="row" style="margin-top:12px"><button class="btn ghost" id="okall">이 학생 성적 전부 확인 완료</button></div>`:""}</div>`;
   document.querySelectorAll("[data-g]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("grades",el.dataset.g),{grade:el.value,updatedBy:me.email,updatedAt:serverTimestamp()}); toast("저장"); });
