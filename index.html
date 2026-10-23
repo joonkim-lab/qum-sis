@@ -213,7 +213,7 @@ onAuthStateChanged(auth, async user => {
 
 /* ---------- 라우터 ---------- */
 const routes = {
-  "":        {label:"현황",       show:()=>true,          view:viewHome},
+  "":        {label:"현황",       show:()=>me.role!=="student", view:viewHome},
   "students":{label:"학생",       show:()=>can.manage() || me.role==="teacher", view:viewStudents},
   "courses": {label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
   "attendance":{label:"출결",     show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
@@ -231,6 +231,7 @@ window.addEventListener("hashchange", route);
 async function route(){
   if (!me) return;
   const [k, arg] = location.hash.replace(/^#\/?/,"").split("/");
+  if (me.role==="student" && !k) { location.hash="#/me"; return; }
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
