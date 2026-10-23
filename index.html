@@ -96,9 +96,10 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr .legend table{font-size:8.5pt}.tr .legend th{background:#eee;padding:2px 5px}.tr .legend td{padding:1px 5px}
 .tr .legend h4{margin:0 0 4px;font-size:9pt}
 .tr .wasc{font-size:8pt;color:#333;margin-top:14px;line-height:1.4}
-.tr .sign{margin-top:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.5pt}
-.tr .sign .line{border-top:1px solid #000;width:320px;padding-top:3px;text-align:center}
-.tr .sign .right{text-align:right}
+.tr .sign{margin-top:30px;display:flex;justify-content:space-between;align-items:flex-start;font-size:8.5pt}
+.tr .sign .left{padding-top:34px}
+.tr .sign .sp{height:34px}
+.tr .sign .line{border-top:1px solid #000;width:340px;padding-top:3px;text-align:center}
 @media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none;font-size:9pt} .tr table{font-size:8.5pt} .tr h1{font-size:18pt} @page{size:A4;margin:12mm 10mm} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
@@ -707,10 +708,12 @@ async function viewTranscript(id){
   const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
   const incR = inc.filter(r=>r.record);
   const staffV = can.manage()||me.role==="teacher";
-  const incTable = `<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead><tbody>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td class="nw">${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody></table></div>`;
+  const incTable = `<div id="incBox"><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead>
+    <tbody id="incRows" hidden>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td class="nw">${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody>
+    <tbody id="incBlank"><tr><td colspan="5">&nbsp;</td></tr></tbody></table></div>`;
   const incHtml = staffV ? incTable : "";
   const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table></div>${incHtml||"<div></div>"}
-    <div class="ft">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div><div class="ft" id="incFt" hidden>Only incidents designated for the official record are shown.</div></div>`:"";
+    <div class="ft">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div><div class="ft" id="incFt">Only incidents designated for the official record are shown.</div></div>`:"";
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
@@ -734,14 +737,14 @@ async function viewTranscript(id){
       <div><h4>Legend</h4><div>IP = In Progress</div><div>DC = Dual Credit</div><div>MB = Minerva Baccalaureate</div><div>+ = Weighted Course (Honors/AP)</div></div>
     </div>
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
-    <div class="sign"><div id="trNote">This transcript is unofficial unless signed and sealed by a School Official.</div>
-      <div class="right"><div class="line" id="trSig">Signature of School Official / Title / Date</div><div style="margin-top:4px">General Principal Rev. | ${us(today)}</div></div></div>
+    <div class="sign"><div class="left" id="trNote">* This transcript is unofficial unless signed and sealed by a School Official.</div>
+      <div><div class="sp"></div><div class="line" id="trSig">General Principal Rev. | ${us(today)}</div></div></div>
   </div>`;
   const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=on?"Official Transcript":"Unofficial Transcript";
-    $("#trNote").textContent=on?"This is an official transcript issued and sealed by the school.":"This transcript is unofficial unless signed and sealed by a School Official.";
-    $("#trSig").innerHTML=on?`<div style="height:34px"></div>${esc(school.principal)}, Principal`:"Signature of School Official / Title / Date"; };
-  const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incBox").hidden=true; $("#incFt").hidden=true; } };
-  if (io) io.onchange=()=>{ $("#incBox").hidden=!io.checked; $("#incFt").hidden=!io.checked; };
+    $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
+    $("#trSig").textContent=on?`${school.principal}, General Principal | Rev. ${us(today)}`:`General Principal Rev. | ${us(today)}`; };
+  const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incRows").hidden=true; $("#incBlank").hidden=false; } };
+  if (io) io.onchange=()=>{ $("#incRows").hidden=!io.checked; $("#incBlank").hidden=io.checked; };
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
