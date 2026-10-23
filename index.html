@@ -74,13 +74,16 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #000;padding-bottom:8px}
 .tr .hd img{height:52px}
 .tr .hd .sch{text-align:right;font-size:9.5pt;line-height:1.35;white-space:pre-line}
-.tr .info{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2px 14px;margin:10px 0;font-size:9.5pt}
+.tr .info{display:grid;grid-template-columns:2.6fr 1fr 1fr 1fr;gap:2px 14px;margin:10px 0;font-size:9.5pt}
 .tr .info b{display:block;font-size:8.5pt;color:#444;font-weight:600}
 .tr .cum{border:1px solid #000;padding:6px 10px;display:flex;gap:26px;font-size:9.5pt;margin:8px 0 12px}
 .tr table{font-size:9pt;table-layout:auto}
 .tr td.ct{letter-spacing:-.2px}
 .tr td.nw,.tr th.nw{white-space:nowrap}
-.tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px}
+.tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
+.tr td.c{text-align:center}
+.tr .side{display:flex;gap:18px;align-items:flex-start;margin:0 0 12px}
+.tr .side table{width:auto}
 .tr td{padding:3px 5px;border-bottom:0}
 .tr tr.tot td{border-top:1px solid #999;font-weight:600;padding-bottom:8px}
 .tr tr:hover td{background:transparent}
@@ -574,11 +577,18 @@ async function viewStudentAttendance(id){
   const [s, as]=await Promise.all([getDoc(ref("students",id)), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(), rows=as.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date));
+  const staff=can.manage()||me.role==="teacher";
+  const inc = staff ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date)) : [];
   const terms={}; rows.forEach(r=>{ const t=terms[r.termCode]=terms[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const tk=Object.keys(terms).sort((a,b)=>termKey(a)-termKey(b));
   $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"att")}
     <table style="max-width:520px;margin-bottom:18px"><thead><tr><th>학기</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${tk.map(t=>`<tr><td>${termLabel(t)}</td><td>${terms[t]["e.a"]}</td><td>${terms[t]["e.t"]}</td><td>${terms[t]["u.a"]}</td><td>${terms[t]["u.t"]}</td></tr>`).join("")||"<tr><td colspan=5 class=muted>기록 없음</td></tr>"}</tbody></table>
-    <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div></div>`;
+    <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div>
+    ${staff?`<h3 style="font-size:15px;color:var(--brand);margin:22px 0 8px">징계·사건 기록 (Incident Reports)</h3>
+    ${can.manage()?`<form id="incf" class="row" style="margin-bottom:10px;background:var(--paper);padding:10px;border-radius:8px"><input type="date" name="date" value="${todayISO()}" style="max-width:160px" required><input name="description" placeholder="사건 내용" style="flex:1;min-width:220px" required><input name="action" placeholder="조치 (경고·정학 등)" style="max-width:220px"><button class="btn sm">추가</button></form>`:""}
+    <table><thead><tr><th>날짜</th><th>내용</th><th>조치</th><th>기록자</th><th></th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${r.date}</td><td>${esc(r.description)}</td><td>${esc(r.action)}</td><td class="muted">${esc(r.by)}</td><td>${can.manage()?`<button class="btn sm ghost" data-idel="${r.id}">×</button>`:""}</td></tr>`).join("")||`<tr><td colspan=5 class=muted>없음</td></tr>`}</tbody></table>`:""}</div>`;
+  const incf=$("#incf"); if (incf) incf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(incf); await setDoc(doc(col("incidents")),{studentId:String(id),date:v.date,termCode:termOf(v.date),description:v.description,action:v.action,by:me.email,at:serverTimestamp()}); toast("저장"); viewStudentAttendance(id); };
+  document.querySelectorAll("[data-idel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("incidents",b.dataset.idel)); viewStudentAttendance(id); });
 }
 
 /* ---------- 수상·활동 (학생 자기 입력) ---------- */
@@ -634,16 +644,19 @@ async function viewRequests(){
 
 /* ---------- Transcript ---------- */
 async function viewTranscript(id){
+  const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
   const [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(), g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
-  const attHtml=attTerms.length?`<div id="attBox" hidden style="margin:0 0 12px"><table style="max-width:460px"><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td>${att[t]["e.a"]}</td><td>${att[t]["e.t"]}</td><td>${att[t]["u.a"]}</td><td>${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div></div>`:"";
+  const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
+  const incHtml = inc.length?`<div id="incBox" hidden><table><thead><tr><th>Incident Reports</th><th>Description</th><th>Action</th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${us(r.date)}</td><td>${esc(r.description)}</td><td>${esc(r.action)}</td></tr>`).join("")}</tbody></table></div>`:"";
+  const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">e.a = excused absence · e.t = excused tardy · u.a = unexcused absence · u.t = unexcused tardy</div></div>${incHtml}</div>`:"";
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
-  const today=new Date().toISOString().slice(0,10); const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
+  const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1>Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
@@ -652,8 +665,8 @@ async function viewTranscript(id){
     <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
     <table><thead><tr><th class="nw">G.Level</th><th class="nw">School</th><th>Code</th><th>Course Title</th><th class="nw">Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
     ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr);
-      return tr.map(r=>`<tr><td>${r.gLevel??""}</td><td class="nw">${esc(r.school)}</td><td>${esc(r.code)}</td><td class="ct">${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td class="nw">${termLabel(t)}</td><td>${esc(r.grade)}</td><td>${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td>${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
-        +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td>${f2(tg.w)}</td><td>${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
+      return tr.map(r=>`<tr><td class="c">${r.gLevel??""}</td><td class="nw c">${esc(r.school)}</td><td class="c">${esc(r.code)}</td><td class="ct">${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td class="nw c">${termLabel(t)}</td><td class="c">${esc(r.grade)}</td><td class="c">${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td class="c">${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
+        +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td class="c">${f2(tg.w)}</td><td class="c">${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
     </tbody></table>
     <div class="legend">
       <div><h4>GRADE</h4><table><tr><th>Grade</th><th>CORE</th><th>H / AP</th><th>%</th></tr><tr><td>A</td><td>4.0</td><td>5.0</td><td>90-100</td></tr><tr><td>B</td><td>3.0</td><td>4.0</td><td>80-89</td></tr><tr><td>C</td><td>2.0</td><td>3.0</td><td>70-79</td></tr><tr><td>D</td><td>1.0</td><td>2.0</td><td>60-69</td></tr><tr><td>F</td><td>0.0</td><td>1.7</td><td>0-59</td></tr></table></div>
@@ -664,7 +677,8 @@ async function viewTranscript(id){
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
     <div class="sign"><div><div class="line">Signature of School Official / Title / Date</div><div style="margin-top:4px">This transcript is unofficial unless signed and sealed by a School Official.</div></div><div>${esc(school.principal)} | General Principal Rev. | ${us(today)}</div></div>
   </div>`;
-  const ao=$("#attOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; };
+  const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incBox").hidden=true; } };
+  if (io) io.onchange=()=>{ $("#incBox").hidden=!io.checked; };
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
