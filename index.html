@@ -60,7 +60,32 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:40px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--brand-ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:14px;opacity:0;transition:.25s;pointer-events:none}
 .toast.show{opacity:1}
-[hidden]{display:none!important}#login{min-height:100vh;display:grid;place-items:center}
+[hidden]{display:none!important}
+#login{min-height:100vh;display:grid;place-items:center}
+.sub{display:flex;gap:6px;margin:-6px 0 14px}
+.sub a{font-size:13px;color:var(--brand);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:14px}
+.sub a.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+/* transcript */
+.tr{background:#fff;color:#000;font-family:"Noto Sans KR",Arial,sans-serif;font-size:10.5pt;max-width:820px;margin:0 auto;padding:28px 34px;border:1px solid var(--line)}
+.tr h1{font-family:Georgia,"Noto Serif KR",serif;font-size:20pt;margin:0;color:#000}
+.tr .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #000;padding-bottom:8px}
+.tr .hd img{height:52px}
+.tr .hd .sch{text-align:right;font-size:9.5pt;line-height:1.35;white-space:pre-line}
+.tr .info{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2px 14px;margin:10px 0;font-size:9.5pt}
+.tr .info b{display:block;font-size:8.5pt;color:#444;font-weight:600}
+.tr .cum{border:1px solid #000;padding:6px 10px;display:flex;gap:26px;font-size:9.5pt;margin:8px 0 12px}
+.tr table{font-size:9.5pt}
+.tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px}
+.tr td{padding:3px 6px;border-bottom:0}
+.tr tr.tot td{border-top:1px solid #999;font-weight:600;padding-bottom:8px}
+.tr tr:hover td{background:transparent}
+.tr .legend{display:grid;grid-template-columns:1.1fr 1.3fr 1.3fr 1.2fr;gap:14px;margin-top:16px;font-size:8.5pt}
+.tr .legend table{font-size:8.5pt}.tr .legend th{background:#eee;padding:2px 5px}.tr .legend td{padding:1px 5px}
+.tr .legend h4{margin:0 0 4px;font-size:9pt}
+.tr .wasc{font-size:8pt;color:#333;margin-top:14px;line-height:1.4}
+.tr .sign{margin-top:26px;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.5pt}
+.tr .sign .line{border-top:1px solid #000;width:300px;padding-top:3px}
+@media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none} @page{size:A4;margin:14mm 12mm} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
 #login h1{color:var(--brand);font-size:26px;margin-bottom:6px}
@@ -95,8 +120,8 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, orderBy, limit, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, orderBy, limit, writeBatch, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBh_YwVF6xaQv0P5csZwhD9tzz3i7jv2_A",
@@ -161,22 +186,33 @@ async function loadSchool(){
 }
 
 /* ---------- 로그인 ---------- */
-$("#btnLogin").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e=>toast("로그인 실패: "+e.code));
+$("#btnLogin").onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => {
+  if (["auth/popup-blocked","auth/popup-closed-by-user","auth/cancelled-popup-request"].includes(e.code)) return signInWithRedirect(auth, new GoogleAuthProvider());
+  toast("로그인 실패: "+e.code); console.error(e);
+});
+getRedirectResult(auth).catch(e=>{ toast("로그인 실패: "+e.code); console.error(e); });
 $("#btnOut").onclick = () => signOut(auth);
 onAuthStateChanged(auth, async user => {
   if (!user) { $("#login").hidden=false; $("#app").hidden=true; return; }
-  const m = await resolveMember(user);
-  if (!m) { toast("이 계정은 아직 등록되지 않았습니다. 학교에 문의하세요."); await signOut(auth); return; }
-  me = m; await loadSchool();
-  $("#meName").textContent = me.name || me.email; $("#meRole").textContent = ROLES[me.role] || me.role;
-  $("#login").hidden=true; $("#app").hidden=false;
-  buildNav(); route();
+  $("#loginSub").textContent = user.email + " 확인 중…";
+  try {
+    const m = await resolveMember(user);
+    if (!m) { toast("이 계정은 아직 등록되지 않았습니다. 학교에 문의하세요."); await signOut(auth); return; }
+    me = m; await loadSchool();
+    $("#meName").textContent = me.name || me.email; $("#meRole").textContent = ROLES[me.role] || me.role;
+    $("#login").hidden=true; $("#app").hidden=false;
+    buildNav(); route();
+  } catch (e) {
+    console.error(e); $("#loginSub").textContent = "오류: " + (e.code || e.message);
+    toast("오류: " + (e.code || e.message));
+  }
 });
 
 /* ---------- 라우터 ---------- */
 const routes = {
   "":        {label:"현황",       show:()=>true,          view:viewHome},
   "students":{label:"학생",       show:()=>can.manage() || me.role==="teacher", view:viewStudents},
+  "courses": {label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
   "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
   "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
   "settings":{label:"학교 설정",  show:()=>can.settings(),view:viewSettings},
@@ -191,7 +227,9 @@ async function route(){
   const [k, arg] = location.hash.replace(/^#\/?/,"").split("/");
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.k===(k||"")));
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
-  if (k==="students" && arg) return viewStudent(arg);
+  const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
+  if (k==="students" && arg) return sub==="grades" ? viewStudentGrades(arg) : viewStudent(arg);
+  if (k==="transcript" && arg) return viewTranscript(arg);
   const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
   await r.view();
 }
@@ -258,6 +296,7 @@ async function viewStudent(id){
   if (!s.exists()) { $("#view").innerHTML="<p>없는 학생입니다.</p>"; return; }
   const d = s.data(), acct = a.exists()? a.data():{};
   $("#view").innerHTML = `<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span> ${statusTag({...d})}</h2>
+    ${subNav(id,"info")}
     <form id="f">${FIELDS.map(([g,fs])=>`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">${g}</h3><div class="grid">${fs.map(f=>fieldHtml(f,d[f[0]])).join("")}</div>`).join("")}
     ${can.manage()?`<h3 style="font-size:14px;color:var(--muted);margin:16px 0 8px">계정 (행정 전용)</h3><div class="grid">${ACCOUNT_FIELDS.map(f=>`<div><label>${f[1]}</label><input data-acct name="${f[0]}" value="${esc(acct[f[0]])}"></div>`).join("")}</div>`:""}
     <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button>
@@ -294,7 +333,8 @@ async function viewNew(){
 /* ---------- 가져오기 ---------- */
 const IMPORT_TYPES = {
   students:{label:"학생 명부", key:"id", cols:["id","last_en","first_en","name_ko","grade","dob","gender","address_en","address_ko","postal","email","genius_login","curriculum","apex_id","iready_id","status","note"], hint:"students_seed.csv 형식. 계정 열(genius_login·apex_id·iready_id)은 계정 컬렉션으로 따로 저장됩니다."},
-  // grades / attendance / activities 는 다음 단계에서 추가
+  courses:{label:"과목", key:"code", cols:["code","title","area","weighted","credit","platform","active","note"], hint:"courses_seed.csv 형식. code가 비어 있으면 title로 식별(학교 선택과목)."},
+  grades:{label:"성적", key:"studentId", cols:["studentId","code","title","school","gLevel","termCode","grade","credit","weighted","source"], hint:"grades_seed_g12.csv 형식. termCode는 2026F/2026S/2026U. 같은 학생·학기·과목은 덮어씀."},
 };
 let importRows = [], importType = "students";
 async function viewImport(){
@@ -321,19 +361,26 @@ async function viewImport(){
     $("#preview").hidden=false;
   };
   $("#save").onclick = async () => {
-    const key = IMPORT_TYPES[importType].key; let n=0, skipped=0;
-    let batch = writeBatch(db), ops=0;
+    let n=0, skipped=0, batch = writeBatch(db), ops=0;
+    const flush = async()=>{ if (ops){ await batch.commit(); batch=writeBatch(db); ops=0; } };
+    const stamp = {needsReview:true, importedAt:serverTimestamp(), importedBy:me.email};
     for (const r of importRows){
-      const id = r[key]; if (!id) { skipped++; continue; }
-      const acc={}, stu={};
-      for (const [k,v] of Object.entries(r)) (ACCOUNT_FIELDS.some(f=>f[0]===k) ? acc : stu)[k]=v;
-      batch.set(ref("students",id), {...stu, needsReview:true, importedAt:serverTimestamp(), importedBy:me.email}, {merge:true});
-      batch.set(ref("accounts",id), acc, {merge:true});
-      n++; ops+=2;
-      if (ops>=400){ await batch.commit(); batch=writeBatch(db); ops=0; }
+      if (importType==="students"){
+        const id=r.id; if (!id){skipped++;continue;}
+        const acc={}, stu={}; for (const [k,v] of Object.entries(r)) if (v!=="") (ACCOUNT_FIELDS.some(f=>f[0]===k) ? acc : stu)[k]=v;
+        batch.set(ref("students",id), {...stu, ...stamp}, {merge:true}); batch.set(ref("accounts",id), acc, {merge:true}); ops+=2;
+      } else if (importType==="courses"){
+        const cid = courseId(r); if (!cid){skipped++;continue;}
+        batch.set(ref("courses",cid), {...r, credit:parseFloat(r.credit)||0, active:r.active!=="N", updatedAt:serverTimestamp()}, {merge:true}); ops++;
+      } else if (importType==="grades"){
+        if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
+        const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
+        batch.set(ref("grades",gid), {studentId:String(r.studentId), courseId:cid, code:r.code||"", title:r.title, school:r.school||school.schoolName, gLevel:parseInt(r.gLevel)||null, termCode:r.termCode, grade:r.grade||"IP", credit:parseFloat(r.credit)||0, weighted:/^(Y|1|true)$/i.test(r.weighted||""), source:r.source||"past", ...stamp}, {merge:true}); ops++;
+      }
+      n++; if (ops>=400) await flush();
     }
-    if (ops) await batch.commit();
-    toast(`${n}명 저장${skipped?`, ID 없는 ${skipped}줄 건너뜀`:""}`); location.hash="#/students";
+    await flush();
+    toast(`${n}줄 저장${skipped?`, ${skipped}줄 건너뜀`:""}`); location.hash = importType==="courses" ? "#/courses" : "#/students";
   };
 }
 function parseDelimited(text){
@@ -354,7 +401,7 @@ function parseDelimited(text){
 /* ---------- 학교 설정 ---------- */
 async function viewSettings(){
   const s = school;
-  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
+  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["accreditation","인증 문구(성적표 하단)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
   const members = await getDocs(query(collection(db,"memberships"), where("schoolId","==",sid)));
   $("#view").innerHTML = `<div class="card"><h2>학교 설정</h2><form id="f"><div class="grid">${F.map(([k,l,t])=>`<div><label>${l}</label><input name="${k}" type="${t||"text"}" value="${esc(s[k])}"></div>`).join("")}</div>
     <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button></div></form></div>
@@ -367,6 +414,107 @@ async function viewSettings(){
   $("#f").onsubmit = async e => { e.preventDefault(); const d=readForm($("#f")); d.nextId=parseInt(d.nextId)||9001; await updateDoc(doc(db,"schools",sid), d); toast("저장했습니다"); await loadSchool(); };
   $("#addm").onsubmit = async e => { e.preventDefault(); const d=readForm($("#addm")); if(!d.email) return; await setDoc(doc(db,"memberships",d.email.toLowerCase()),{schoolId:sid,role:d.role,studentId:d.studentId||null,createdAt:serverTimestamp()}); toast("추가했습니다"); viewSettings(); };
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm(b.dataset.del+" 삭제?")) return; await setDoc(doc(db,"memberships",b.dataset.del),{schoolId:"",role:"removed"}); viewSettings(); });
+}
+
+/* ---------- 공통: 학기·과목·GPA ---------- */
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
+const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
+const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
+function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
+  return m[2]==="F" ? `Fall ${y}-${String(y+1).slice(2)}` : (m[2]==="S"?`Spring ${y-1}-${String(y).slice(2)}`:`Summer ${y-1}-${String(y).slice(2)}`); }
+const termKey = tc => { const m=/^(\d{4})([FSU])$/.exec(tc||""); return m ? +m[1] + ({F:0.5,S:0,U:0.25}[m[2]]) : 0; };
+const PTS={A:4,B:3,C:2,D:1,F:0}, WPTS={A:5,B:4,C:3,D:2,F:1.7};
+function gpaOf(rows){ // 학점 가중 평균 (카운슬러 시트와 동일)
+  const done=rows.filter(r=>r.grade in PTS && r.credit>0); const cr=done.reduce((a,r)=>a+r.credit,0);
+  if (!cr) return {u:0,w:0,credits:0};
+  return {u:done.reduce((a,r)=>a+PTS[r.grade]*r.credit,0)/cr, w:done.reduce((a,r)=>a+(r.weighted?WPTS:PTS)[r.grade]*r.credit,0)/cr, credits:cr};
+}
+const f2 = n => (Math.round(n*100)/100).toFixed(2);
+async function loadGrades(id){ const q=query(col("grades"), where("studentId","==",String(id))); return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode) || (a.gLevel||0)-(b.gLevel||0) || String(a.code).localeCompare(b.code)); }
+let courseCache=null; async function loadCourses(){ if(!courseCache){ courseCache=(await getDocs(col("courses"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.code||"zz").localeCompare(b.code||"zz")||a.title.localeCompare(b.title)); } return courseCache; }
+
+/* ---------- 과목 ---------- */
+async function viewCourses(){
+  courseCache=null; const all=await loadCourses();
+  $("#view").innerHTML=`<div class="card"><h2>과목 ${all.length}개</h2>
+    <div class="row" style="margin-bottom:12px"><input id="q" placeholder="코드·제목 검색" style="max-width:260px">${can.manage()?`<button class="btn sm ghost" id="add">과목 추가</button>`:""}</div>
+    <div id="form" hidden class="card" style="background:var(--paper)"></div>
+    <div class="scroll"><table><thead><tr><th>코드</th><th>제목</th><th>영역</th><th>가중</th><th>학점</th><th>플랫폼</th><th>사용</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
+  const draw=()=>{ const q=$("#q").value.toLowerCase();
+    $("#tb").innerHTML=all.filter(c=>!q||[c.code,c.title].join(" ").toLowerCase().includes(q)).map(c=>`<tr><td>${esc(c.code)}</td><td>${esc(c.title)}</td><td class="muted">${esc(c.area)}</td><td>${c.weighted?`<span class="tag">${esc(c.weighted)}</span>`:""}</td><td>${c.credit}</td><td class="muted">${esc(c.platform)}</td><td>${c.active===false?"N":"Y"}</td><td>${can.manage()?`<button class="btn sm ghost" data-e="${c.id}">수정</button>`:""}</td></tr>`).join("");
+    document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>courseForm(all.find(c=>c.id===b.dataset.e))); };
+  $("#q").oninput=draw; draw();
+  const courseForm=(c={})=>{ const F=[["code","코드(선택과목은 비움)"],["title","제목"],["area","영역"],["weighted","가중","select",["","Honors","AP"]],["credit","학점","number"],["platform","플랫폼","select",["apex","cw","inhouse","miri"]],["note","메모"]];
+    $("#form").hidden=false; $("#form").innerHTML=`<form id="cf"><div class="grid">${F.map(f=>f[2]==="select"?`<div><label>${f[1]}</label><select name="${f[0]}">${f[3].map(o=>`<option ${o===(c[f[0]]??"")?"selected":""}>${o}</option>`).join("")}</select></div>`:`<div><label>${f[1]}</label><input name="${f[0]}" type="${f[2]||"text"}" step="0.25" value="${esc(c[f[0]])}"></div>`).join("")}
+      <div><label>사용</label><select name="active"><option value="Y" ${c.active!==false?"selected":""}>Y</option><option value="N" ${c.active===false?"selected":""}>N</option></select></div></div>
+      <div class="row" style="margin-top:10px"><button class="btn sm">저장</button><button class="btn sm ghost" type="button" id="cx">닫기</button></div></form>`;
+    $("#cx").onclick=()=>$("#form").hidden=true;
+    $("#cf").onsubmit=async e=>{ e.preventDefault(); const d=readForm($("#cf")); const cid=c.id||courseId(d); if(!cid) return toast("제목은 필수");
+      await setDoc(ref("courses",cid),{...d,credit:parseFloat(d.credit)||0,active:d.active!=="N",updatedAt:serverTimestamp()},{merge:true}); toast("저장"); viewCourses(); }; };
+  if ($("#add")) $("#add").onclick=()=>courseForm({credit:0.5,platform:"inhouse"});
+}
+
+/* ---------- 학생 성적 ---------- */
+async function viewStudentGrades(id){
+  const [s, rows, courses] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), loadCourses()]);
+  if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=s.data(), g=gpaOf(rows), editable=can.manage()||me.role==="teacher";
+  const terms=[...new Set(rows.map(r=>r.termCode))];
+  $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"grades")}
+    <div class="stat" style="margin-bottom:14px"><div><b>${f2(g.u)}</b><span>Unweighted GPA</span></div><div><b>${f2(g.w)}</b><span>Weighted GPA</span></div><div><b>${g.credits}</b><span>Credits</span></div><div><b>${rows.filter(r=>r.needsReview).length}</b><span>확인 필요</span></div></div>
+    ${editable?`<form id="gf" class="row" style="margin-bottom:12px;background:var(--paper);padding:10px;border-radius:8px">
+      <input list="cl" name="course" placeholder="과목 코드 또는 제목" style="max-width:300px" required><datalist id="cl">${courses.map(c=>`<option value="${esc(c.code?c.code+" · ":"")}${esc(c.title)}">`).join("")}</datalist>
+      <input name="sem" placeholder="Sem 1/2" style="max-width:90px"><input name="termCode" placeholder="2026F" value="${esc(school.termCode)}" style="max-width:90px" required>
+      <input name="gLevel" placeholder="학년" value="${esc(d.grade)}" style="max-width:70px"><select name="grade" style="max-width:80px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option>${x}</option>`).join("")}</select>
+      <select name="source" style="max-width:110px">${["elective","apex","cw","miri","past","transfer"].map(x=>`<option>${x}</option>`).join("")}</select><button class="btn sm">추가</button></form>`:""}
+    <div class="scroll"><table><thead><tr><th>학기</th><th>학년</th><th>코드</th><th>과목</th><th>학교</th><th>성적</th><th>학점</th><th>가중</th><th>출처</th><th></th></tr></thead><tbody>
+    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr); return tr.map(r=>`<tr class="${r.needsReview?"rv":""}"><td>${termLabel(t)}</td><td>${r.gLevel??""}</td><td>${esc(r.code)}</td><td>${esc(r.title)}</td><td class="muted">${esc(r.school)}</td>
+      <td>${editable?`<select data-g="${r.id}" style="width:70px;padding:3px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option ${x===r.grade?"selected":""}>${x}</option>`).join("")}</select>`:esc(r.grade)}</td>
+      <td>${editable?`<input data-c="${r.id}" value="${r.credit}" style="width:60px;padding:3px">`:r.credit}</td><td>${r.weighted?"+":""}</td><td class="muted">${esc(r.source)}</td>
+      <td>${r.needsReview?`<span class="tag pend">확인</span>`:""} ${can.manage()?`<button class="btn sm ghost" data-del="${r.id}">×</button>`:""}</td></tr>`).join("")+`<tr class="tot"><td colspan="5" style="text-align:right">Semester Totals</td><td>${f2(tg.u)} / ${f2(tg.w)}</td><td>${tg.credits}</td><td colspan="3"></td></tr>`; }).join("")}
+    </tbody></table></div>
+    ${rows.some(r=>r.needsReview)&&editable?`<div class="row" style="margin-top:12px"><button class="btn ghost" id="okall">이 학생 성적 전부 확인 완료</button></div>`:""}</div>`;
+  document.querySelectorAll("[data-g]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("grades",el.dataset.g),{grade:el.value,updatedBy:me.email,updatedAt:serverTimestamp()}); toast("저장"); });
+  document.querySelectorAll("[data-c]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("grades",el.dataset.c),{credit:parseFloat(el.value)||0}); toast("저장"); });
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ if(!confirm("이 줄을 지울까요?")) return; await deleteDoc(ref("grades",b.dataset.del)); viewStudentGrades(id); });
+  const ok=$("#okall"); if (ok) ok.onclick=async()=>{ const b=writeBatch(db); rows.filter(r=>r.needsReview).forEach(r=>b.update(ref("grades",r.id),{needsReview:false,reviewedBy:me.email})); await b.commit(); viewStudentGrades(id); };
+  const gf=$("#gf"); if (gf) gf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(gf);
+    const code=v.course.includes(" · ")?v.course.split(" · ")[0]:""; const c=courses.find(x=>(code&&x.code===code)||(!code&&x.title===v.course));
+    if(!c) return toast("과목 목록에 없는 과목입니다. 과목 화면에서 먼저 추가하세요");
+    const title=c.title+(v.sem?" "+v.sem.replace(/^(\d)$/,"Sem $1"):""); const cid=c.id; const gid=`${id}_${v.termCode}_${cid}_${slug(v.sem||"")}`.replace(/[\/\s]/g,"_");
+    await setDoc(ref("grades",gid),{studentId:String(id),courseId:cid,code:c.code||"",title,school:school.schoolName,gLevel:parseInt(v.gLevel)||null,termCode:v.termCode,grade:v.grade,credit:c.credit||0,weighted:!!c.weighted,source:v.source,needsReview:false,createdBy:me.email,createdAt:serverTimestamp()});
+    toast("추가"); viewStudentGrades(id); };
+}
+
+/* ---------- Transcript ---------- */
+async function viewTranscript(id){
+  const [s, rows] = await Promise.all([getDoc(ref("students",id)), loadGrades(id)]);
+  if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=s.data(), g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
+  const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
+  const today=new Date().toISOString().slice(0,10); const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
+  const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button><span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  <div class="tr">
+    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1>Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
+    <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
+      <div><b>Address</b>${esc(d.address_en)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div></div>
+    <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
+    <table><thead><tr><th>G.Level</th><th>School</th><th>Code</th><th>Course Title</th><th>Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
+    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr);
+      return tr.map(r=>`<tr><td>${r.gLevel??""}</td><td>${esc(r.school)}</td><td>${esc(r.code)}</td><td>${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td>${termLabel(t)}</td><td>${esc(r.grade)}</td><td>${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td>${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
+        +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td>${f2(tg.w)}</td><td>${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
+    </tbody></table>
+    <div class="legend">
+      <div><h4>GRADE</h4><table><tr><th>Grade</th><th>CORE</th><th>H / AP</th><th>%</th></tr><tr><td>A</td><td>4.0</td><td>5.0</td><td>90-100</td></tr><tr><td>B</td><td>3.0</td><td>4.0</td><td>80-89</td></tr><tr><td>C</td><td>2.0</td><td>3.0</td><td>70-79</td></tr><tr><td>D</td><td>1.0</td><td>2.0</td><td>60-69</td></tr><tr><td>F</td><td>0.0</td><td>1.7</td><td>0-59</td></tr></table></div>
+      <div><h4>Distinctions</h4>${dist.map(x=>`<div>${esc(x)}</div>`).join("")||"<div>—</div>"}</div>
+      <div><h4>Enrollment Summary</h4><div>Start Date: ${us(d.enrollDate)}</div><div>End Date: ${us(d.endDate)}</div><div>Graduation Date: ${us(d.gradDate||d.endDate)}</div></div>
+      <div><h4>Legend</h4><div>IP = In Progress</div><div>DC = Dual Credit</div><div>MB = Minerva Baccalaureate</div><div>+ = Weighted Course (Honors/AP)</div></div>
+    </div>
+    <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
+    <div class="sign"><div><div class="line">Signature of School Official / Title / Date</div><div style="margin-top:4px">This transcript is unofficial unless signed and sealed by a School Official.</div></div><div>${esc(school.principal)} | General Principal Rev. | ${us(today)}</div></div>
+  </div>`;
+  $("#pr").onclick=()=>window.print();
 }
 
 /* ---------- 학생 본인 ---------- */

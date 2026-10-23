@@ -1,0 +1,701 @@
+studentId,code,title,school,gLevel,term,termCode,grade,credit,weighted,source
+799,2300,English 9 Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+799,3202,Algebra I Sem 1,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+799,4404,Physical Science Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+799,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+799,9140,Understanding & Operating Valorant I,Elite Open School,9,Fall 2023-24,2023F,A,0.25,,past
+799,2300,English 9 Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+799,3202,Algebra I Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+799,4404,Physical Science Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+799,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+799,9152,Aim Theory in Esports,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+799,9153,Esports Communication I,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+799,9140,Understanding & Operating Valorant II,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+799,2401,English 10 Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+799,3300,Geometry Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+799,4301,Chemistry Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+799,1301,United States History and Geography Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+799,8301,Physical Education,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+799,9196,Critical Composition: Argumentative Essay,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+799,9194,Esports Team Building,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+799,9108,Getting Googlified,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+799,9188,Sports Science,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+799,2401,English 10 Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+799,3300,Geometry Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+799,3210,Algebra II Honors Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+799,3210,Algebra II Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+799,4301,Chemistry Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+799,1301,United States History and Geography Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+799,7201,AP Psychology,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+799,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+799,9215,Critical Composition: Persuasive Essay,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+799,9206,Esports Team Optimization,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+799,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+799,2700,AP English Language and Composition Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+799,3401,Precalculus Honors Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+799,4202,AP Biology Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+799,1203,AP World History Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+799,8301,Physical Education,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+799,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+799,6300,Music Appreciation Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+799,,From Lab to Market: Vitamin Gummy Development,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+799,,Fundamentals of Structured Thinking Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+799,2700,AP English Language and Composition Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+799,3401,Precalculus Honors Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+799,4202,AP Biology Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+799,1203,AP World History Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+799,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+799,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+799,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+799,6300,Music Appreciation Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+799,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+799,,Product Development: SMART Studio,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+799,,From Lab to Market: Scent Development,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+799,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+799,3402,AP Calculus AB Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+799,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+799,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+799,4401,Physics Honors Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+799,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+799,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+799,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+799,,R&D2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+799,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,,PreAP Language Arts 1 Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,C,1.0,,transfer
+848,,PreAP Geometry and Statistics Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,B,1.0,,transfer
+848,,PreAP Biology Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,B,1.0,,transfer
+848,,PreAP Social Studies 1 Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,B,1.0,,transfer
+848,,Chinese II Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,C,1.0,,transfer
+848,,Computer Science Sem 1,St. Paul American Scholars,9,Fall 2023-24,2023F,A,0.5,,transfer
+848,,PreAP Language Arts 1 Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,A,1.0,,transfer
+848,,PreAP Geometry and Statistics Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,B,1.0,,transfer
+848,,PreAP Biology Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,B,1.0,,transfer
+848,,PreAP Social Studies 1 Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,B,1.0,,transfer
+848,,Chinese II Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,B,1.0,,transfer
+848,,Computer Science Sem 2,St. Paul American Scholars,9,Spring 2023-24,2024S,A,0.5,,transfer
+848,,High School Debate,St. Paul American Scholars,9,Spring 2023-24,2024S,A,0.5,,transfer
+848,,Philosophy of Humor,St. Paul American Scholars,9,Spring 2023-24,2024S,A,0.5,,transfer
+848,,PreAP Language Arts 2 Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,B,1.0,,transfer
+848,,PreAP Chemistry Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,B,1.0,,transfer
+848,,PreAP Social Studies 2 Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,A,1.0,,transfer
+848,,AP Seminar Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,A,1.0,Y,transfer
+848,,High School PE Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,A,0.5,,transfer
+848,,Choir Sem 1,St. Paul American Scholars,10,Fall 2024-25,2024F,A,0.5,,transfer
+848,,PreAP Language Arts 2 Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,B,1.0,,transfer
+848,,PreAP Chemistry Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,A,1.0,,transfer
+848,,PreAP Social Studies 2 Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,A,1.0,,transfer
+848,,AP Seminar Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,A,1.0,Y,transfer
+848,,High School PE Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,A,0.5,,transfer
+848,,Choir Sem 2,St. Paul American Scholars,10,Spring 2024-25,2025S,A,0.5,,transfer
+848,2500,English 11 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+848,3205,Algebra II Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+848,4202,AP Biology Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+848,1202,"World History, Culture & Geography Sem 1",Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+848,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+848,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+848,635,English in Action: Application and Practice Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+848,2500,English 11 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,3205,Algebra II Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,4202,AP Biology Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+848,1202,"World History, Culture & Geography Sem 2",Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+848,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+848,635,English in Action: Application and Practice Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+848,2600,English 12 Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,3400,Precalculus Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+848,1301,United States History and Geography Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,,DIY1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,,GE2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+848,,AI2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,2300,English 9 Sem 1,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+805,3202,Algebra I Sem 1,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+805,4404,Physical Science Sem 1,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+805,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+805,9140,Understanding & Operating Valorant I,Elite Open School,9,Fall 2023-24,2023F,A,0.25,,past
+805,2300,English 9 Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+805,3202,Algebra I Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+805,4404,Physical Science Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+805,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+805,9176,Craftsmanship In You (CIY),Elite Open School,9,Spring 2023-24,2024S,A,0.25,,past
+805,9175,Periodic Table Playground (PTP),Elite Open School,9,Spring 2023-24,2024S,A,0.25,,past
+805,2401,English 10 Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+805,3300,Geometry Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+805,4301,Chemistry Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+805,1301,United States History and Geography Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+805,6300,Music Appreciation Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+805,8301,Physical Education,Elite Open School,10,Fall 2024-25,2024F,B,0.5,,past
+805,9108,Getting Googlified,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+805,9194,Esports Team Building,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+805,9188,Sports Science,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+805,9196,Critical Compositions: Argumentative Essay,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+805,2401,English 10 Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+805,3300,Geometry Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+805,4301,Chemistry Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+805,1301,United States History and Geography Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+805,6300,Music Appreciation Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+805,7201,AP Psychology,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+805,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+805,9206,Esports Team Optimization,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+805,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+805,9215,Critical Composition: Persuasive Essay,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+805,2700,AP English Language and Composition Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+805,3205,Algebra II Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+805,4201,Biology Honors Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+805,1203,AP World History Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+805,8301,Physical Education,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+805,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+805,636,English in Action: From Research to Results Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+805,630,Problem Solving: Calculation and Logic Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+805,638,Express and Reflect: Writing with Purpose,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+805,2700,AP English Language and Composition Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+805,3205,Algebra II Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+805,4201,Biology Honors Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+805,1203,AP World History Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+805,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+805,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+805,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+805,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+805,636,English in Action: From Research to Results Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+805,639,Fundamentals of Structured Thinking,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+805,,From Lab to Market: Scent Development,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+805,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+805,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+805,3400,Precalculus Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+805,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,6214,AP Art History Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+805,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,,R&D2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+805,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+870,,Physical Education,Bangbae Middle School,9,Fall 2022-23,2022F,A,0.5,,transfer
+870,,Music,Bangbae Middle School,9,Fall 2022-23,2022F,A,0.5,,transfer
+870,2300,English 9 Sem 1,Elite Open School,9,Spring 2022-23,2023S,B,0.5,,past
+870,3202,Algebra I Sem 1,Elite Open School,9,Spring 2022-23,2023S,B,0.5,,past
+870,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,Spring 2022-23,2023S,B,0.5,,past
+870,8301,Physical Education,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+870,9125,Application of Science 101,Elite Open School,9,Spring 2022-23,2023S,B,0.25,,past
+870,9126,Book Publishing 101,Elite Open School,9,Spring 2022-23,2023S,B,0.25,,past
+870,9128,Literature Adventures,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+870,9131,The Expressionists 101,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+870,2207,Understanding Literature,Elite Open School,10,Fall 2023-24,2023F,B,0.5,,past
+870,3207,Algebra I Sem 2,Elite Open School,10,Fall 2023-24,2023F,B,0.5,,past
+870,4306,Chemistry Sem 1,Elite Open School,10,Fall 2023-24,2023F,B,0.5,,past
+870,9149,Language Foundations: Mastering Grammar,Elite Open School,10,Fall 2023-24,2023F,C,0.25,,past
+870,9201,League of Legends Concepts and Analysis I,Elite Open School,10,Fall 2023-24,2023F,A,0.25,,past
+870,,English 10,Advantages School International,10,Spring 2023-24,2024S,A,1.0,,transfer
+870,,Geometry Sem 1,Advantages School International,10,Spring 2023-24,2024S,B,0.5,,transfer
+870,,Geometry Sem 2,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Physics,Advantages School International,10,Spring 2023-24,2024S,A,1.0,,transfer
+870,,Civics and Government,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Communications,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Competitive Esports - OW,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Fitness Training,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Introduction to Esports,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,Introduction to Game Design and Anatomy of Games,Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,"The History of Science Fiction: Sci-Fi in Books, Film, and Reality",Advantages School International,10,Spring 2023-24,2024S,A,0.5,,transfer
+870,,English 11,Advantages School International,11,Fall 2024-25,2024F,A,1.0,,transfer
+870,,English 12 Sem 1,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Algebra II Sem 1,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Economics Sem 1,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Advanced Competitive Esports - League of Legends,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Advanced Fitness Training,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Anatomy and Esports Injuries,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Business and Management in Game and Esports,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Content Creation: A Guide to Content Creation and Video Production,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Esports Coaching: Introduction to the Esports Industry,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Esports Journalism: A Study of Journalism in Esports and Gaming,Advantages School International,11,Fall 2024-25,2024F,A,0.5,,transfer
+870,,Algebra II Sem 2,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Chemistry Sem 2,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,English 12 Sem 2,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,World Cultures Sem 2,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Esports Tournament Planning and Operation,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Expert League of Legends I,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Health and Nutrition,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Intermediate Game Design,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,,Voice and Diction,Advantages School International,11,Spring 2024-25,2025S,A,0.5,,transfer
+870,2700,AP English Language and Composition Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,Y,past
+870,3400,Precalculus Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,,past
+870,4201,Biology Honors Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,Y,past
+870,1301,United States History and Geography Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,,past
+870,5100,Spanish I Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,,past
+870,5100,Spanish I Sem 2,Elite Open School,12,Fall 2025-26,2025F,A,0.5,,past
+870,6300,Music Appreciation Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.5,,past
+870,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2025-26,2025F,A,0.25,,past
+870,9188,Sports Science,Elite Open School,12,Fall 2025-26,2025F,A,0.25,,past
+870,9108,Get Googlified,Elite Open School,12,Fall 2025-26,2025F,A,0.25,,past
+870,9222,English in Action: Application and Practice Sem 1,Elite Open School,12,Fall 2025-26,2025F,A,0.25,,past
+870,2700,AP English Language and Composition Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.5,Y,past
+870,3400,Precalculus Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.5,,past
+870,4201,Biology Honors Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.5,Y,past
+870,1301,United States History and Geography Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.5,,past
+870,6300,Music Appreciation Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.5,,past
+870,9163,Senior Forum II: Career and College Readiness,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+870,9228,Human Performance Lab: Restoration,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+870,9231,Product Development: SMART Studio,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+870,9224,From Lab to Market: Scent Development,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+870,9225,Fundamentals of Structured Thinking,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+870,9222,English in Action: Application and Practice Sem 2,Elite Open School,12,Spring 2025-26,2026S,A,0.25,,past
+841,,Moral Education,Apgujeong Middle School,9,Fall 2023-24,2023F,A,0.5,,transfer
+841,,Daily Chinese,Apgujeong Middle School,9,Fall 2023-24,2023F,A,0.5,,transfer
+841,,Physical Education,Apgujeong Middle School,9,Fall 2023-24,2023F,A,0.5,,transfer
+841,,Fine Arts,Apgujeong Middle School,9,Fall 2023-24,2023F,A,0.5,,transfer
+841,,Korean Language,Chungdam High School,9,Spring 2023-24,2024S,A,0.5,,transfer
+841,,English,Chungdam High School,9,Spring 2022-23,2023S,B,0.5,,transfer
+841,,Integrated Social Studies,Chungdam High School,9,Spring 2022-23,2023S,A,0.5,,transfer
+841,,Integrated Sciences,Chungdam High School,9,Spring 2022-23,2023S,A,0.5,,transfer
+841,,Science Laboratory Experiments,Chungdam High School,9,Spring 2022-23,2023S,A,0.25,,transfer
+841,,Physical Education,Chungdam High School,9,Spring 2022-23,2023S,A,0.5,,transfer
+841,,Fine Arts,Chungdam High School,9,Spring 2022-23,2023S,A,0.5,,transfer
+841,,Korean Language,Chungdam High School,10,Fall 2024-25,2024F,A,0.5,,transfer
+841,,Mathematics,Chungdam High School,10,Fall 2024-25,2024F,B,0.5,,transfer
+841,,English,Chungdam High School,10,Fall 2024-25,2024F,B,0.5,,transfer
+841,,Integrated Sciences,Chungdam High School,10,Fall 2024-25,2024F,A,0.5,,transfer
+841,,Science Laboratory Experiments,Chungdam High School,10,Fall 2024-25,2024F,A,0.25,,transfer
+841,,Physical Education,Chungdam High School,10,Fall 2024-25,2024F,A,0.5,,transfer
+841,,Fine Arts,Chungdam High School,10,Fall 2024-25,2024F,A,0.5,,transfer
+841,2400,English 10 Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+841,3300,Geometry Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+841,1202,"World History, Culture and Geography Sem 1",Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+841,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+841,9197,Creative Arts and Design,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+841,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+841,9189,Literacy Appreciation 1 Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+841,9208,Reading to Write: Vocabulary Mastery,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+841,2700,AP English Language and Composition Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+841,3300,Geometry Sem 2,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+841,3210,Algebra II Honors Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+841,4202,AP Biology Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+841,1301,United States History and Geography Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+841,8301,Physical Education,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+841,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+841,636,English in Action: From Research to Results Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+841,2700,AP English Language and Composition Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,2802,Expository Writing Honors,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,3210,Algebra II Honors Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,3401,Precalculus Honors Sem 1,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,3401,Precalculus Honors Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,4202,AP Biology Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,1301,United States History and Geography Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+841,7201,AP Psychology,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+841,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+841,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+841,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+841,636,English in Action: From Research to Results Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+841,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+841,3402,AP Calculus AB Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+841,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+841,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+841,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+841,6214,AP Art History Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+841,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+841,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+841,,R&D2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+841,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+833,,Music,Sincheon Middle School,9,Fall 2023-24,2023F,B,0.5,,transfer
+833,,Fine Arts,Sincheon Middle School,9,Fall 2023-24,2023F,A,0.5,,transfer
+833,,Science Laboratory Experiments,Jamil High School,9,Spring 2023-24,2024S,B,0.25,,transfer
+833,,Science Laboratory Experiments,Jamil High School,10,Fall 2024-25,2024F,A,0.25,,transfer
+833,2204,Reading Around the World,Elite Open School,10,Spring 2024-25,2025S,B,0.5,,past
+833,3207,Algebra I Sem 1,Elite Open School,10,Spring 2024-25,2025S,B,0.5,,past
+833,,Language Mechanics and Reading Skills,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+833,2207,Understanding Literature,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+833,3207,Algebra I Sem 2,Elite Open School,11,Fall 2025-26,2025F,B,0.5,,past
+833,4306,Chemistry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+833,641,Communications 101: Social Interpretation,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+833,2205,Reading Comprehension,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+833,3301,Geometry Sem 1,Elite Open School,11,Spring 2025-26,2026S,B,0.5,,past
+833,4306,Chemistry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+833,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+833,,Communications 102: Speech & Delivery,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+833,2206,Speed Reading,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+833,3301,Geometry Sem 2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+833,4205,Biology Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+833,7606,Leadership,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+833,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+829,,English,Gaepo High School,9,Fall 2023-24,2023F,C,0.5,,transfer
+829,,Integrated Social Studies,Gaepo High School,9,Fall 2023-24,2023F,A,0.5,,transfer
+829,,Science Laboratory Experiments,Gaepo High School,9,Fall 2023-24,2023F,A,0.25,,transfer
+829,,Physical Education,Gaepo High School,9,Fall 2023-24,2023F,A,0.5,,transfer
+829,,Fine Arts,Gaepo High School,9,Fall 2023-24,2023F,A,0.5,,transfer
+829,,Physical Education,Gaepo High School,9,Spring 2023-24,2024S,A,0.5,,transfer
+829,2400,English 10 Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+829,3202,Algebra I Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+829,4200,Biology Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+829,1202,"World History, Culture and Geography Sem 1",Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+829,2400,English 10 Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+829,3202,Algebra I Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+829,4200,Biology Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+829,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+829,2500,English 11 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,3300,Geometry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,4300,Chemistry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,1301,United States History and Geography Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,6300,Music Appreciation Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+829,9189,Literacy Appreciation 1 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+829,2500,English 11 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,2802,Expository Writing Honors,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+829,3300,Geometry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,3205,Algebra II Sem 1,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,4300,Chemistry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,1301,United States History and Geography Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,6300,Music Appreciation Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+829,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+829,9189,Literacy Appreciation 1 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+829,2600,English 12 Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+829,3205,Algebra II Sem 2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+829,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+829,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+829,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+829,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+861,2207,Understanding Literature,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+861,3207,Algebra I Sem 1,Elite Open School,9,Fall 2023-24,2023F,B,0.5,,past
+861,4306,Chemistry Sem 1,Elite Open School,9,Fall 2023-24,2023F,F,0.5,,past
+861,2205,Reading Comprehension,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+861,3207,Algebra I Sem 2,Elite Open School,9,Spring 2023-24,2024S,B,0.5,,past
+861,4502,Environmental Science,Elite Open School,9,Spring 2022-23,2023S,B,0.5,,past
+861,2206,Speed Reading,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+861,3301,Geometry Sem 1,Elite Open School,10,Fall 2024-25,2024F,B,0.5,,past
+861,4205,Biology Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+861,2204,Reading Around the World,Elite Open School,10,Spring 2024-25,2025S,B,0.5,,past
+861,3301,Geometry Sem 2,Elite Open School,10,Spring 2024-25,2025S,B,0.5,,past
+861,4205,Biology Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+861,4306,Chemistry Sem 1 (Recovery),Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+861,3208,Algebra II Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+861,1601,Sociology,Elite Open School,11,Fall 2025-26,2025F,B,0.5,,past
+861,3208,Algebra II Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+861,4306,Chemistry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+861,1207,World Geography,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+861,7110,Marketing,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+861,4602,Earth Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+861,4407,Physical Science,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+861,1104,Survey of World History Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+861,7606,Leadership,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+807,2300,English 9 Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+807,3300,Geometry Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+807,4404,Physical Science Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+807,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+807,8301,Physical Education,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+807,9140,Understanding & Operating Valorant I,Elite Open School,9,Fall 2023-24,2023F,A,0.25,,past
+807,2300,English 9 Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+807,3300,Geometry Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+807,3210,Algebra II Honors Sem 1,Elite Open School,9,Spring 2022-23,2023S,A,0.5,Y,past
+807,3210,Algebra II Honors Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,Y,past
+807,4404,Physical Science Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+807,1202,"World History, Culture and Geography Sem 2",Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+807,9152,Aim Theory in Esports,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+807,9153,Esports Communication I,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+807,9140,Understanding & Operating Valorant II,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+807,2401,English 10 Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+807,3401,Precalculus Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+807,4301,Chemistry Honors Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,Y,past
+807,1301,United States History and Geography Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+807,4706,AP Computer Science Principles,Elite Open School,10,Fall 2024-25,2024F,A,1.0,Y,past
+807,6300,Music Appreciation Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+807,8301,Physical Education,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+807,9108,Getting Googlified,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+807,9195,Engineering Design,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+807,9194,Esports Team Building,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+807,2401,English 10 Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+807,3401,Precalculus Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+807,3402,AP Calculus AB Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+807,4301,Chemistry Honors Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,Y,past
+807,1301,United States History and Geography Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+807,4707,AP Computer Science A,Elite Open School,10,Spring 2024-25,2025S,A,1.0,Y,past
+807,6300,Music Appreciation Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+807,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+807,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,9212,Developing AI-Powered Study Tools,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,9206,Esports Team Optimization,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,9207,Introduction to Block Coding,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,9197,Creative Arts and Design,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,9216,Engineering Minds,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+807,2700,AP English Language and Composition Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+807,3402,AP Calculus AB Sem 2,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+807,4202,AP Biology Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+807,4401,Physics Honors Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+807,1203,AP World History Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,Y,past
+807,8301,Physical Education,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+807,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+807,9188,Sports Science,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+807,639,Fundamentals of Structured Thinking Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+807,2700,AP English Language and Composition Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,3403,AP Calculus BC Sem 1,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,3403,AP Calculus BC Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,4202,AP Biology Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,4401,Physics Honors Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,1203,AP World History Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,Y,past
+807,7201,AP Psychology,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+807,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+807,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+807,,From Lab to Market: Scent Development,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+807,,Product Development: SMART Studio,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+807,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+807,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+807,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+807,1211,AP Human Geography Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+807,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+807,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+807,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+807,,R&D2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+807,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,,Algebra 1 Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,A,0.5,,transfer
+7954,,Biology Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,B,0.5,,transfer
+7954,,Communication II Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,B,0.5,,transfer
+7954,,Composition - Style & Argument Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,B,0.5,,transfer
+7954,,Geometry Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,A,0.5,,transfer
+7954,,Intro to English Literature & Composition Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,B,0.5,,transfer
+7954,,PE Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,A,0.5,,transfer
+7954,,World History Sem 1,Seoul Scholars International,9,Fall 2023-24,2023F,B,0.5,,transfer
+7954,,Algebra 1 Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,Biology Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,Communication II Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,Composition - Style & Argument Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,Geometry Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,A,0.5,,transfer
+7954,,Intro to English Literature & Composition Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,PE Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,World History Sem 2,Seoul Scholars International,9,Spring 2023-24,2024S,B,0.5,,transfer
+7954,,Algebra 2 Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,,transfer
+7954,,AP Psychology Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,B,0.5,Y,transfer
+7954,,AP U.S. History Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,Y,transfer
+7954,,Chemistry Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,,transfer
+7954,,English 10 Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,,transfer
+7954,,English Language & Composition Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,,transfer
+7954,,Spanish 1 Sem 1,Seoul Scholars International,10,Fall 2024-25,2024F,A,0.5,,transfer
+7954,,Algebra 2 Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,A,0.5,,transfer
+7954,,AP Psychology Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,B,0.5,Y,transfer
+7954,,AP U.S. History Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,A,0.5,Y,transfer
+7954,,Chemistry Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,A,0.5,,transfer
+7954,,English 10 Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,A,0.5,,transfer
+7954,,English Language & Composition Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,A,0.5,,transfer
+7954,,Spanish 1 Sem 2,Seoul Scholars International,10,Spring 2024-25,2025S,B,0.5,,transfer
+7954,,AP Macroeconomics Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,B,0.5,Y,transfer
+7954,,AP Microeconomics Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,B,0.5,Y,transfer
+7954,,AP Precalculus Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,B,0.5,Y,transfer
+7954,,AP World History Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,A,0.5,Y,transfer
+7954,,College Readiness Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,B,0.5,,transfer
+7954,,English 11 Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,A,0.5,,transfer
+7954,,Spanish 2 Sem 1,Seoul Scholars International,11,Fall 2025-26,2025F,A,0.5,,transfer
+7954,,AP Macroeconomics Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,B,0.5,Y,transfer
+7954,,AP Microeconomics Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,B,0.5,Y,transfer
+7954,,AP Precalculus Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,B,0.5,Y,transfer
+7954,,AP World History Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,A,0.5,Y,transfer
+7954,,College Readiness Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,B,0.5,,transfer
+7954,,English 11 Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,A,0.5,,transfer
+7954,,Spanish 2 Sem 2,Seoul Scholars International,11,Spring 2025-26,2026S,A,0.5,,transfer
+7954,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7954,3402,AP Calculus AB Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7954,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7954,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7954,1211,AP Human Geography Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7954,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,6300,Music Appreciation Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,,Design Thinking: SSLDe,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7954,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,2300,English 9 Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+877,3202,Algebra I Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+877,2300,English 9 Sem 1,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+877,3202,Algebra I Sem 2,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+877,4404,Physical Science Sem 1,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+877,1202,"World History, Culture and Geography Sem 1",Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+877,2400,English 10 Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+877,3300,Geometry Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+877,4600,Earth Science Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+877,4404,Physical Science Sem 2,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+877,1202,"World History, Culture and Geography Sem 2",Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+877,2400,English 10 Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+877,3300,Geometry Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+877,4600,Earth Science Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+877,1301,United States History and Geography Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+877,2500,English 11 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,3205,Algebra II Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,4300,Chemistry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,1301,United States History and Geography Sem 2,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,6300,Music Appreciation Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+877,9189,Literacy Appreciation 1 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+877,2500,English 11 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,3205,Algebra II Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,4300,Chemistry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,1500,Economics,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,6300,Music Appreciation Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+877,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+877,9189,Literacy Appreciation 1 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+877,2600,English 12 Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,3400,Precalculus Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,4501,AP Environmental Science Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+877,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,8301,Physical Education,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+877,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,2207,Understanding Literature,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+802,4306,Chemistry Sem 1,Elite Open School,9,Fall 2023-24,2023F,A,0.5,,past
+802,9164,Language Foundations: Mastering Grammar,Elite Open School,9,Fall 2023-24,2023F,A,0.25,,past
+802,9140,Understanding & Operating Valorant I,Elite Open School,9,Fall 2023-24,2023F,A,0.25,,past
+802,2205,Reading Comprehension,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+802,2207,Pre-Algebra Sem 1,Elite Open School,9,Spring 2022-23,2023S,A,0.5,,past
+802,4306,Chemistry Sem 2,Elite Open School,9,Spring 2023-24,2024S,A,0.5,,past
+802,9152,Aim Theory in Esports,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+802,9153,Esports Communication I,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+802,9154,Socratic Seminar I,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+802,9140,Understanding & Operating Valorant II,Elite Open School,9,Spring 2022-23,2023S,A,0.25,,past
+802,2206,Speed Reading,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+802,3201,Pre-Algebra Sem 2,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+802,4205,Biology Sem 1,Elite Open School,10,Fall 2024-25,2024F,A,0.5,,past
+802,9192,FPS Map Reading,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+802,9187,Vocabulary Building and Reading Skills,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+802,9202,Valorant Concepts & Analysis I,Elite Open School,10,Fall 2024-25,2024F,A,0.25,,past
+802,2204,Reading Around the World,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+802,3207,Algebra I Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+802,3207,Algebra I Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+802,4205,Biology Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+802,9197,Creative Arts and Design,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+802,9216,Engineering Minds,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+802,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+802,9209,Language Mechanics and Reading Skills,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+802,9208,Reading to Write: Vocabulary Mastery,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+802,3301,Geometry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+802,4602,Earth Science Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+802,1601,Sociology,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+802,7110,Marketing,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+802,9188,Sports Science,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,633,From Lab to Market: Vitamin Tonic Development,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,641,Communications 101: Social Interpretations,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,635,English in Action: Application and Practice Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,630,Problem Solving: Calculation and Logic Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,631,Getting Googlified,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+802,3301,Geometry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+802,4602,Earth Science Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+802,1207,World Geography,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+802,7102,Accounting,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+802,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,635,English in Action: Application and Practice Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,,Human Performance Lab: Restoration,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,,Scene Makers: Amphitheather,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,,From Lab to Market: Scent Development,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,,Product Development: SMART Studio,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,,Communications 102: Speech & Delivery,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+802,3208,Algebra II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,4407,Physical Science,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,1104,Survey of World History Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,7606,Leadership,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,,Design Thinking: SSLDe,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+802,,GE1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,,English 1 Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,,transfer
+7953,,Introduction to Historical Studies Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,,transfer
+7953,,Adv Alg/ Trig/ Precal Honors Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,Y,transfer
+7953,,Principles of Scientific Inquiry Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,,transfer
+7953,,French 1 Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,,transfer
+7953,,AP Art: Drawing & 2D Sem 1,Stevenson School,9,Fall 2023-24,2023F,A,0.5,Y,transfer
+7953,,English 1 Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,,transfer
+7953,,Introduction to Historical Studies Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,,transfer
+7953,,Adv Alg/ Trig/ Precal Honors Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,Y,transfer
+7953,,Principles of Scientific Inquiry Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,,transfer
+7953,,French 1 Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,,transfer
+7953,,AP Art: Drawing & 2D Sem 2,Stevenson School,9,Spring 2023-24,2024S,A,0.5,Y,transfer
+7953,,English 2 Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,,transfer
+7953,,The Modern World Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,,transfer
+7953,,AP Calculus AB Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,Y,transfer
+7953,,Science 2 Honors Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,Y,transfer
+7953,,Digital Fabrication 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,,transfer
+7953,,French 2 Honors Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,Y,transfer
+7953,,Digital Art & Photography 2 Sem 1,Stevenson School,10,Fall 2024-25,2024F,A,0.5,,transfer
+7953,,English 2 Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,,transfer
+7953,,The Modern World Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,,transfer
+7953,,AP Calculus AB Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,Y,transfer
+7953,,Science 2 Honors Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,Y,transfer
+7953,,French 2 Honors Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,Y,transfer
+7953,,Digital Art & Photography 2 Sem 2,Stevenson School,10,Spring 2024-25,2025S,A,0.5,,transfer
+7953,,English 3 Sem 1,Stevenson School,11,Fall 2025-26,2025F,A,0.5,,transfer
+7953,,AP US History Sem 1,Stevenson School,11,Fall 2025-26,2025F,A,0.5,Y,transfer
+7953,,AP Calculus BC Sem 1,Stevenson School,11,Fall 2025-26,2025F,A,0.5,Y,transfer
+7953,,Physics: Mechanics & Kinematics,Stevenson School,11,Fall 2025-26,2025F,B,0.5,,transfer
+7953,,French 3 Honors Sem 1,Stevenson School,11,Fall 2025-26,2025F,A,0.5,Y,transfer
+7953,,Art 2: Architecture Sem 1,Stevenson School,11,Fall 2025-26,2025F,A,0.5,,transfer
+7953,,English 3 Sem 2,Stevenson School,11,Spring 2025-26,2026S,A,0.5,,transfer
+7953,,AP Calculus BC Sem 2,Stevenson School,11,Spring 2025-26,2026S,B,0.5,Y,transfer
+7953,,Chemistry: Experimental Chemistry,Stevenson School,11,Spring 2025-26,2026S,B,0.5,,transfer
+7953,,French 3 Honors Sem 2,Stevenson School,11,Spring 2025-26,2026S,A,0.5,Y,transfer
+7953,,Art 2: Architecture Sem 2,Stevenson School,11,Spring 2025-26,2026S,A,0.5,,transfer
+7953,2701,AP English Literature and Composition Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7953,3501,AP Statistics Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7953,4201,Biology Honors Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+7953,4300,Chemistry Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,1400,U.S. Government and Politics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,1500,Economics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,8301,Physical Education,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,,R&D1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,,AI2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+7953,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,,Fine Arts,Unjung Middle School,9,Fall 2023-24,2023F,B,0.5,,transfer
+842,,Physical Education,Unjung High School,9,Spring 2023-24,2024S,B,0.5,,transfer
+842,,Music,Unjung High School,9,Spring 2022-23,2023S,B,0.5,,transfer
+842,,Physical Education,Unjung High School,10,Fall 2024-25,2024F,B,0.5,,transfer
+842,,Fine Arts,Unjung High School,10,Fall 2024-25,2024F,A,0.5,,transfer
+842,2204,Reading Around the World,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+842,3207,Algebra I Sem 1,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+842,3207,Algebra I Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+842,1601,Sociology,Elite Open School,10,Spring 2024-25,2025S,A,0.5,,past
+842,9197,Creative Arts and Design,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+842,9214,Foundations of Analytical Reasoning,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+842,9209,Language Mechanics and Reading Skills,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+842,9189,Literacy Appreciation 1 Sem 2,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+842,9208,Reading to Write: Vocabulary Mastery,Elite Open School,10,Spring 2024-25,2025S,A,0.25,,past
+842,2500,English 11 Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,2200,English Foundations I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,3300,Geometry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,3300,Geometry Sem 2,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,4300,Chemistry Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,1202,"World History, Culture & Geography Sem 1",Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,8100,Health Opportunities through Physical Education Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,5100,Spanish I Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,6300,Music Appreciation Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.5,,past
+842,628,From Lab to Market: Vitamin Gummy Development,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+842,635,English in Action: Application and Practice Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+842,630,Problem Solving: Calculation and Logic Sem 1,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+842,631,Get Googlified,Elite Open School,11,Fall 2025-26,2025F,A,0.25,,past
+842,2500,English 11 Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,2200,English Foundations I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,3205,Algebra II Sem 1,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,3205,Algebra II Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,4300,Chemistry Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,1202,"World History, Culture & Geography Sem 2",Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,8100,Health Opportunities through Physical Education Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,5100,Spanish I Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,6300,Music Appreciation Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.5,,past
+842,9151,Junior Forum I: Career and College Readiness,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+842,635,English in Action: Application and Practice Sem 2,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+842,,From Lab to Market: Scent Development,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+842,,Product Development: SMART Studio,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+842,,Scene Makers: Amphitheater,Elite Open School,11,Spring 2025-26,2026S,A,0.25,,past
+842,2600,English 12 Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,2202,English Foundations II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,3400,Precalculus Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,4201,Biology Honors Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,Y,past
+842,1301,United States History and Geography Sem 2,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,1500,Economics,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,5102,Spanish II Sem 1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,9163,Senior Forum I: Career and College Readiness,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,,GE1,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
+842,,DIY3,Elite Open School,12,Fall 2026-27,2026F,IP,0.0,,past
