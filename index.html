@@ -479,7 +479,9 @@ function gpaOf(rows){ // 학점 가중 평균 (카운슬러 시트와 동일)
   return {u:done.reduce((a,r)=>a+PTS[r.grade]*r.credit,0)/cr, w:done.reduce((a,r)=>a+(r.weighted?WPTS:PTS)[r.grade]*r.credit,0)/cr, credits:cr};
 }
 const f2 = n => (Math.round(n*100)/100).toFixed(2);
-async function loadGrades(id){ const q=query(col("grades"), where("studentId","==",String(id))); return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode) || (a.gLevel||0)-(b.gLevel||0) || String(a.code).localeCompare(b.code)); }
+const AREA_RANK={"2":0,"3":1,"1":2,"4":3,"5":4,"6":5,"7":6,"8":7,"9":8};  // 영어·수학·사회·과학·외국어·예술·경영·체육·학교선택
+const areaRank = c => c ? (AREA_RANK[String(c)[0]] ?? 8) : 9;              // 코드 없는 선택과목은 맨 뒤
+async function loadGrades(id){ const q=query(col("grades"), where("studentId","==",String(id))); return (await getDocs(q)).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode) || (a.gLevel||0)-(b.gLevel||0) || areaRank(a.code)-areaRank(b.code) || String(a.code).localeCompare(b.code) || String(a.title).localeCompare(b.title)); }
 let courseCache=null; async function loadCourses(){ if(!courseCache){ courseCache=(await getDocs(col("courses"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(a.code||"zz").localeCompare(b.code||"zz")||a.title.localeCompare(b.title)); } return courseCache; }
 
 /* ---------- 과목 ---------- */
