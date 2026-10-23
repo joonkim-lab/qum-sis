@@ -74,7 +74,8 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #000;padding-bottom:8px}
 .tr .hd img{height:52px}
 .tr .hd .sch{text-align:right;font-size:9.5pt;line-height:1.35;white-space:pre-line}
-.tr .info{display:grid;grid-template-columns:2.6fr 1fr 1fr 1fr;gap:2px 14px;margin:10px 0;font-size:9.5pt}
+.tr .info{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:4px 14px;margin:10px 0;font-size:9.5pt}
+.tr .info .addr{grid-column:1/-1;white-space:nowrap}
 .tr .info b{display:block;font-size:8.5pt;color:#444;font-weight:600}
 .tr .cum{border:1px solid #000;padding:6px 10px;display:flex;gap:26px;font-size:9.5pt;margin:8px 0 12px}
 .tr table{font-size:9pt;table-layout:auto}
@@ -82,17 +83,21 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr td.nw,.tr th.nw{white-space:nowrap}
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
 .tr td.c{text-align:center}
-.tr .side{display:flex;gap:18px;align-items:flex-start;margin:0 0 12px}
-.tr .side table{width:auto}
+.tr .side{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;margin:0 0 12px}
+.tr .side>div{min-width:0}
+.tr .side table{width:100%}
 .tr td{padding:3px 5px;border-bottom:0}
 .tr tr.tot td{border-top:1px solid #999;font-weight:600;padding-bottom:8px}
 .tr tr:hover td{background:transparent}
-.tr .legend{display:grid;grid-template-columns:1.1fr 1.3fr 1.3fr 1.2fr;gap:14px;margin-top:16px;font-size:8.5pt}
+.tr .legend{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:18px;margin-top:16px;font-size:8.5pt}
+.tr .legend>div{min-width:0}
+.tr .legend table{width:100%}
 .tr .legend table{font-size:8.5pt}.tr .legend th{background:#eee;padding:2px 5px}.tr .legend td{padding:1px 5px}
 .tr .legend h4{margin:0 0 4px;font-size:9pt}
 .tr .wasc{font-size:8pt;color:#333;margin-top:14px;line-height:1.4}
-.tr .sign{margin-top:26px;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.5pt}
-.tr .sign .line{border-top:1px solid #000;width:300px;padding-top:3px}
+.tr .sign{margin-top:30px;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.5pt}
+.tr .sign .line{border-top:1px solid #000;width:320px;padding-top:3px;text-align:center}
+.tr .sign .right{text-align:right}
 @media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none;font-size:9pt} .tr table{font-size:8.5pt} .tr h1{font-size:18pt} @page{size:A4;margin:12mm 10mm} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
@@ -705,11 +710,12 @@ async function viewTranscript(id){
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
-    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1>Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
+    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
-      <div><b>Address</b>${esc(d.address_en)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div></div>
+      <div><b>Student ID</b>${esc(id)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div>
+      <div class="addr"><b>Address</b>${esc(d.address_en)}</div></div>
     ${attHtml}
     <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
     <table><thead><tr><th class="nw">G.Level</th><th class="nw">School</th><th>Code</th><th>Course Title</th><th class="nw">Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
@@ -724,11 +730,15 @@ async function viewTranscript(id){
       <div><h4>Legend</h4><div>IP = In Progress</div><div>DC = Dual Credit</div><div>MB = Minerva Baccalaureate</div><div>+ = Weighted Course (Honors/AP)</div></div>
     </div>
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
-    <div class="sign"><div><div class="line">Signature of School Official / Title / Date</div><div style="margin-top:4px">This transcript is unofficial unless signed and sealed by a School Official.</div></div><div>${esc(school.principal)} | General Principal Rev. | ${us(today)}</div></div>
+    <div class="sign"><div id="trNote">This transcript is unofficial unless signed and sealed by a School Official.</div>
+      <div class="right"><div class="line" id="trSig">Signature of School Official / Title / Date</div><div style="margin-top:4px">General Principal Rev. | ${us(today)}</div></div></div>
   </div>`;
+  const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=on?"Official Transcript":"Unofficial Transcript";
+    $("#trNote").textContent=on?"This is an official transcript issued and sealed by the school.":"This transcript is unofficial unless signed and sealed by a School Official.";
+    $("#trSig").innerHTML=on?`<div style="height:34px"></div>${esc(school.principal)}, Principal`:"Signature of School Official / Title / Date"; };
   const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incBox").hidden=true; } };
   if (io) io.onchange=()=>{ $("#incBox").hidden=!io.checked; };
-  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
+  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_${$("#offOn")?.checked?"Official":"Unofficial"}Transcript_${today}`.replace(/\s+/g,""); window.print(); document.title=t; };
 }
 
 /* ---------- 학생 본인 ---------- */
