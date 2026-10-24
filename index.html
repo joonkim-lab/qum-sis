@@ -443,7 +443,7 @@ async function viewImport(){
       } else if (importType==="grades"){
         if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
         const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
-        const extra={}; if (r.score!==undefined&&r.score!=="") extra.score=parseFloat(r.score); if (r.subjectKo) extra.subjectKo=r.subjectKo; if (r.level) extra.level=r.level; if (r.transcriptGrade) extra.transcriptGrade=r.transcriptGrade; if (r.weeks) extra.weeks=parseInt(r.weeks);
+        const extra={}; if (r.score!==undefined&&r.score!=="") extra.score=parseFloat(r.score); if (r.subjectKo) extra.subjectKo=r.subjectKo; if (r.level) extra.level=r.level; if (r.transcriptGrade) extra.transcriptGrade=r.transcriptGrade; if (r.weeks) extra.weeks=parseInt(r.weeks); if (r.kTerm) extra.kTerm=r.kTerm;
         batch.set(ref("grades",gid), {studentId:String(r.studentId), courseId:cid, code:r.code||"", title:r.title, school:r.school||school.schoolName, gLevel:parseInt(r.gLevel)||null, termCode:r.termCode, grade:r.grade||"IP", credit:parseFloat(r.credit)||0, weighted:/^(Y|1|true)$/i.test(r.weighted||""), source:r.source||"past", ...extra, ...stamp}, {merge:true}); ops++;
       }
       n++; if (ops>=400) await flush();
@@ -696,9 +696,9 @@ async function viewSections(){
   const teachers=[...new Set(ms.docs.filter(d=>["teacher","admin","principal"].includes(d.data().role)).map(d=>d.id))];
   const mine=cur.filter(s=>s.teacherEmail===me.email);
   $("#view").innerHTML=`<div class="card"><h2>반 · ${termLabel(term)}</h2>
-    <p class="muted">담임반은 학년당 하나 — 출결 확인서·세특·미리 담당. 과목반은 심화 과목별 — 담당 교사가 진도 상태를 입력합니다. 반 이름을 누르면 명단이 한 화면에 나옵니다.</p>
+    <p class="muted">담임반은 학년당 하나. 담임이 반 학생 전원의 과목별 진도 상태·출결 확인서·세특을 맡습니다. 반 이름을 누르면 학생×과목 격자가 한 화면에 나옵니다.</p>
     ${mine.length?`<div class="row" style="margin-bottom:10px"><span class="muted">내 반:</span>${mine.map(s=>`<a class="btn sm ghost" href="#/sections/${s.id}">${esc(s.title)}</a>`).join("")}</div>`:""}
-    ${can.manage()?`<div class="row" style="margin-bottom:12px"><button class="btn sm ghost" id="mkHouse">학년별 담임반 만들기</button><button class="btn sm ghost" id="mkCourse">이번 학기 성적 줄로 과목반 만들기</button><button class="btn sm ghost" id="addSec">반 직접 추가</button><span class="muted">이미 있는 반은 명단만 갱신(담당 교사는 유지)</span></div>
+    ${can.manage()?`<div class="row" style="margin-bottom:12px"><button class="btn sm ghost" id="mkHouse">학년별 담임반 만들기</button><button class="btn sm ghost" id="addSec">반 직접 추가 (교내 선택과목 등)</button>${cur.some(x=>x.kind==="course"&&x.courseId)?`<button class="btn sm ghost" id="rmAuto">자동 생성된 과목반 모두 삭제</button>`:""}<span class="muted">담임반을 다시 만들면 명단만 갱신(담당 교사는 유지)</span></div>
     <div id="form" hidden class="card" style="background:var(--paper)"></div>`:""}
     <div class="scroll"><table><thead><tr><th>종류</th><th>반</th><th>담당 교사</th><th>학생</th><th>진도 최근 입력</th><th></th></tr></thead><tbody>
     ${cur.map(s=>`<tr><td>${s.kind==="house"?`<span class="tag">담임</span>`:`<span class="tag ok">과목</span>`}</td><td><a href="#/sections/${s.id}">${esc(s.title)}</a></td>
@@ -713,14 +713,8 @@ async function viewSections(){
     for (const [h,ids] of Object.entries(by)){ const id=`house_${term}_${slug(h)}`; const ex=secs.find(x=>x.id===id);
       b.set(ref("sections",id),{kind:"house",title:h,termCode:term,studentIds:ids.sort(),teacherEmail:ex?.teacherEmail||"",updatedAt:serverTimestamp(),by:me.email},{merge:true}); }
     await b.commit(); toast(`담임반 ${Object.keys(by).length}개`); viewSections(); };
-  const mc=$("#mkCourse"); if (mc) mc.onclick=async()=>{
-    const gs=(await getDocs(query(col("grades"), where("termCode","==",term)))).docs.map(d=>d.data()).filter(r=>r.source!=="miri");
-    const by={}; gs.forEach(r=>{ const k=r.courseId||courseId(r); if(!k) return; (by[k]=by[k]||{title:stripSem(r.title),ids:new Set()}).ids.add(String(r.studentId)); });
-    if (!Object.keys(by).length) return toast("이번 학기 성적 줄이 없습니다. 성적을 먼저 넣거나 반을 직접 추가하세요.");
-    const b=writeBatch(db);
-    for (const [k,v] of Object.entries(by)){ const id=`c_${term}_${k}`.replace(/[\/\s]/g,"_"); const ex=secs.find(x=>x.id===id);
-      b.set(ref("sections",id),{kind:"course",title:v.title,courseId:k,termCode:term,studentIds:[...v.ids].sort(),teacherEmail:ex?.teacherEmail||"",updatedAt:serverTimestamp(),by:me.email},{merge:true}); }
-    await b.commit(); toast(`과목반 ${Object.keys(by).length}개`); viewSections(); };
+  const ra=$("#rmAuto"); if (ra) ra.onclick=async()=>{ const auto=cur.filter(x=>x.kind==="course"&&x.courseId); if(!confirm(`자동 생성된 과목반 ${auto.length}개를 지울까요? (담임반은 그대로)`)) return;
+    let b=writeBatch(db), n=0; for (const x of auto){ b.delete(ref("sections",x.id)); if(++n%400===0){ await b.commit(); b=writeBatch(db);} } await b.commit(); toast(`${auto.length}개 삭제`); viewSections(); };
   const ad=$("#addSec"); if (ad) ad.onclick=()=>{ $("#form").hidden=false; $("#form").innerHTML=`<form id="sf" class="row"><input name="title" placeholder="반 이름 (예: Economics)" required style="max-width:260px"><select name="kind" style="max-width:120px"><option value="course">과목반</option><option value="house">담임반</option></select><input name="teacherEmail" list="tl" placeholder="담당 교사 이메일" style="max-width:250px"><button class="btn sm">추가</button></form>`;
     $("#sf").onsubmit=async e=>{ e.preventDefault(); const v=readForm($("#sf")); const id=`${v.kind==="house"?"house":"c"}_${term}_${slug(v.title)}`;
       await setDoc(ref("sections",id),{kind:v.kind,title:v.title,termCode:term,teacherEmail:v.teacherEmail.toLowerCase(),studentIds:[],updatedAt:serverTimestamp(),by:me.email},{merge:true}); toast("추가 — 명단을 넣으세요"); location.hash="#/sections/"+id; }; };
@@ -730,23 +724,30 @@ async function viewSection(id){
   const [sd, ss, ps] = await Promise.all([getDoc(ref("sections",id)), getDocs(col("students")), getDocs(query(col("progress"), where("sectionId","==",id)))]);
   if (!sd.exists()) return $("#view").innerHTML="<p>없는 반입니다.</p>";
   const s={id,...sd.data()}; const names={}; ss.docs.forEach(d=>names[d.id]={id:d.id,...d.data()});
-  const prog={}; ps.docs.forEach(d=>prog[d.data().studentId]=d.data());
+  const prog={}; ps.docs.forEach(d=>prog[d.id]=d.data());
   const canEdit=can.manage()||me.role==="teacher"; const gnum=g=>parseInt(g)||99;
   const roster=(s.studentIds||[]).map(i=>names[i]).filter(Boolean).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
+  // 담임반: 학생마다 이번 학기 듣는 과목(성적 줄) + 미리 한 줄. 과목반: 과목 한 줄.
+  let byStu={};
+  if (s.kind==="house"){ const gs=(await getDocs(query(col("grades"), where("termCode","==",s.termCode)))).docs.map(d=>d.data()).filter(r=>r.source!=="miri");
+    gs.forEach(r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); (byStu[r.studentId]=byStu[r.studentId]||{})[k]={key:k,title:stripSem(r.title),rank:areaRank(r.code)}; }); }
+  const rowsOf = st => s.kind==="house" ? [...Object.values(byStu[st.id]||{}).sort((a,b)=>a.rank-b.rank||a.title.localeCompare(b.title)), {key:"miri",title:"미리 (전 과목)",rank:99}] : [{key:(s.courseId||"all").replace(/[\/\s.]/g,"_"), title:s.title}];
   const today=todayISO();
+  const btns=(pid,p)=>Object.entries(PROG).map(([k,v])=>`<button class="btn sm ${p.status===k?"":"ghost"}" data-p="${k}" ${canEdit?"":"disabled"}>${v.l}</button>`).join(" ");
   $("#view").innerHTML=`<div class="card"><h2>${esc(s.title)} <span class="tag">${s.kind==="house"?"담임반":"과목반"}</span> <span class="muted" style="font-size:14px">${termLabel(s.termCode)} · ${esc(s.teacherEmail||"담당 미정")}</span></h2>
-    <div class="row" style="margin-bottom:10px"><a href="#/sections" class="muted">← 반 목록</a>${s.kind==="house"?`<a class="btn sm ghost" href="#/biweekly/${s.id}">이 반 출결 확인서</a>`:""}${can.manage()?`<button class="btn sm ghost" id="edR">명단 수정</button>`:""}<span class="muted">상태를 누르면 오늘 날짜로 저장되고, 출결 확인서에 그대로 들어갑니다.</span></div>
+    <div class="row" style="margin-bottom:10px"><a href="#/sections" class="muted">← 반 목록</a>${s.kind==="house"?`<a class="btn sm ghost" href="#/biweekly/${s.id}">이 반 출결 확인서</a>`:""}${can.manage()?`<button class="btn sm ghost" id="edR">명단 수정</button>`:""}<span class="muted">상태를 누르면 오늘 날짜로 저장되고 출결 확인서에 그대로 들어갑니다. ${s.kind==="house"?"과목 줄은 이번 학기 성적 줄에서 가져옵니다(성적 화면에서 과목을 추가하면 여기도 늘어남).":""}</span></div>
     <div id="rosterEd" hidden class="card" style="background:var(--paper)"></div>
-    <table><thead><tr><th>학년</th><th>학생</th><th>진도 상태</th><th>메모 (미완 과제 수 등)</th><th>최근 기록</th></tr></thead><tbody>
-    ${roster.map(st=>{ const p=prog[st.id]||{}; return `<tr data-s="${st.id}"><td>${esc(st.grade)}</td><td class="nw"><a href="#/students/${st.id}">${esc(st.last_en)}, ${esc(st.first_en)}</a> <span class="muted">${esc(st.name_ko||"")}</span></td>
-      <td class="nw">${Object.entries(PROG).map(([k,v])=>`<button class="btn sm ${p.status===k?"":"ghost"}" data-p="${k}" ${canEdit?"":"disabled"}>${v.l}</button>`).join(" ")}</td>
-      <td><input data-note value="${esc(p.note||"")}" placeholder="예: 과제 7개 미제출" style="padding:4px 8px" ${canEdit?"":"disabled"}></td><td class="muted nw" data-when>${p.date?`${p.date} · ${esc((p.by||"").split("@")[0])}`:"—"}</td></tr>`; }).join("")||`<tr><td colspan=5 class=muted>명단이 비어 있습니다${can.manage()?" — '명단 수정'으로 넣으세요":""}</td></tr>`}
+    <table><thead><tr><th>학년</th><th>학생</th><th>과목</th><th>진도 상태</th><th>메모 (미완 과제 수 등)</th><th>최근 기록</th></tr></thead><tbody>
+    ${roster.map(st=>{ const rows=rowsOf(st); return rows.map((r,i)=>{ const pid=`${id}_${st.id}_${r.key}`; const p=prog[pid]||{}; return `<tr data-pid="${pid}" data-s="${st.id}" data-k="${r.key}" data-t="${esc(r.title)}" ${i===0?'style="border-top:2px solid var(--line)"':""}>
+      ${i===0?`<td rowspan="${rows.length}">${esc(st.grade)}</td><td rowspan="${rows.length}" class="nw"><a href="#/students/${st.id}">${esc(st.last_en)}, ${esc(st.first_en)}</a><br><span class="muted">${esc(st.name_ko||"")}</span></td>`:""}
+      <td class="nw">${esc(r.title)}</td><td class="nw">${btns(pid,p)}</td>
+      <td><input data-note value="${esc(p.note||"")}" placeholder="예: 과제 7개 미제출" style="padding:4px 8px" ${canEdit?"":"disabled"}></td><td class="muted nw" data-when>${p.date?`${p.date} · ${esc((p.by||"").split("@")[0])}`:"—"}</td></tr>`; }).join(""); }).join("")||`<tr><td colspan=6 class=muted>명단이 비어 있습니다${can.manage()?" — '명단 수정'으로 넣으세요":""}</td></tr>`}
     </tbody></table></div>`;
-  document.querySelectorAll("tr[data-s]").forEach(tr=>{ const stid=tr.dataset.s, note=tr.querySelector("[data-note]"); const pid=`${id}_${stid}`;
-    const save=async(status)=>{ const cur=prog[stid]||{}; const st=status??cur.status; if(!st) return toast("상태를 먼저 고르세요");
+  document.querySelectorAll("tr[data-pid]").forEach(tr=>{ const pid=tr.dataset.pid, stid=tr.dataset.s, note=tr.querySelector("[data-note]");
+    const save=async(status)=>{ const cur=prog[pid]||{}; const st=status??cur.status; if(!st) return toast("상태를 먼저 고르세요");
       const hist=(cur.history||[]).slice(-19); if (cur.status && (cur.status!==st||(cur.note||"")!==note.value.trim())) hist.push({date:cur.date||"",status:cur.status,note:cur.note||"",by:cur.by||""});
-      const data={sectionId:id,studentId:stid,termCode:s.termCode,status:st,note:note.value.trim(),date:today,by:me.email,at:serverTimestamp(),history:hist};
-      await setDoc(ref("progress",pid),data); prog[stid]=data; tr.querySelector("[data-when]").textContent=`${today} · ${me.email.split("@")[0]}`;
+      const data={sectionId:id,studentId:stid,termCode:s.termCode,courseId:tr.dataset.k,title:tr.dataset.t,status:st,note:note.value.trim(),date:today,by:me.email,at:serverTimestamp(),history:hist};
+      await setDoc(ref("progress",pid),data); prog[pid]=data; tr.querySelector("[data-when]").textContent=`${today} · ${me.email.split("@")[0]}`;
       updateDoc(ref("sections",id),{progressDate:today}).catch(()=>{}); toast("저장"); };
     tr.querySelectorAll("[data-p]").forEach(b=>b.onclick=async()=>{ tr.querySelectorAll("[data-p]").forEach(x=>x.classList.toggle("ghost",x!==b)); await save(b.dataset.p); });
     note.onchange=()=>save();
@@ -773,14 +774,14 @@ async function viewBiweekly(){
   const [ss, as, ps, cd] = await Promise.all([getDocs(col("students")), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term))), getDoc(ref("biweekly",`${h.id}_${end}`))]);
   const gnum=g=>parseInt(g)||99;
   const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>ids.includes(s.id)).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
-  const att=as.docs.map(d=>d.data()); const prog={}; ps.docs.forEach(d=>{ const p=d.data(); prog[`${p.sectionId}_${p.studentId}`]=p; });
+  const att=as.docs.map(d=>d.data()); const prog={}; ps.docs.forEach(d=>{ prog[d.id]=d.data(); });
   const comments=cd.exists()?(cd.data().comments||{}):{};
   const Z=()=>({"e.a":0,"e.t":0,"u.a":0,"u.t":0});
   const count=(sid,from,to)=>{ const t=Z(); att.filter(a=>a.studentId===sid&&(!from||(a.date>=from&&a.date<=to))).forEach(a=>t[finalCode(a)]++); return t; };
   const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
   const teacherName = (h.teacherEmail||"").split("@")[0];
-  const slip=st=>{ const p2=count(st.id,start,end), pt=count(st.id); const mySecs=secs.filter(x=>x.termCode===term&&(x.studentIds||[]).includes(st.id)&&prog[`${x.id}_${st.id}`]);
-    const progRows=mySecs.map(x=>{ const p=prog[`${x.id}_${st.id}`]; return `<tr><td>${esc(x.kind==="house"?"미리 (담임)":x.title)}</td><td class="c"><span class="pt">${PROG[p.status]?.l||esc(p.status)}</span></td><td>${esc(p.note||"")}</td><td class="c">${p.date||""}</td></tr>`; }).join("");
+  const slip=st=>{ const p2=count(st.id,start,end), pt=count(st.id);
+    const progRows=Object.values(prog).filter(p=>p.studentId===st.id&&p.status).sort((a,b)=>(a.courseId==="miri")-(b.courseId==="miri")||String(a.title).localeCompare(b.title)).map(p=>`<tr><td>${esc(p.title||p.sectionId)}</td><td class="c"><span class="pt">${PROG[p.status]?.l||esc(p.status)}</span></td><td>${esc(p.note||"")}</td><td class="c">${p.date||""}</td></tr>`).join("");
     return `<div class="bw"><div class="bwh"><div><h2>격주 출결 보고서</h2><div>[${termKo(term)}] &nbsp; ${us(start)} ~ ${us(end)}</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}<br>${esc(school.schoolName)}</div></div>
       <table class="sg"><tr><th>학생</th><td>${esc(st.last_en)}, ${esc(st.first_en)} ${st.name_ko?`(${esc(st.name_ko)})`:""}</td><th>생년월일</th><td>${us(st.dob)}</td><th>학년</th><td class="c">${esc(st.grade)}</td><th>재학 상태</th><td class="c">전일제</td></tr>
         <tr><th>담임반</th><td>${esc(h.title)}</td><th>성별</th><td class="c">${esc(st.gender)}</td><th>졸업 연도</th><td class="c">${esc(st.gradYear)}</td><th>담임 교사</th><td>${esc(teacherName)}</td></tr></table>
@@ -854,17 +855,22 @@ const MIRI_ORDER=["국어","수학","영어","사회","도덕","한국사","과�
 const KO_GROUP={"국어":"국어","수학":"수학","영어":"영어","사회":"사회(역사포함)/도덕","도덕":"사회(역사포함)/도덕","한국사":"사회(역사포함)/도덕","과학":"과학"};
 const miriGrade = sc => sc>=60?"A":sc>=50?"B":sc>=40?"C":"F";
 const ayOf = tc => { const m=/^(\d{4})([FSU])$/.exec(tc||""); return m? (m[2]==="F"? +m[1] : +m[1]-1) : null; };
+// 한국 학년도·학기: 3~8월 = 1학기, 9~2월 = 2학기 (2월은 전년도 2학기)
+const kTermOfDate = d => { const [y,m]=String(d).split("-").map(Number); return (m>=3&&m<=8)? `${y}K1` : (m>=9? `${y}K2` : `${y-1}K2`); };
+const kTermOfUS = tc => { const m=/^(\d{4})([FSU])$/.exec(tc||""); return m? (m[2]==="F"? `${m[1]}K2` : `${m[1]}K1`) : null; };
+const kAY = kt => +String(kt).slice(0,4); const kSem = kt => String(kt).endsWith("K1")?"1":"2";
+const kGradeLabel = g => g>=10? `고${g-9}` : g>=7? `중${g-6}` : g>=1? `초${g}` : "";
 const AREA_KO={"1":"사회","2":"영어","3":"수학","4":"과학","5":"외국어","6":"예술","7":"교양","8":"체육","9":"선택"};
 async function viewMiri(id){
   const staff=can.manage()||me.role==="teacher";
   const [s, all, as, acts, cms]=await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id)))), getDocs(query(col("activities"), where("studentId","==",String(id)))), staff?getDocs(query(col("comments"), where("studentId","==",String(id)))):Promise.resolve({docs:[]})]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
-  const d=s.data(); const curAY=ayOf(school.termCode)||new Date().getFullYear(); const grade=parseInt(d.grade)||0;
-  const gradeOfAY = ay => grade-(curAY-ay);
+  const d=s.data(); const birthY=parseInt((d.dob||"").slice(0,4))||null;
+  const kGradeOf = ay => birthY? ay-birthY-6 : null;   // 학령 기준: 7세 초1
   const today=new Date(); const todayKo=`${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
   const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
   // 출결: 학년별
-  const att={}; as.docs.forEach(x=>{ const r=x.data(); const g=gradeOfAY(ayOf(r.termCode)); const t=att[g]=att[g]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
+  const att={}; as.docs.forEach(x=>{ const r=x.data(); const ay=kAY(kTermOfDate(r.date)); const t=att[ay]=att[ay]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attGrades=Object.keys(att).map(Number).sort((a,b)=>a-b);
   // 수상·활동·봉사 (승인된 것만)
   const A=acts.docs.map(x=>x.data()).filter(a=>a.approved);
@@ -873,41 +879,42 @@ async function viewMiri(id){
   const vols=A.filter(a=>a.kind==="volunteer").sort((a,b)=>String(a.date||"").localeCompare(b.date||""));
   // 교과: 학년별 → 학기별
   const miri=all.filter(r=>r.source==="miri"); const apex=all.filter(r=>r.source!=="miri" && r.grade!=="IP" && r.credit>0 && r.school===school.schoolName);
-  const ays=[...new Set([...miri,...apex].map(r=>ayOf(r.termCode)))].filter(x=>x).sort();
+  const kt = r => r.kTerm || kTermOfUS(r.termCode);
+  const ays=[...new Set([...miri,...apex].map(r=>kAY(kt(r))))].filter(x=>x).sort();
   const comments=cms.docs.map(x=>({id:x.id,...x.data()}));
   const cell=(v)=>v==null||v===""?"&nbsp;":esc(v);
   const T=(hdr,rows,cls="")=>`<table class="sg ${cls}"><thead><tr>${hdr.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.length?rows.join(""):`<tr><td colspan="${hdr.length}" class="c">해당 사항 없음</td></tr>`}</tbody></table>`;
   const subjectRows = ay => {
-    const g=gradeOfAY(ay); const out=[];
-    for (const sem of ["1","2"]){ const tc = sem==="1"? `${ay}F` : `${ay+1}S`;
-      for (const sub of MIRI_ORDER){ const r=miri.find(x=>x.termCode===tc&&x.subjectKo===sub); if (!r) continue;
-        out.push(`<tr><td class="c">${sem}</td><td>${KO_GROUP[sub]}</td><td>${sub}</td><td class="c">${r.score}</td><td class="c">${miriGrade(r.score)}</td><td class="muted">미리</td></tr>`); }
-      for (const r of apex.filter(x=>x.termCode===tc).sort((a,b)=>areaRank(a.code)-areaRank(b.code))){
-        out.push(`<tr><td class="c">${sem}</td><td>${AREA_KO[String(r.code||"9")[0]]||"선택"} (심화)</td><td>${esc(r.title)}</td><td class="c">—</td><td class="c">${esc(r.grade)}</td><td class="muted">미국 교육과정${r.weighted?" · Honors/AP":""}</td></tr>`); }
+    const out=[];
+    for (const sem of ["1","2"]){ const k=`${ay}K${sem}`;
+      for (const sub of MIRI_ORDER){ const r=miri.find(x=>kt(x)===k&&x.subjectKo===sub); if (!r) continue;
+        out.push(`<tr><td class="c">${sem}</td><td>${KO_GROUP[sub]}</td><td>${sub}</td><td class="c">${r.score}</td><td class="c">${miriGrade(r.score)}</td><td class="muted">미리 (${esc(r.level||"")})</td></tr>`); }
+      for (const r of apex.filter(x=>kt(x)===k).sort((a,b)=>areaRank(a.code)-areaRank(b.code))){
+        out.push(`<tr><td class="c">${sem}</td><td>${AREA_KO[String(r.code||"9")[0]]||"선택"} (심화)</td><td>${esc(r.title)}</td><td class="c">—</td><td class="c">${esc(r.grade)}</td><td class="muted">미국 교육과정 ${termLabel(r.termCode)}${r.weighted?" · Honors/AP":""}</td></tr>`); }
     }
     return out; };
-  const commentRows = ay => comments.filter(c=>ayOf(c.termCode)===ay).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode)).map(c=>`<div><b>(${c.termCode.endsWith("F")?"1":"2"}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`).join("")||`<div class="muted">기록 없음</div>`;
+  const commentRows = ay => comments.filter(c=>kAY(kTermOfUS(c.termCode))===ay).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode)).map(c=>`<div><b>(${kSem(kTermOfUS(c.termCode))}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`).join("")||`<div class="muted">기록 없음</div>`;
   $("#view").innerHTML=`<div class="noprint row" style="max-width:860px;margin:0 auto 12px">${subNav(id,"miri")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
   <div class="tr sgdoc" style="max-width:860px">
     <h1 style="text-align:center;font-size:19pt;margin:0 0 18px;font-family:'Noto Serif KR',serif">학습성장기록부</h1>
-    <table class="sg" style="margin-bottom:14px"><tr><th style="width:90px">학교</th><td>${esc(school.schoolNameKo||school.schoolName)}</td><th style="width:90px">학번</th><td>${esc(id)}</td><th style="width:90px">현재 학년</th><td>${esc(d.grade)}</td></tr></table>
+    <table class="sg" style="margin-bottom:14px"><tr><th style="width:90px">학교</th><td>${esc(school.schoolNameKo||school.schoolName)}</td><th style="width:90px">학번</th><td>${esc(id)}</td><th style="width:110px">학년 (학령)</th><td>${(()=>{const now=new Date(); const ay=now.getMonth()+1>=3?now.getFullYear():now.getFullYear()-1; const g=kGradeOf(ay); return g?`${kGradeLabel(g)} <span class="muted">(미국 ${esc(d.grade)}학년)</span>`:esc(d.grade);})()}</td></tr></table>
     <h3>1. 인적·학적사항</h3>
     <table class="sg"><tr><th style="width:90px">학생정보</th><td colspan="5"><div>성명 : ${esc(d.name_ko||"")} (${esc(d.last_en)}, ${esc(d.first_en)}) &nbsp;&nbsp; 성별 : ${d.gender==="F"?"여":d.gender==="M"?"남":""} &nbsp;&nbsp; 생년월일 : ${us(d.dob)}</div><div>주소 : ${esc(d.address_ko||d.address_en||"")}</div></td></tr>
       <tr><th>학적사항</th><td colspan="5">${d.enrollDate?`${us(d.enrollDate)} ${esc(school.schoolNameKo||school.schoolName)} 입학`:""}${d.prevSchool?` (${esc(d.prevSchool)} 에서 전입)`:""}${d.track?` · 트랙 ${esc(d.track)}`:""}</td></tr>
       <tr><th>특기사항</th><td colspan="5">${esc(d.distinctions||"")}&nbsp;</td></tr></table>
     <h3>2. 출결상황</h3>
-    ${T(["학년","결석 (인정)","결석 (미인정)","지각 (인정)","지각 (미인정)","특기사항"], attGrades.map(g=>`<tr><td class="c">${g}</td><td class="c">${att[g]["e.a"]}</td><td class="c">${att[g]["u.a"]}</td><td class="c">${att[g]["e.t"]}</td><td class="c">${att[g]["u.t"]}</td><td>&nbsp;</td></tr>`))}
+    ${T(["학년도","학년","결석 (인정)","결석 (미인정)","지각 (인정)","지각 (미인정)","특기사항"], attGrades.map(ay=>`<tr><td class="c">${ay}</td><td class="c">${kGradeLabel(kGradeOf(ay))}</td><td class="c">${att[ay]["e.a"]}</td><td class="c">${att[ay]["u.a"]}</td><td class="c">${att[ay]["e.t"]}</td><td class="c">${att[ay]["u.t"]}</td><td>&nbsp;</td></tr>`))}
     <h3>3. 수상경력</h3>
-    ${T(["학년","수상명","등급(위)","수상연월일","수여기관"], awards.map(a=>`<tr><td class="c">${a.date?gradeOfAY(ayOf(termOf(a.date))):""}</td><td>${esc(a.name)}</td><td class="c">${esc(a.description||"")}</td><td class="c">${us(a.date)}</td><td class="c">${a.awardType==="School"?esc(school.schoolNameKo||school.schoolName):esc(a.awardType||"")}</td></tr>`))}
+    ${T(["학년","수상명","등급(위)","수상연월일","수여기관"], awards.map(a=>`<tr><td class="c">${a.date?kGradeLabel(kGradeOf(kAY(kTermOfDate(a.date)))):""}</td><td>${esc(a.name)}</td><td class="c">${esc(a.description||"")}</td><td class="c">${us(a.date)}</td><td class="c">${a.awardType==="School"?esc(school.schoolNameKo||school.schoolName):esc(a.awardType||"")}</td></tr>`))}
     <h3>4. 창의적 체험활동상황</h3>
-    ${T(["학년","영역","활동명","역할·결과","기간","특기사항"], activities.map(a=>`<tr><td class="c">${a.startDate?gradeOfAY(ayOf(termOf(a.startDate))):""}</td><td class="c">${esc(a.category||"")}</td><td>${esc(a.name)}</td><td>${esc([a.position,a.rank].filter(Boolean).join(" · "))}</td><td class="c nw">${us(a.startDate)}${a.endDate?" ~ "+us(a.endDate):""}</td><td>${esc(a.description||"")}</td></tr>`))}
+    ${T(["학년","영역","활동명","역할·결과","기간","특기사항"], activities.map(a=>`<tr><td class="c">${a.startDate?kGradeLabel(kGradeOf(kAY(kTermOfDate(a.startDate)))):""}</td><td class="c">${esc(a.category||"")}</td><td>${esc(a.name)}</td><td>${esc([a.position,a.rank].filter(Boolean).join(" · "))}</td><td class="c nw">${us(a.startDate)}${a.endDate?" ~ "+us(a.endDate):""}</td><td>${esc(a.description||"")}</td></tr>`))}
     <div style="margin-top:8px"><b>봉사활동실적</b></div>
     ${T(["일자 또는 기간","장소 또는 주관기관명","활동내용","시간","누계시간"], (()=>{let acc=0; return vols.map(v=>{acc+=parseFloat(v.hours)||0; return `<tr><td class="c nw">${us(v.date)}</td><td class="c">${esc(school.schoolNameKo||school.schoolName)}${v.givenBy?" ("+esc(v.givenBy)+")":""}</td><td>${esc(v.name)}</td><td class="c">${v.hours||""}</td><td class="c">${acc}</td></tr>`;});})())}
     <h3>5. 교과학습발달상황</h3>
-    ${ays.map(ay=>`<div style="margin:8px 0 4px"><b>[${gradeOfAY(ay)}학년]</b> <span class="muted">${ay}학년도</span></div>
+    ${ays.map(ay=>`<div style="margin:8px 0 4px"><b>[${kGradeLabel(kGradeOf(ay))}]</b> <span class="muted">${ay}학년도 (3월~익년 2월)</span></div>
       ${T(["학기","교과","과목","원점수","성취도","비고"], subjectRows(ay))}
       <table class="sg" style="margin-top:-1px"><tr><th style="width:90px;vertical-align:top">세부능력 및 특기사항</th><td style="line-height:1.7">${commentRows(ay)}</td></tr></table>`).join("")||`<p class="muted">교과 기록 없음</p>`}
-    <div style="font-size:8.5pt;color:#444;margin-top:12px;line-height:1.6">· 미리 과목의 원점수는 주차별 학습 평가 최고점의 학기 평균이며, 성취도는 A(60–100) · B(50–59) · C(40–49) · F(39 이하)로 표기합니다(검정고시 합격 기준 60점).<br>· 심화 과목은 미국 교육과정(Apex Learning) 성적을 그대로 표기합니다.</div>
+    <div style="font-size:8.5pt;color:#444;margin-top:12px;line-height:1.6">· 미리 과목의 원점수는 주차별 학습 평가 최고점의 학기 평균이며, 성취도는 A(60–100) · B(50–59) · C(40–49) · F(39 이하)로 표기합니다(검정고시 합격 기준 60점).<br>· 심화 과목은 미국 교육과정(Apex Learning) 성적을 그대로 표기하며, 미국 학기(Fall 8~12월, Spring 1~6월)를 한국 학기(1학기 3~8월, 2학기 9~2월)에 가까운 쪽으로 배치했습니다.<br>· 학년은 학령(만 나이 기준 3월 입학)으로 표기했습니다. 본교는 미국 학제로 운영되며 미국 학년은 괄호에 병기합니다.</div>
     <div class="sign" style="margin-top:24px"><div class="left">* 본 기록부는 학교 직인이 없으면 참고용입니다.</div><div><div class="sp"></div><div class="line">${esc(school.schoolNameKo||school.schoolName)} 교장 ${esc(school.principalKo||school.principal)}</div><div style="margin-top:4px;text-align:center">${todayKo}</div></div></div>
   </div>
   ${staff?`<div class="card noprint" style="max-width:860px;margin:16px auto"><h2>세부능력 및 특기사항 입력</h2>
@@ -956,10 +963,10 @@ async function viewTranscript(id){
   let [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(); const level=(location.hash.split("/")[3]||"hs");
-  const miriRows = rows.filter(r=>r.source==="miri" && ["국어","한국사","사회","도덕"].includes(r.subjectKo)).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode));
+  const miriRows = rows.filter(r=>r.source==="miri" && ["국어","한국사","도덕"].includes(r.subjectKo)).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode));
   rows = rows.filter(r=>r.source!=="miri");
   rows = level==="ms" ? rows.filter(r=>r.gLevel>=6&&r.gLevel<=8) : rows.filter(r=>!(r.gLevel>=6&&r.gLevel<=8));
-  const miriHtml = miriRows.length ? `<div id="miriBox" hidden style="margin:10px 0 4px"><table><thead><tr><th class="nw" style="text-align:left">Korean National Curriculum (Pass/Fail)</th><th>Term</th><th>Grade</th></tr></thead><tbody>${miriRows.map(r=>`<tr><td>${esc(r.title.split(" · ")[0])}</td><td class="nw c">${termLabel(r.termCode)}</td><td class="c">${r.transcriptGrade||(r.score>=60?"P":"F")}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Korean national curriculum courses are recorded Pass/Fail and are not included in GPA or credit totals.</div></div>` : "";
+  const miriHtml = miriRows.length ? `<div id="miriBox" hidden style="margin:10px 0 4px"><table><thead><tr><th class="nw" style="text-align:left">Korean National Curriculum (Pass/Fail)</th><th>Term</th><th>Grade</th></tr></thead><tbody>${miriRows.map(r=>`<tr><td>${esc(r.title.split(" · ")[0])}</td><td class="nw c">${termLabel(r.termCode)}</td><td class="c">${r.transcriptGrade||(r.score>=60?"P":"F")}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Korean Language Arts, Korean History and Ethics (school-run Korean national curriculum) are recorded Pass/Fail and are not included in GPA or credit totals.</div></div>` : "";
   const g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
