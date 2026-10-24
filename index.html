@@ -730,18 +730,20 @@ async function viewSection(id){
   // 담임반: 학생마다 이번 학기 듣는 과목(성적 줄) + 미리 한 줄. 과목반: 과목 한 줄.
   let byStu={};
   if (s.kind==="house"){ const gs=(await getDocs(query(col("grades"), where("termCode","==",s.termCode)))).docs.map(d=>d.data()).filter(r=>r.source!=="miri");
-    gs.forEach(r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); (byStu[r.studentId]=byStu[r.studentId]||{})[k]={key:k,title:stripSem(r.title),rank:areaRank(r.code)}; }); }
+    gs.forEach(r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); (byStu[r.studentId]=byStu[r.studentId]||{})[k]={key:k,title:stripSem(r.title),rank:areaRank(r.code),score:r.score,behind:r.behind,auto:r.auto,asOf:r.geniusAsOf}; }); }
   const rowsOf = st => s.kind==="house" ? [...Object.values(byStu[st.id]||{}).sort((a,b)=>a.rank-b.rank||a.title.localeCompare(b.title)), {key:"miri",title:"미리 (전 과목)",rank:99}] : [{key:(s.courseId||"all").replace(/[\/\s.]/g,"_"), title:s.title}];
   const today=todayISO();
-  const btns=(pid,p)=>Object.entries(PROG).map(([k,v])=>`<button class="btn sm ${p.status===k?"":"ghost"}" data-p="${k}" ${canEdit?"":"disabled"}>${v.l}</button>`).join(" ");
+  const eff=(p,r)=> (p.status && (!r.auto || (p.date||"")>=(r.asOf||""))) ? {st:p.status,auto:false} : (r.auto?{st:r.auto,auto:true}:{st:p.status,auto:false});
+  const btns=(e)=>Object.entries(PROG).map(([k,v])=>`<button class="btn sm ${e.st===k?"":"ghost"}" data-p="${k}" ${canEdit?"":"disabled"} ${e.st===k&&e.auto?'style="opacity:.75"':""}>${v.l}</button>`).join(" ");
+  const gcell=r=> r.asOf ? `${r.score!=null?r.score+"점 · ":""}밀린 ${Math.max(0,r.behind??0)}개 <span class="muted">(${r.asOf.slice(5)})</span>` : "";
   $("#view").innerHTML=`<div class="card"><h2>${esc(s.title)} <span class="tag">${s.kind==="house"?"담임반":"과목반"}</span> <span class="muted" style="font-size:14px">${termLabel(s.termCode)} · ${esc(s.teacherEmail||"담당 미정")}</span></h2>
-    <div class="row" style="margin-bottom:10px"><a href="#/sections" class="muted">← 반 목록</a>${s.kind==="house"?`<a class="btn sm ghost" href="#/biweekly/${s.id}">이 반 출결 확인서</a>`:""}${can.manage()?`<button class="btn sm ghost" id="edR">명단 수정</button>`:""}<span class="muted">상태를 누르면 오늘 날짜로 저장되고 출결 확인서에 그대로 들어갑니다. ${s.kind==="house"?"과목 줄은 이번 학기 성적 줄에서 가져옵니다(성적 화면에서 과목을 추가하면 여기도 늘어남).":""}</span></div>
+    <div class="row" style="margin-bottom:10px"><a href="#/sections" class="muted">← 반 목록</a>${s.kind==="house"?`<a class="btn sm ghost" href="#/biweekly/${s.id}">이 반 출결 확인서</a>`:""}${can.manage()?`<button class="btn sm ghost" id="edR">명단 수정</button>`:""}<span class="muted">Apex 과목은 Genius의 밀린 과제 수로 상태가 자동으로 잡힙니다(0–4 On Track · 5–10 Behind · 11+ Behind 10+, 흐린 버튼 = 자동). 다르게 판단되면 눌러서 바꾸면 그 값이 우선합니다. 미리 줄은 직접 누르세요.</span></div>
     <div id="rosterEd" hidden class="card" style="background:var(--paper)"></div>
-    <table><thead><tr><th>학년</th><th>학생</th><th>과목</th><th>진도 상태</th><th>메모 (미완 과제 수 등)</th><th>최근 기록</th></tr></thead><tbody>
+    <table><thead><tr><th>학년</th><th>학생</th><th>과목</th><th>Genius</th><th>진도 상태</th><th>메모</th><th>최근 기록</th></tr></thead><tbody>
     ${roster.map(st=>{ const rows=rowsOf(st); return rows.map((r,i)=>{ const pid=`${id}_${st.id}_${r.key}`; const p=prog[pid]||{}; return `<tr data-pid="${pid}" data-s="${st.id}" data-k="${r.key}" data-t="${esc(r.title)}" ${i===0?'style="border-top:2px solid var(--line)"':""}>
       ${i===0?`<td rowspan="${rows.length}">${esc(st.grade)}</td><td rowspan="${rows.length}" class="nw"><a href="#/students/${st.id}">${esc(st.last_en)}, ${esc(st.first_en)}</a><br><span class="muted">${esc(st.name_ko||"")}</span></td>`:""}
-      <td class="nw">${esc(r.title)}</td><td class="nw">${btns(pid,p)}</td>
-      <td><input data-note value="${esc(p.note||"")}" placeholder="예: 과제 7개 미제출" style="padding:4px 8px" ${canEdit?"":"disabled"}></td><td class="muted nw" data-when>${p.date?`${p.date} · ${esc((p.by||"").split("@")[0])}`:"—"}</td></tr>`; }).join(""); }).join("")||`<tr><td colspan=6 class=muted>명단이 비어 있습니다${can.manage()?" — '명단 수정'으로 넣으세요":""}</td></tr>`}
+      <td class="nw">${esc(r.title)}</td><td class="nw muted" style="font-size:12.5px">${gcell(r)}</td><td class="nw">${btns(eff(p,r))}</td>
+      <td><input data-note value="${esc(p.note||"")}" placeholder="메모" style="padding:4px 8px" ${canEdit?"":"disabled"}></td><td class="muted nw" data-when>${p.date?`${p.date} · ${esc((p.by||"").split("@")[0])}`:"—"}</td></tr>`; }).join(""); }).join("")||`<tr><td colspan=7 class=muted>명단이 비어 있습니다${can.manage()?" — '명단 수정'으로 넣으세요":""}</td></tr>`}
     </tbody></table></div>`;
   document.querySelectorAll("tr[data-pid]").forEach(tr=>{ const pid=tr.dataset.pid, stid=tr.dataset.s, note=tr.querySelector("[data-note]");
     const save=async(status)=>{ const cur=prog[pid]||{}; const st=status??cur.status; if(!st) return toast("상태를 먼저 고르세요");
@@ -771,7 +773,8 @@ async function viewBiweekly(){
       ${h?`<button class="btn sm" id="pr">인쇄 / PDF 저장</button>`:""}<span class="muted">${h?"담임 의견 칸은 바로 쳐서 넣을 수 있고 자동 저장됩니다. A4 한 장에 두 명씩 나옵니다.":"담임반이 없으면 '반·진도'에서 먼저 만드세요."}</span></div></div>`;
   if (!h){ $("#view").innerHTML=head; $("#bwH").onchange=go; $("#bwS").onchange=go; $("#bwE").onchange=go; return; }
   const ids=h.studentIds||[];
-  const [ss, as, ps, cd] = await Promise.all([getDocs(col("students")), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term))), getDoc(ref("biweekly",`${h.id}_${end}`))]);
+  const [ss, as, ps, cd, gs] = await Promise.all([getDocs(col("students")), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term))), getDoc(ref("biweekly",`${h.id}_${end}`)), getDocs(query(col("grades"), where("termCode","==",term)))]);
+  const gRows=gs.docs.map(d=>d.data()).filter(r=>r.source!=="miri");
   const gnum=g=>parseInt(g)||99;
   const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>ids.includes(s.id)).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
   const att=as.docs.map(d=>d.data()); const prog={}; ps.docs.forEach(d=>{ prog[d.id]=d.data(); });
@@ -781,14 +784,19 @@ async function viewBiweekly(){
   const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
   const teacherName = (h.teacherEmail||"").split("@")[0];
   const slip=st=>{ const p2=count(st.id,start,end), pt=count(st.id);
-    const progRows=Object.values(prog).filter(p=>p.studentId===st.id&&p.status).sort((a,b)=>(a.courseId==="miri")-(b.courseId==="miri")||String(a.title).localeCompare(b.title)).map(p=>`<tr><td>${esc(p.title||p.sectionId)}</td><td class="c"><span class="pt">${PROG[p.status]?.l||esc(p.status)}</span></td><td>${esc(p.note||"")}</td><td class="c">${p.date||""}</td></tr>`).join("");
+    const man=Object.values(prog).filter(p=>p.studentId===st.id&&p.status);
+    const items=gRows.filter(r=>r.studentId===st.id).sort((a,b)=>areaRank(a.code)-areaRank(b.code)||String(a.title).localeCompare(b.title)).map(r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); const p=man.find(x=>x.courseId===k)||{};
+        const useMan=p.status&&(!r.auto||(p.date||"")>=(r.geniusAsOf||"")); const stt=useMan?p.status:r.auto; if(!stt) return null;
+        return {title:stripSem(r.title), st:stt, note:useMan?(p.note||""):(r.behind>0?`밀린 과제 ${r.behind}개`:""), score:r.score, date:useMan?p.date:r.geniusAsOf}; }).filter(Boolean);
+    const mp=man.find(x=>x.courseId==="miri"); if (mp) items.push({title:"미리 (전 과목)", st:mp.status, note:mp.note||"", score:null, date:mp.date});
+    const progRows=items.map(i=>`<tr><td>${esc(i.title)}</td><td class="c">${i.score!=null?i.score:""}</td><td class="c"><span class="pt">${PROG[i.st]?.l||esc(i.st)}</span></td><td>${esc(i.note)}</td><td class="c">${i.date||""}</td></tr>`).join("");
     return `<div class="bw"><div class="bwh"><div><h2>격주 출결 보고서</h2><div>[${termKo(term)}] &nbsp; ${us(start)} ~ ${us(end)}</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}<br>${esc(school.schoolName)}</div></div>
       <table class="sg"><tr><th>학생</th><td>${esc(st.last_en)}, ${esc(st.first_en)} ${st.name_ko?`(${esc(st.name_ko)})`:""}</td><th>생년월일</th><td>${us(st.dob)}</td><th>학년</th><td class="c">${esc(st.grade)}</td><th>재학 상태</th><td class="c">전일제</td></tr>
         <tr><th>담임반</th><td>${esc(h.title)}</td><th>성별</th><td class="c">${esc(st.gender)}</td><th>졸업 연도</th><td class="c">${esc(st.gradYear)}</td><th>담임 교사</th><td>${esc(teacherName)}</td></tr></table>
       <table class="sg"><thead><tr><th style="width:auto;white-space:normal">출결</th><th>인정 결석 (EA)</th><th>인정 지각 (ET)</th><th>무단 결석 (UA)</th><th>무단 지각 (UT)</th></tr></thead>
         <tbody><tr><td>이번 2주</td><td class="c">${p2["e.a"]}</td><td class="c">${p2["e.t"]}</td><td class="c">${p2["u.a"]}</td><td class="c">${p2["u.t"]}</td></tr>
         <tr><td>학기 누적 (${termLabel(term)})</td><td class="c"><b>${pt["e.a"]}</b></td><td class="c"><b>${pt["e.t"]}</b></td><td class="c"><b>${pt["u.a"]}</b></td><td class="c"><b>${pt["u.t"]}</b></td></tr></tbody></table>
-      ${progRows?`<table class="sg"><thead><tr><th style="width:auto">과목 진도</th><th>상태</th><th style="width:auto">메모</th><th>기준일</th></tr></thead><tbody>${progRows}</tbody></table>`:""}
+      ${progRows?`<table class="sg"><thead><tr><th style="width:auto">과목 진도</th><th>현재 점수</th><th>상태</th><th style="width:auto">메모</th><th>기준일</th></tr></thead><tbody>${progRows}</tbody></table>`:""}
       <table class="sg"><tr><th style="vertical-align:top;padding-top:7px">담임 의견</th><td><div class="cm" contenteditable data-cm="${st.id}">${esc(comments[st.id]||"")}</div></td></tr></table>
       <table class="sg sign3"><thead><tr><th style="width:auto">확인 및 동의</th><th style="width:45%">서명</th><th style="width:25%">날짜</th></tr></thead><tbody><tr><td>학생</td><td></td><td></td></tr><tr><td>학부모</td><td></td><td></td></tr><tr><td>담임 교사</td><td></td><td></td></tr></tbody></table>
     </div>`; };
