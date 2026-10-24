@@ -57,6 +57,17 @@ service cloud.firestore {
       match /comments/{id} {           // 세특·교사 코멘트
         allow read, write: if isStaff(sid);
       }
+      match /sections/{id} {           // 반(담임반·과목반) — 교직원 편집, 학생은 보기
+        allow read: if isStaff(sid) || role(sid) == 'student';
+        allow write: if isStaff(sid);
+      }
+      match /progress/{id} {           // 과목별 진도 상태 — 교사 입력, 학생 본인 열람
+        allow read: if isStaff(sid) || isSelf(sid, resource.data.studentId);
+        allow write: if isStaff(sid);
+      }
+      match /biweekly/{id} {           // 격주 출결 확인서 담임 의견
+        allow read, write: if isStaff(sid);
+      }
       match /requests/{id} {           // 학생 수정 요청
         allow read: if isManager(sid) || isSelf(sid, resource.data.studentId);
         allow create: if isSelf(sid, request.resource.data.studentId);
