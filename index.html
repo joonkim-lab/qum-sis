@@ -253,6 +253,7 @@ async function route(){
   try {
     if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg));
     if (k==="transcript" && arg) return await viewTranscript(arg);
+    if (k==="miri" && arg) return await viewMiri(arg);
   } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; return; }
   const r = routes[k||""]; if (!r || !r.show()) { v.innerHTML="<p>권한이 없습니다.</p>"; return; }
   try { await r.view(); } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; }
@@ -419,7 +420,8 @@ async function viewImport(){
       } else if (importType==="grades"){
         if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
         const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
-        batch.set(ref("grades",gid), {studentId:String(r.studentId), courseId:cid, code:r.code||"", title:r.title, school:r.school||school.schoolName, gLevel:parseInt(r.gLevel)||null, termCode:r.termCode, grade:r.grade||"IP", credit:parseFloat(r.credit)||0, weighted:/^(Y|1|true)$/i.test(r.weighted||""), source:r.source||"past", ...stamp}, {merge:true}); ops++;
+        const extra={}; if (r.score!==undefined&&r.score!=="") extra.score=parseFloat(r.score); if (r.subjectKo) extra.subjectKo=r.subjectKo; if (r.level) extra.level=r.level; if (r.transcriptGrade) extra.transcriptGrade=r.transcriptGrade; if (r.weeks) extra.weeks=parseInt(r.weeks);
+        batch.set(ref("grades",gid), {studentId:String(r.studentId), courseId:cid, code:r.code||"", title:r.title, school:r.school||school.schoolName, gLevel:parseInt(r.gLevel)||null, termCode:r.termCode, grade:r.grade||"IP", credit:parseFloat(r.credit)||0, weighted:/^(Y|1|true)$/i.test(r.weighted||""), source:r.source||"past", ...extra, ...stamp}, {merge:true}); ops++;
       }
       n++; if (ops>=400) await flush();
     }
@@ -445,7 +447,7 @@ function parseDelimited(text){
 /* ---------- 학교 설정 ---------- */
 async function viewSettings(){
   const s = school;
-  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["accreditation","인증 문구(성적표 하단)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
+  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["principalKo","교장 한글명(미리 성적표)"],["accreditation","인증 문구(성적표 하단)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
   const members = await getDocs(query(collection(db,"memberships"), where("schoolId","==",sid)));
   $("#view").innerHTML = `<div class="card"><h2>학교 설정</h2><form id="f"><div class="grid">${F.map(([k,l,t])=>`<div><label>${l}</label><input name="${k}" type="${t||"text"}" value="${esc(s[k])}"></div>`).join("")}</div>
     <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button></div></form></div>
@@ -466,7 +468,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a></div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">미리 성적표</a></div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -520,7 +522,7 @@ async function viewStudentGrades(id){
       <select name="source" style="max-width:110px">${["elective","apex","cw","miri","past","transfer"].map(x=>`<option>${x}</option>`).join("")}</select><button class="btn sm">추가</button></form>`:""}
     <div class="scroll"><table><thead><tr><th>학기</th><th>학년</th><th>코드</th><th>과목</th><th>학교</th><th>성적</th><th>학점</th><th>가중</th><th>출처</th><th></th></tr></thead><tbody>
     ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr); return tr.map(r=>`<tr class="${r.needsReview?"rv":""}"><td class="nw">${termLabel(t)}</td><td>${r.gLevel??""}</td><td>${esc(r.code)}</td><td>${esc(r.title)}</td><td class="muted nw" title="${esc(r.school)}">${r.school===school.schoolName?"EOS":esc(r.school)}</td>
-      <td>${editable?`<select data-g="${r.id}" style="width:70px;padding:3px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option ${x===r.grade?"selected":""}>${x}</option>`).join("")}</select>`:esc(r.grade)}</td>
+      <td class="nw">${editable?`<select data-g="${r.id}" style="width:70px;padding:3px">${["IP","A","B","C","D","F","P","DC","MB"].map(x=>`<option ${x===r.grade?"selected":""}>${x}</option>`).join("")}</select>`:esc(r.grade)}${r.score!=null?` <span class="muted">${r.score}점</span>`:""}</td>
       <td>${editable?`<input data-c="${r.id}" value="${r.credit}" style="width:60px;padding:3px">`:r.credit}</td><td>${r.weighted?"+":""}</td><td class="muted">${esc(r.source)}</td>
       <td class="nw">${r.needsReview?`<span class="tag pend">확인</span>`:""} ${can.manage()?`<button class="btn sm ghost" data-del="${r.id}">×</button>`:""}</td></tr>`).join("")+`<tr class="tot"><td colspan="5" style="text-align:right">Semester Totals</td><td>${f2(tg.u)} / ${f2(tg.w)}</td><td>${tg.credits}</td><td colspan="3"></td></tr>`; }).join("")}
     </tbody></table></div>
@@ -702,13 +704,45 @@ async function viewRequests(){
   document.querySelectorAll("[data-done]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("requests",el.dataset.done),{status:el.checked?"done":"open",doneBy:me.email,doneAt:serverTimestamp()}); });
 }
 
+/* ---------- 미리 성적표 (한국 과정) ---------- */
+const MIRI_ORDER=["국어","수학","영어","사회","과학","도덕","한국사"];
+const miriGrade = sc => sc>=60?"A":sc>=50?"B":sc>=40?"C":"F";
+async function viewMiri(id){
+  const [s, all]=await Promise.all([getDoc(ref("students",id)), loadGrades(id)]);
+  if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=s.data(); const rows=all.filter(r=>r.source==="miri");
+  const terms=[...new Set(rows.map(r=>r.termCode))].sort((a,b)=>termKey(a)-termKey(b)); const term=location.hash.split("/")[3]||terms[terms.length-1]||school.termCode;
+  const tr=rows.filter(r=>r.termCode===term).sort((a,b)=>MIRI_ORDER.indexOf(a.subjectKo)-MIRI_ORDER.indexOf(b.subjectKo));
+  const level=tr[0]?.level||""; const avg=tr.length?Math.round(tr.reduce((a,r)=>a+(r.score||0),0)/tr.length):0;
+  const y=term.slice(0,4), sem=term.endsWith("F")?"1":"2"; const today=new Date().toISOString().slice(0,10);
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"miri")}<select id="miTerm" style="max-width:150px;padding:5px 8px">${terms.map(t=>`<option value="${t}" ${t===term?"selected":""}>${y}학년도 ${t.endsWith("F")?"1":"2"}학기</option>`).join("")}</select><button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
+  <div class="tr" style="max-width:820px">
+    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 style="font-family:'Noto Serif KR',serif">미리 학습 성적표</h1><div style="font-size:9pt;color:#444;margin-top:4px">한국 교육과정 (검정고시 과정) · Korean National Curriculum</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}\n${esc(school.schoolName)}</div></div>
+    <div class="info" style="grid-template-columns:1.4fr 1fr 1fr 1fr"><div><b>학생</b>${esc(d.name_ko||"")} ${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>학번</b>${esc(id)}</div><div><b>학년</b>${esc(d.grade)}</div><div><b>과정</b>${esc(level)}</div>
+      <div><b>학기</b>${y}학년도 ${sem}학기</div><div><b>트랙</b>${esc(d.track||"")}</div><div><b>학기 평균</b>${avg}점</div><div><b>발행일</b>${today}</div></div>
+    <table style="margin-top:8px"><thead><tr><th>과목</th><th>Course</th><th>학습 주차</th><th>평균 점수</th><th>등급</th><th>이수</th></tr></thead><tbody>
+    ${tr.map(r=>`<tr><td class="c"><b>${esc(r.subjectKo)}</b></td><td>${esc(r.title.split(" · ")[0])}</td><td class="c">${r.weeks||""}</td><td class="c">${r.score}</td><td class="c"><b>${miriGrade(r.score)}</b></td><td class="c">${r.score>=60?"이수":"미이수"}</td></tr>`).join("")||`<tr><td colspan="6" class="c muted">이 학기 기록 없음</td></tr>`}
+    </tbody></table>
+    <div class="legend" style="grid-template-columns:1fr 1fr;margin-top:18px">
+      <div><h4>등급 기준</h4><table><tr><th>등급</th><th>점수</th><th>의미</th></tr><tr><td>A</td><td>60–100</td><td>합격 수준 이수</td></tr><tr><td>B</td><td>50–59</td><td>보완 필요</td></tr><tr><td>C</td><td>40–49</td><td>재학습 필요</td></tr><tr><td>F</td><td>0–39</td><td>미이수</td></tr></table><div style="font-size:8pt;color:#555;margin-top:4px">점수는 주차별 학습 평가의 최고점 평균입니다. 검정고시 합격 기준(과목 60점)에 맞춘 등급입니다.</div></div>
+      <div><h4>안내</h4><div style="font-size:8.5pt;line-height:1.6">이 성적표는 본교 자체 운영 한국 교육과정(미리)의 학습 결과입니다.<br>미국 학제 성적표(Transcript)에는 국어·한국사·사회·도덕이 Pass/Fail로 기재되며 GPA에 포함되지 않습니다.<br>수학·영어·과학은 미국 교육과정 성적이 별도로 기재됩니다.</div></div>
+    </div>
+    <div class="sign"><div class="left">* 본 성적표는 학교 직인이 없으면 참고용입니다.</div><div><div class="sp"></div><div class="line">${esc(school.schoolNameKo||school.schoolName)} 교장 ${esc(school.principalKo||school.principal)}</div></div></div>
+  </div>`;
+  $("#miTerm").onchange=e=>{ location.hash=`#/miri/${id}/${e.target.value}`; };
+  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_MIRI_${term}`; window.print(); document.title=t; };
+}
+
 /* ---------- Transcript ---------- */
 async function viewTranscript(id){
   const us = x => x? `${x.slice(5,7)}/${x.slice(8,10)}/${x.slice(0,4)}` : "";
   let [s, rows, as] = await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(); const level=(location.hash.split("/")[3]||"hs");
+  const miriRows = rows.filter(r=>r.source==="miri" && ["국어","한국사","사회","도덕"].includes(r.subjectKo)).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode));
+  rows = rows.filter(r=>r.source!=="miri");
   rows = level==="ms" ? rows.filter(r=>r.gLevel>=6&&r.gLevel<=8) : rows.filter(r=>!(r.gLevel>=6&&r.gLevel<=8));
+  const miriHtml = miriRows.length ? `<div id="miriBox" hidden style="margin:10px 0 4px"><table><thead><tr><th class="nw" style="text-align:left">Korean National Curriculum (Pass/Fail)</th><th>Term</th><th>Grade</th></tr></thead><tbody>${miriRows.map(r=>`<tr><td>${esc(r.title.split(" · ")[0])}</td><td class="nw c">${termLabel(r.termCode)}</td><td class="c">${r.transcriptGrade||(r.score>=60?"P":"F")}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Korean national curriculum courses are recorded Pass/Fail and are not included in GPA or credit totals.</div></div>` : "";
   const g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
@@ -724,7 +758,7 @@ async function viewTranscript(id){
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${miriHtml?`<label style="font-size:13px"><input type="checkbox" id="miriOn" style="width:auto"> 미리 포함</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial ${level==="ms"?"Middle School ":""}Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
@@ -737,6 +771,7 @@ async function viewTranscript(id){
       return tr.map(r=>`<tr><td class="c">${r.gLevel??""}</td><td class="nw c">${esc(r.school)}</td><td class="c">${esc(r.code)}</td><td class="ct">${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td class="nw c">${termLabel(t)}</td><td class="c">${esc(r.grade)}</td><td class="c">${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td class="c">${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
         +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td class="c">${f2(tg.w)}</td><td class="c">${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
     </tbody></table>
+    ${miriHtml}
     <div class="legend">
       <div><h4>GRADE</h4><table><tr><th>Grade</th><th>CORE</th><th>H / AP</th><th>%</th></tr><tr><td>A</td><td>4.0</td><td>5.0</td><td>90-100</td></tr><tr><td>B</td><td>3.0</td><td>4.0</td><td>80-89</td></tr><tr><td>C</td><td>2.0</td><td>3.0</td><td>70-79</td></tr><tr><td>D</td><td>1.0</td><td>2.0</td><td>60-69</td></tr><tr><td>F</td><td>0.0</td><td>1.7</td><td>0-59</td></tr></table></div>
       <div><h4>Distinctions</h4>${dist.map(x=>`<div>${esc(x)}</div>`).join("")||"<div>—</div>"}</div>
@@ -747,6 +782,7 @@ async function viewTranscript(id){
     <div class="sign"><div class="left" id="trNote">* This transcript is unofficial unless signed and sealed by a School Official.</div>
       <div><div class="sp"></div><div class="line" id="trSig" style="border-top:0">Printed on ${us(today)}</div></div></div>
   </div>`;
+  const mo=$("#miriOn"); if (mo) mo.onchange=()=>{ $("#miriBox").hidden=!mo.checked; };
   $("#trLevel").onchange=e=>{ location.hash=`#/transcript/${id}/${e.target.value}`; };
   const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=(on?"Official ":"Unofficial ")+(level==="ms"?"Middle School ":"")+"Transcript";
     $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
