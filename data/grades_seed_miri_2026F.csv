@@ -1,282 +1,286 @@
-studentId,code,title,subjectKo,level,school,gLevel,termCode,grade,score,weeks,credit,weighted,source,transcriptGrade
-4227,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,B,53,1,0,,miri,F
-4227,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,93,1,0,,miri,P
-4227,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-4236,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-4236,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-4236,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,91,2,0,,miri,P
-4236,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,95,2,0,,miri,P
-4236,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-4236,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,97,2,0,,miri,P
-4368,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,F,33,1,0,,miri,F
-4368,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,93,1,0,,miri,P
-4368,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,F,33,1,0,,miri,F
-4368,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,F,10,1,0,,miri,F
-4368,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,F,17,1,0,,miri,F
-4407,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,96,1,0,,miri,P
-4407,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,80,1,0,,miri,P
-4407,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-4407,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-4407,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-4407,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-4409,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-4409,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-4409,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-4409,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-4409,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-4434,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,69,3,0,,miri,P
-4434,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,73,3,0,,miri,P
-4434,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,B,58,3,0,,miri,F
-4434,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-4434,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,61,3,0,,miri,P
-4434,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-4446,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-4446,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-4446,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-4446,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,97,2,0,,miri,P
-4446,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-4446,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-4446,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-773,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-773,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-773,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-773,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-773,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-773,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-773,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-774,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-774,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,62,2,0,,miri,P
-774,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,88,1,0,,miri,P
-774,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,80,1,0,,miri,P
-774,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,85,1,0,,miri,P
-774,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-779,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-779,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-779,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-779,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,93,1,0,,miri,P
-779,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,90,1,0,,miri,P
-779,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-779,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7953,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,87,2,0,,miri,P
-7953,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,60,1,0,,miri,P
-7953,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-7954,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7954,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,93,1,0,,miri,P
-7954,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7954,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7954,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,95,1,0,,miri,P
-7954,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7954,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,1,0,,miri,P
-7955,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7955,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,84,1,0,,miri,P
-7955,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7955,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-7955,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7955,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,96,1,0,,miri,P
-7956,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-7956,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-7956,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-7956,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-7956,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-7956,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-799,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-799,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-799,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-799,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-799,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-799,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-799,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-7990,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7990,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-7990,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7990,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7990,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7990,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-7990,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-802,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-802,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-802,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-802,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-802,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-802,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-802,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-802,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,B,52,1,0,,miri,F
-805,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-805,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-805,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-805,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-805,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,80,2,0,,miri,P
-805,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-805,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-807,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-807,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-807,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-807,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-807,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,95,2,0,,miri,P
-807,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-807,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-811,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-811,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-811,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,89,2,0,,miri,P
-811,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-811,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-811,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-811,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-819,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-819,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-819,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-819,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-819,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-819,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-820,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-820,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-820,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-820,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-820,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-820,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-820,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-821,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-821,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-821,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-821,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-821,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-821,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-822,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-822,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-822,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-822,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,90,2,0,,miri,P
-822,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-822,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-823,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-823,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-823,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,91,2,0,,miri,P
-823,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,80,2,0,,miri,P
-823,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,82,2,0,,miri,P
-823,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,97,2,0,,miri,P
-826,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-826,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-826,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-826,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-826,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,80,2,0,,miri,P
-826,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-826,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-829,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-829,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,87,1,0,,miri,P
-829,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,76,1,0,,miri,P
-829,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,80,1,0,,miri,P
-829,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-829,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-829,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,1,0,,miri,P
-831,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,60,1,0,,miri,P
-831,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,93,1,0,,miri,P
-831,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,67,1,0,,miri,P
-831,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-836,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-836,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-839,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,93,2,0,,miri,P
-839,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-839,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,89,2,0,,miri,P
-839,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-839,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-839,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-839,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-840,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,73,1,0,,miri,P
-840,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-840,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-840,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,87,1,0,,miri,P
-840,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,90,1,0,,miri,P
-840,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-840,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,62,1,0,,miri,P
-841,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-841,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-841,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-841,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-841,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,95,2,0,,miri,P
-841,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-841,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-842,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-842,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-842,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-842,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-842,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-842,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-842,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-844,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-844,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-844,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,89,2,0,,miri,P
-844,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-844,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-844,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-844,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-845,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-845,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-845,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,97,2,0,,miri,P
-845,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,85,2,0,,miri,P
-845,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-845,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,97,2,0,,miri,P
-846,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-846,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,84,2,0,,miri,P
-846,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-846,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,89,2,0,,miri,P
-846,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,86,2,0,,miri,P
-846,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-848,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-848,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-848,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,96,1,0,,miri,P
-848,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-848,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-848,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-849,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-849,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-849,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-849,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,95,2,0,,miri,P
-849,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-849,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-860,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,80,1,0,,miri,P
-860,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-860,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-860,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-860,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-860,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-860,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,1,0,,miri,P
-864,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,93,2,0,,miri,P
-864,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-864,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-864,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-864,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,95,2,0,,miri,P
-864,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-864,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-865,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,87,1,0,,miri,P
-865,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,89,1,0,,miri,P
-865,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-870,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-870,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-870,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-870,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-870,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-870,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-870,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-877,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-877,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-877,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-877,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-877,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-877,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,A,98,2,0,,miri,P
-877,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,A,96,2,0,,miri,P
-880,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,92,1,0,,miri,P
-880,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,91,2,0,,miri,P
-880,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,88,2,0,,miri,P
-880,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,85,2,0,,miri,P
-880,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,91,2,0,,miri,P
-880,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,94,2,0,,miri,P
-891,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,A,92,2,0,,miri,P
-891,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,A,82,2,0,,miri,P
-891,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-891,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
-891,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,A,91,2,0,,miri,P
-891,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,A,100,2,0,,miri,P
+studentId,code,title,subjectKo,level,school,gLevel,termCode,kTerm,grade,score,weeks,credit,weighted,source,transcriptGrade
+4227,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,B,53,1,0,,miri,F
+4227,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,93,1,0,,miri,P
+4227,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+4236,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+4236,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+4236,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+4236,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,95,2,0,,miri,P
+4236,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+4236,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,97,2,0,,miri,P
+4368,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,F,33,1,0,,miri,F
+4368,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,93,1,0,,miri,P
+4368,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,F,33,1,0,,miri,F
+4368,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,F,10,1,0,,miri,F
+4368,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,F,17,1,0,,miri,F
+4407,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,96,1,0,,miri,P
+4407,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,80,1,0,,miri,P
+4407,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+4407,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+4407,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+4407,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+4409,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+4409,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+4409,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+4409,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+4409,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+4434,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K1,F,23,1,0,,miri,F
+4434,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+4434,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K1,F,27,1,0,,miri,F
+4434,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+4434,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K1,F,0,1,0,,miri,F
+4434,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+4434,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+4434,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K1,F,0,1,0,,miri,F
+4434,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+4434,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+4446,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+4446,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+4446,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+4446,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,97,2,0,,miri,P
+4446,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+4446,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+4446,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+773,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+773,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+773,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+773,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+773,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+773,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+773,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+774,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+774,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,62,2,0,,miri,P
+774,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,88,1,0,,miri,P
+774,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,80,1,0,,miri,P
+774,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,85,1,0,,miri,P
+774,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+779,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+779,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+779,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+779,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,93,1,0,,miri,P
+779,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,90,1,0,,miri,P
+779,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+779,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7953,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,87,2,0,,miri,P
+7953,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,60,1,0,,miri,P
+7953,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+7954,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7954,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,93,1,0,,miri,P
+7954,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7954,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7954,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,95,1,0,,miri,P
+7954,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7954,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,1,0,,miri,P
+7955,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7955,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,84,1,0,,miri,P
+7955,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7955,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+7955,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7955,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,96,1,0,,miri,P
+7956,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+7956,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+7956,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+7956,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+7956,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+7956,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+799,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+799,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+799,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+799,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+799,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+799,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+799,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+7990,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7990,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+7990,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7990,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7990,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7990,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+7990,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+802,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+802,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+802,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+802,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+802,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+802,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+802,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+802,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,B,52,1,0,,miri,F
+805,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+805,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+805,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+805,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+805,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,80,2,0,,miri,P
+805,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+805,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+807,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+807,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+807,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+807,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+807,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,95,2,0,,miri,P
+807,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+807,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+811,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+811,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+811,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,89,2,0,,miri,P
+811,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+811,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+811,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+811,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+819,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+819,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+819,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+819,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+819,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+819,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+820,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+820,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+820,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+820,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+820,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+820,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+820,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+821,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+821,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+821,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+821,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+821,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+821,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+822,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+822,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+822,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+822,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,90,2,0,,miri,P
+822,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+822,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+823,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+823,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+823,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+823,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,80,2,0,,miri,P
+823,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,82,2,0,,miri,P
+823,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,97,2,0,,miri,P
+826,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+826,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+826,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+826,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+826,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,80,2,0,,miri,P
+826,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+826,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+829,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+829,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,87,1,0,,miri,P
+829,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,76,1,0,,miri,P
+829,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,80,1,0,,miri,P
+829,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+829,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+829,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,1,0,,miri,P
+831,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,60,1,0,,miri,P
+831,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,93,1,0,,miri,P
+831,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,67,1,0,,miri,P
+831,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+836,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+836,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+839,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,93,2,0,,miri,P
+839,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+839,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,89,2,0,,miri,P
+839,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+839,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+839,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+839,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+840,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,73,1,0,,miri,P
+840,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+840,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+840,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,87,1,0,,miri,P
+840,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,90,1,0,,miri,P
+840,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+840,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,62,1,0,,miri,P
+841,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+841,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+841,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+841,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+841,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,95,2,0,,miri,P
+841,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+841,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+842,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+842,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+842,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+842,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+842,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+842,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+842,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+844,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+844,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+844,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,89,2,0,,miri,P
+844,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+844,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+844,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+844,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+845,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+845,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+845,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,97,2,0,,miri,P
+845,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,85,2,0,,miri,P
+845,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+845,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,97,2,0,,miri,P
+846,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+846,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,84,2,0,,miri,P
+846,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+846,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,89,2,0,,miri,P
+846,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,86,2,0,,miri,P
+846,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+848,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+848,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+848,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,96,1,0,,miri,P
+848,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+848,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+848,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+849,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+849,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+849,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+849,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,95,2,0,,miri,P
+849,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+849,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+860,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,80,1,0,,miri,P
+860,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+860,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+860,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+860,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+860,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+860,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,1,0,,miri,P
+864,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,93,2,0,,miri,P
+864,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+864,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+864,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+864,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,95,2,0,,miri,P
+864,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+864,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+865,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,87,1,0,,miri,P
+865,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,89,1,0,,miri,P
+865,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+870,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+870,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+870,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+870,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+870,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+870,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+870,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+877,K-SCI,Science (Korean Curriculum) · 과학 (고졸),과학,고졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+877,K-KOR,Korean Language Arts · 국어 (고졸),국어,고졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+877,K-ETH,Ethics · 도덕 (고졸),도덕,고졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+877,K-SOC,Korean Social Studies · 사회 (고졸),사회,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+877,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),수학,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+877,K-ENG,English (Korean Curriculum) · 영어 (고졸),영어,고졸,Elite Open School,,2026F,2026K2,A,98,2,0,,miri,P
+877,K-HIS,Korean History · 한국사 (고졸),한국사,고졸,Elite Open School,,2026F,2026K2,A,96,2,0,,miri,P
+880,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,92,1,0,,miri,P
+880,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+880,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,88,2,0,,miri,P
+880,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,85,2,0,,miri,P
+880,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+880,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,94,2,0,,miri,P
+891,K-SCI,Science (Korean Curriculum) · 과학 (중졸),과학,중졸,Elite Open School,,2026F,2026K2,A,92,2,0,,miri,P
+891,K-KOR,Korean Language Arts · 국어 (중졸),국어,중졸,Elite Open School,,2026F,2026K2,A,82,2,0,,miri,P
+891,K-ETH,Ethics · 도덕 (중졸),도덕,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+891,K-SOC,Korean Social Studies · 사회 (중졸),사회,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
+891,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),수학,중졸,Elite Open School,,2026F,2026K2,A,91,2,0,,miri,P
+891,K-ENG,English (Korean Curriculum) · 영어 (중졸),영어,중졸,Elite Open School,,2026F,2026K2,A,100,2,0,,miri,P
