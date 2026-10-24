@@ -120,6 +120,8 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .bw .cm{min-height:34px;outline:none;line-height:1.45}.bw .cm:focus{background:#fffdf0}
 .bw .sign3 td{height:22px}
 .bw .pt{display:inline-block;padding:0 7px;border-radius:10px;font-size:8.5pt;border:1px solid #999;white-space:nowrap}
+.bw .prh{font-weight:700;font-size:9.5pt;margin:6px 0 2px}.bw .units{font-size:8pt;line-height:1.4;color:#222}.bw .tcm{margin-top:3px;padding-top:3px;border-top:0.5px dashed #999;line-height:1.45}
+@media print{ #prList .bw{border:0;max-width:none;margin:0;padding:0;page-break-after:always;font-size:8.5pt} #prList .bw:last-child{page-break-after:auto} #prList .bw .sg th,#prList .bw .sg td{font-size:8.5pt;padding:2px 5px} }
 @media print{ #bwList .bw{border:0;max-width:none;margin:0;padding:2mm 2mm 0;height:135mm;overflow:hidden;border-bottom:1px dashed #888;page-break-inside:avoid;font-size:8.5pt} #bwList .bw .sg th,#bwList .bw .sg td{font-size:8.5pt;padding:2px 5px} #bwList .bw .bwh h2{font-size:12.5pt} #bwList .bw:nth-of-type(2n){page-break-after:always;border-bottom:0} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
@@ -156,7 +158,7 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, orderBy, limit, writeBatch, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc as _setDoc, updateDoc as _updateDoc, collection, getDocs, query, where, orderBy, limit, writeBatch as _writeBatch, deleteDoc as _deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBh_YwVF6xaQv0P5csZwhD9tzz3i7jv2_A",
@@ -183,6 +185,24 @@ let school = null;      // settings doc
 let sid = DEFAULT_SCHOOL;
 const col = name => collection(db, "schools", sid, name);
 const ref = (name, id) => doc(db, "schools", sid, name, String(id));
+
+/* ---------- 변경 이력: 모든 쓰기를 schools/{sid}/audit 에 자동 기록 (교장만 열람) ---------- */
+const AUDIT_BEFORE=new Set(["grades","attendance","incidents","students","activities","memberships","accounts","comments"]);
+const pathInfo = r => { const p=r.path.split("/"); return {path:r.path, col:p[0]==="schools"?(p[2]||"school"):p[0], docId:p[p.length-1]}; };
+const auditJson = v => { if (v==null) return ""; try { const s=JSON.stringify(v,(k,x)=> (x && typeof x==="object" && !Array.isArray(x) && Object.getPrototypeOf(x)!==Object.prototype) ? (x.seconds!=null? new Date(x.seconds*1000).toISOString().slice(0,19) : "(저장 시각)") : x); return s.length>4000? s.slice(0,4000)+"…" : s; } catch(e){ return ""; } };
+const stuOf = (c,id,d,b) => (d&&d.studentId) || (b&&b.studentId) || (c==="students"||c==="accounts" ? id : (c==="grades"||c==="attendance") ? String(id).split("_")[0] : "");
+async function beforeOf(r){ if (!me) return undefined; if (!AUDIT_BEFORE.has(pathInfo(r).col)) return undefined; try { const x=await getDoc(r); return x.exists()? x.data() : null; } catch(e){ return undefined; } }
+function audit(r, op, data, before){ if (!me) return; const {path,col:c,docId}=pathInfo(r); if (c==="audit") return; const st=stuOf(c,docId,data,before);
+  _setDoc(doc(collection(db,"schools",sid,"audit")), {path, col:c, docId, op, count:1, studentIds: st?[String(st)]:[], data:auditJson(data), before: before===undefined? null : auditJson(before), by:me.email, role:me.role, at:serverTimestamp()}).catch(e=>console.warn("audit",e)); }
+async function setDoc(r,d,o){ const b=await beforeOf(r); const x = o ? await _setDoc(r,d,o) : await _setDoc(r,d); audit(r, o&&o.merge?"merge":"set", d, b); return x; }
+async function updateDoc(r,d){ const b=await beforeOf(r); await _updateDoc(r,d); audit(r,"update",d,b); }
+async function deleteDoc(r){ const b=await beforeOf(r); await _deleteDoc(r); audit(r,"delete",null,b); }
+function writeBatch(dbx){ const b=_writeBatch(dbx), ops=[];
+  const w={ set(r,d,o){ o? b.set(r,d,o) : b.set(r,d); ops.push([r,"set",d]); return w; }, update(r,d){ b.update(r,d); ops.push([r,"update",d]); return w; }, delete(r){ b.delete(r); ops.push([r,"delete",null]); return w; },
+    async commit(){ await b.commit(); if (!me||!ops.length) return; const cols={}, stu=new Set();
+      ops.forEach(([r,op,d])=>{ const i=pathInfo(r); cols[i.col]=(cols[i.col]||0)+1; const x=stuOf(i.col,i.docId,d); if (x) stu.add(String(x)); });
+      _setDoc(doc(collection(db,"schools",sid,"audit")), {op:"batch", col:Object.keys(cols).join(","), cols, count:ops.length, studentIds:[...stu].slice(0,300), data:auditJson(ops.slice(0,25).map(([r,op,d])=>({path:r.path,op,d}))), before:null, by:me.email, role:me.role, at:serverTimestamp()}).catch(e=>console.warn("audit",e)); } };
+  return w; }
 
 const ROLES = { owner:"소유자", admin:"행정", principal:"교장", teacher:"교사", student:"학생" };
 const can = {
@@ -252,11 +272,15 @@ const routes = {
   "sections":{label:"반·진도",    show:()=>can.manage() || me.role==="teacher", view:viewSections},
   "biweekly":{label:"출결 확인서", show:()=>can.manage() || me.role==="teacher", view:viewBiweekly},
   "slips":   {label:"슬립 승인",  show:()=>can.manage(),  view:viewSlips},
-  "comments":{label:"세특",       show:()=>can.manage() || me.role==="teacher", view:viewComments},
+  "comments":{label:"세특·의견",   show:()=>can.manage() || me.role==="teacher", view:viewComments},
+  "report":  {label:"Progress Report", show:()=>can.manage() || me.role==="teacher", view:viewReport},
+  "electives":{label:"선택과목 성적", show:()=>can.manage(), view:viewElectives},
+  "genius":  {label:"Genius 갱신", show:()=>can.manage(),  view:viewGenius},
   "requests":{label:"수정 요청",  show:()=>can.manage(),  view:viewRequests},
   "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
   "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
   "settings":{label:"학교 설정",  show:()=>can.settings(),view:viewSettings},
+  "audit":   {label:"변경 이력",  show:()=>can.settings(),view:viewAudit},
   "me":      {label:"내 정보 · 성적 · 출결 · 활동", show:()=>me.role==="student", view:viewMe},
 };
 function buildNav(){
@@ -394,7 +418,7 @@ const IMPORT_TYPES = {
   courses:{label:"과목", key:"code", cols:["code","title","area","weighted","credit","platform","active","note"], hint:"courses_seed.csv 형식. code가 비어 있으면 title로 식별(학교 선택과목)."},
   attendance:{label:"출결", key:"studentId", cols:["studentId","date","termCode","code","note","slipNo","approved","source"], hint:"attendance_seed.csv 형식. code는 u.t/u.a/e.t/e.a. 같은 학생·날짜는 덮어씀."},
   activities:{label:"수상·활동", key:"studentId", cols:["studentId","kind","awardType","name","date","description","test","subject","score","category","inside","position","rank","startDate","endDate","givenBy","hours","approved"], hint:"kind = award / test / activity / volunteer. 박재영 Student Information Sheet 양식 그대로."},
-  grades:{label:"성적", key:"studentId", cols:["studentId","code","title","school","gLevel","termCode","grade","credit","weighted","source"], hint:"grades_seed_g12.csv 형식. termCode는 2026F/2026S/2026U. 같은 학생·학기·과목은 덮어씀."},
+  grades:{label:"성적", key:"studentId", cols:["studentId","code","title","school","gLevel","termCode","grade","credit","weighted","source"], hint:"grades_seed_g12.csv 형식. termCode는 2026F/2026S/2026U. 같은 학생·학기·과목은 덮어씀. grade 열이 없으면 있는 열만 갱신(예: 미리 주차 grades_patch_miri_weeks_2026F.csv)."},
 };
 let importRows = [], importType = "students";
 async function viewImport(){
@@ -443,7 +467,11 @@ async function viewImport(){
       } else if (importType==="grades"){
         if (!r.studentId || !r.termCode || !r.title){skipped++;continue;}
         const cid = courseId(r); const gid = `${r.studentId}_${r.termCode}_${cid}`.replace(/[\/\s]/g,"_");
-        const extra={}; if (r.score!==undefined&&r.score!=="") extra.score=parseFloat(r.score); if (r.subjectKo) extra.subjectKo=r.subjectKo; if (r.level) extra.level=r.level; if (r.transcriptGrade) extra.transcriptGrade=r.transcriptGrade; if (r.weeks) extra.weeks=parseInt(r.weeks); if (r.kTerm) extra.kTerm=r.kTerm;
+        const wl = r.weekList!==undefined ? String(r.weekList).split(/[\s,;]+/).filter(Boolean).map(Number).filter(x=>!isNaN(x)) : undefined;
+        if (!("grade" in r)){   // 부분 갱신: grade 열이 없으면 있는 열만 덮어씀 (예: 미리 주차 weekList)
+          const o={}; if (wl) o.weekList=wl; for (const k of ["score","behind"]) if (r[k]!==undefined&&r[k]!=="") o[k]=parseFloat(r[k]); for (const k of ["subjectKo","level","kTerm","transcriptGrade"]) if (r[k]) o[k]=r[k];
+          batch.set(ref("grades",gid), {...o, updatedAt:serverTimestamp(), updatedBy:me.email}, {merge:true}); ops++; n++; if (ops>=400) await flush(); continue; }
+        const extra={}; if (wl) extra.weekList=wl; if (r.score!==undefined&&r.score!=="") extra.score=parseFloat(r.score); if (r.subjectKo) extra.subjectKo=r.subjectKo; if (r.level) extra.level=r.level; if (r.transcriptGrade) extra.transcriptGrade=r.transcriptGrade; if (r.weeks) extra.weeks=parseInt(r.weeks); if (r.kTerm) extra.kTerm=r.kTerm;
         batch.set(ref("grades",gid), {studentId:String(r.studentId), courseId:cid, code:r.code||"", title:r.title, school:r.school||school.schoolName, gLevel:parseInt(r.gLevel)||null, termCode:r.termCode, grade:r.grade||"IP", credit:parseFloat(r.credit)||0, weighted:/^(Y|1|true)$/i.test(r.weighted||""), source:r.source||"past", ...extra, ...stamp}, {merge:true}); ops++;
       }
       n++; if (ops>=400) await flush();
@@ -491,7 +519,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a></div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a>${me&&can.settings()?`<a href="#/audit/${id}">변경 이력</a>`:""}</div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -871,14 +899,16 @@ const kGradeLabel = g => g>=10? `고${g-9}` : g>=7? `중${g-6}` : g>=1? `초${g}
 const AREA_KO={"1":"사회","2":"영어","3":"수학","4":"과학","5":"외국어","6":"예술","7":"교양","8":"체육","9":"선택"};
 async function viewMiri(id){
   const staff=can.manage()||me.role==="teacher";
-  const [s, all, as, acts, cms]=await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id)))), getDocs(query(col("activities"), where("studentId","==",String(id)))), staff?getDocs(query(col("comments"), where("studentId","==",String(id)))):Promise.resolve({docs:[]})]);
+  const [s, all, as, acts, cms, U]=await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id)))), getDocs(query(col("activities"), where("studentId","==",String(id)))), staff?getDocs(query(col("comments"), where("studentId","==",String(id)))):Promise.resolve({docs:[]}), loadUnits()]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(); const birthY=parseInt((d.dob||"").slice(0,4))||null;
   const kGradeOf = ay => birthY? ay-birthY-6 : null;   // 학령 기준: 7세 초1
   const today=new Date(); const todayKo=`${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
   const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
   // 출결: 학년별
-  const att={}; as.docs.forEach(x=>{ const r=x.data(); const ay=kAY(kTermOfDate(r.date)); const t=att[ay]=att[ay]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
+  const Z=()=>({"e.a":0,"e.t":0,"u.a":0,"u.t":0});
+  const att={}; as.docs.forEach(x=>{ const r=x.data(); const kt0=kTermOfDate(r.date); const ay=kAY(kt0); const t=att[ay]=att[ay]||{"1":Z(),"2":Z()}; t[kSem(kt0)][finalCode(r)]++; });
+  const attCell=(ay,c)=>{ const a=att[ay]["1"][c], b=att[ay]["2"][c]; return a+b ? `${a+b} <span style="font-size:8pt">(${a}/${b})</span>` : "0"; };
   const attGrades=Object.keys(att).map(Number).sort((a,b)=>a-b);
   // 수상·활동·봉사 (승인된 것만)
   const A=acts.docs.map(x=>x.data()).filter(a=>a.approved);
@@ -889,7 +919,7 @@ async function viewMiri(id){
   const miri=all.filter(r=>r.source==="miri"); const apex=all.filter(r=>r.source!=="miri" && r.grade!=="IP" && r.credit>0 && r.school===school.schoolName);
   const kt = r => r.kTerm || kTermOfUS(r.termCode);
   const ays=[...new Set([...miri,...apex].map(r=>kAY(kt(r))))].filter(x=>x).sort();
-  const comments=cms.docs.map(x=>({id:x.id,...x.data()}));
+  const comments=cms.docs.map(x=>({id:x.id,...x.data()})).filter(c=>c.kind!=="pr");
   const cell=(v)=>v==null||v===""?"&nbsp;":esc(v);
   const T=(hdr,rows,cls="")=>`<table class="sg ${cls}"><thead><tr>${hdr.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.length?rows.join(""):`<tr><td colspan="${hdr.length}" class="c">해당 사항 없음</td></tr>`}</tbody></table>`;
   const subjectRows = ay => {
@@ -901,7 +931,14 @@ async function viewMiri(id){
         out.push(`<tr><td class="c">${sem}</td><td>${AREA_KO[String(r.code||"9")[0]]||"선택"} (심화)</td><td>${esc(r.title)}</td><td class="c">—</td><td class="c">${esc(r.grade)}</td><td class="muted">미국 교육과정 ${termLabel(r.termCode)}${r.weighted?" · Honors/AP":""}</td></tr>`); }
     }
     return out; };
-  const commentRows = ay => comments.filter(c=>kAY(kTermOfUS(c.termCode))===ay).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode)).map(c=>`<div><b>(${kSem(kTermOfUS(c.termCode))}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`).join("")||`<div class="muted">기록 없음</div>`;
+  // 세특: 학기별로 미리 과목은 [통과 단원 자동 문장 + 교사 관찰], 그 밖의 과목·공통은 교사 입력 그대로
+  const commentRows = ay => { const out=[];
+    for (const sem of ["1","2"]){ const k=`${ay}K${sem}`; const cs=comments.filter(c=>kTermOfUS(c.termCode)===k);
+      for (const sub of MIRI_ORDER){ const r=miri.find(x=>kt(x)===k&&x.subjectKo===sub); const tc=cs.filter(c=>c.subject===sub).map(c=>c.text).join(" ");
+        const auto=r?unitSentence(U,r):""; if (!auto&&!tc) continue;
+        out.push(`<div><b>(${sem}학기)${sub}:</b> ${esc([auto,tc].filter(Boolean).join(" "))}</div>`); }
+      cs.filter(c=>!MIRI_ORDER.includes(c.subject)).sort((a,b)=>String(a.subject).localeCompare(b.subject)).forEach(c=>out.push(`<div><b>(${sem}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`)); }
+    return out.join("")||`<div class="muted">기록 없음</div>`; };
   $("#view").innerHTML=`<div class="noprint row" style="max-width:860px;margin:0 auto 12px">${subNav(id,"miri")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
   <div class="tr sgdoc" style="max-width:860px">
     <h1 style="text-align:center;font-size:19pt;margin:0 0 18px;font-family:'Noto Serif KR',serif">학습성장기록부</h1>
@@ -911,7 +948,8 @@ async function viewMiri(id){
       <tr><th>학적사항</th><td colspan="5">${d.enrollDate?`${us(d.enrollDate)} ${esc(school.schoolNameKo||school.schoolName)} 입학`:""}${d.prevSchool?` (${esc(d.prevSchool)} 에서 전입)`:""}${d.track?` · 트랙 ${esc(d.track)}`:""}</td></tr>
       <tr><th>특기사항</th><td colspan="5">${esc(d.distinctions||"")}&nbsp;</td></tr></table>
     <h3>2. 출결상황</h3>
-    ${T(["학년도","학년","결석 (인정)","결석 (미인정)","지각 (인정)","지각 (미인정)","특기사항"], attGrades.map(ay=>`<tr><td class="c">${ay}</td><td class="c">${kGradeLabel(kGradeOf(ay))}</td><td class="c">${att[ay]["e.a"]}</td><td class="c">${att[ay]["u.a"]}</td><td class="c">${att[ay]["e.t"]}</td><td class="c">${att[ay]["u.t"]}</td><td>&nbsp;</td></tr>`))}
+    ${T(["학년도","학년","결석 (인정)","결석 (미인정)","지각 (인정)","지각 (미인정)","특기사항"], attGrades.map(ay=>`<tr><td class="c">${ay}</td><td class="c">${kGradeLabel(kGradeOf(ay))}</td><td class="c">${attCell(ay,"e.a")}</td><td class="c">${attCell(ay,"u.a")}</td><td class="c">${attCell(ay,"e.t")}</td><td class="c">${attCell(ay,"u.t")}</td><td>&nbsp;</td></tr>`))}
+    <div style="font-size:8pt;color:#444;margin-top:2px">· 학년 합계이며 괄호 안은 (1학기/2학기)입니다.</div>
     <h3>3. 수상경력</h3>
     ${T(["학년","수상명","등급(위)","수상연월일","수여기관"], awards.map(a=>`<tr><td class="c">${a.date?kGradeLabel(kGradeOf(kAY(kTermOfDate(a.date)))):""}</td><td>${esc(a.name)}</td><td class="c">${esc(a.description||"")}</td><td class="c">${us(a.date)}</td><td class="c">${a.awardType==="School"?esc(school.schoolNameKo||school.schoolName):esc(a.awardType||"")}</td></tr>`))}
     <h3>4. 창의적 체험활동상황</h3>
@@ -926,41 +964,54 @@ async function viewMiri(id){
     <div class="sign" style="margin-top:24px"><div class="left">* 본 기록부는 학교 직인이 없으면 참고용입니다.</div><div><div class="sp"></div><div class="line">${esc(school.schoolNameKo||school.schoolName)} 교장 ${esc(school.principalKo||school.principal)}</div><div style="margin-top:4px;text-align:center">${todayKo}</div></div></div>
   </div>
   ${staff?`<div class="card noprint" style="max-width:860px;margin:16px auto"><h2>세부능력 및 특기사항 입력</h2>
-    <form id="cf" class="row"><input name="termCode" value="${esc(school.termCode)}" style="max-width:90px" required><select name="subject" style="max-width:130px"><option>공통</option>${MIRI_ORDER.map(x=>`<option>${x}</option>`).join("")}<option>심화</option><option>체육</option><option>예술</option></select><input name="text" placeholder="~을 이해함, ~을 설명할 수 있음 (과정명·점수는 쓰지 않음)" style="flex:1;min-width:300px" required><button class="btn sm">추가</button></form>
+    <form id="cf" class="row"><input name="termCode" value="${esc(school.termCode)}" style="max-width:90px" required><select name="subject" style="max-width:130px"><option>공통</option>${MIRI_ORDER.map(x=>`<option>${x}</option>`).join("")}<option>심화</option><option>체육</option><option>예술</option></select><input name="text" placeholder="~을 이해함, ~을 설명할 수 있음 (과정명·점수는 쓰지 않음 · 미리 단원 문장은 자동으로 앞에 붙음)" style="flex:1;min-width:300px" required><button class="btn sm">추가</button></form>
     <table style="margin-top:10px"><tbody>${comments.sort((a,b)=>termKey(b.termCode)-termKey(a.termCode)).map(c=>`<tr><td class="nw">${termLabel(c.termCode)}</td><td class="nw">${esc(c.subject)}</td><td>${esc(c.text)}</td><td class="muted nw">${esc(c.by||"")}</td><td><button class="btn sm ghost" data-cdel="${c.id}">×</button></td></tr>`).join("")}</tbody></table></div>`:""}`;
   $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_학습성장기록부_${today.toISOString().slice(0,10)}`; window.print(); document.title=t; };
   const cf=$("#cf"); if (cf){ cf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(cf); await setDoc(doc(col("comments")),{studentId:String(id),termCode:v.termCode,subject:v.subject,text:v.text,by:me.email,at:serverTimestamp()}); toast("저장"); viewMiri(id); };
     document.querySelectorAll("[data-cdel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("comments",b.dataset.cdel)); viewMiri(id); }); }
 }
 
-/* ---------- 세특 과목별 일괄 입력 ---------- */
+/* ---------- 세특·Progress Report 의견: 과목별 일괄 입력 ---------- */
+// #/comments/{term}/{subject}/{mode: se|pr}/{houseId}
 async function viewComments(){
-  const term = location.hash.split("/")[1] || school.termCode; const subj = decodeURIComponent(location.hash.split("/")[2]||"");
-  const [gs, ss, cs] = await Promise.all([getDocs(query(col("grades"), where("termCode","==",term))), getDocs(col("students")), getDocs(query(col("comments"), where("termCode","==",term)))]);
+  const P=location.hash.replace(/^#\/?/,"").split("/");
+  const term=P[1]||school.termCode, subj=decodeURIComponent(P[2]||""), mode=P[3]==="pr"?"pr":"se", hid=P[4]||"";
+  sectionCache=null;
+  const [gs, ss, cs, secs, U] = await Promise.all([getDocs(query(col("grades"), where("termCode","==",term))), getDocs(col("students")), getDocs(query(col("comments"), where("termCode","==",term))), loadSections(), loadUnits()]);
   const names={}; ss.docs.forEach(d=>{ const x=d.data(); names[d.id]={n:`${x.last_en}, ${x.first_en}`, ko:x.name_ko||"", g:x.grade}; });
-  const grades=gs.docs.map(d=>d.data());
-  // 과목 목록: 미리 과목(subjectKo) + 그 외 과목 제목
-  const subjects=[...new Set(grades.map(r=>r.source==="miri"? r.subjectKo : r.title.replace(/\s+Sem\s*[12].*$/,"")))].sort((a,b)=>a.localeCompare(b,"ko"));
-  const roster = subj ? grades.filter(r=>(r.source==="miri"? r.subjectKo : r.title.replace(/\s+Sem\s*[12].*$/,""))===subj).map(r=>r.studentId) : [];
-  const studs=[...new Set(roster)].map(id=>({id,...names[id]})).sort((a,b)=>(parseInt(a.g)||0)-(parseInt(b.g)||0)||String(a.n).localeCompare(b.n));
-  const existing={}; cs.docs.forEach(d=>{ const x=d.data(); existing[x.studentId+"|"+x.subject]={id:d.id,text:x.text}; });
-  // 지난 학기 참고
+  const houses=secs.filter(x=>x.kind==="house"&&x.termCode===term).sort((a,b)=>a.title.localeCompare(b.title));
+  const house=houses.find(x=>x.id===hid)||null;
+  const grades=gs.docs.map(d=>d.data()); const subjOf=r=>r.source==="miri"? r.subjectKo : stripSem(r.title);
+  const HOME="담임 종합";
+  const subjects=[HOME, ...new Set(grades.map(subjOf).sort((a,b)=>a.localeCompare(b,"ko")))];
+  let roster = subj===HOME ? [...new Set(grades.map(r=>r.studentId))] : subj ? grades.filter(r=>subjOf(r)===subj).map(r=>r.studentId) : [];
+  if (house) roster=roster.filter(id=>(house.studentIds||[]).includes(id));
+  const studs=[...new Set(roster)].filter(id=>names[id]).map(id=>({id,...names[id]})).sort((a,b)=>(parseInt(a.g)||0)-(parseInt(b.g)||0)||String(a.n).localeCompare(b.n));
+  const kindOf=x=>x.kind==="pr"?"pr":"se";
+  const existing={}; cs.docs.forEach(d=>{ const x=d.data(); if (kindOf(x)===mode) existing[x.studentId+"|"+x.subject]={id:d.id,text:x.text}; });
   const prevTerm = term.endsWith("F") ? `${term.slice(0,4)}S` : `${+term.slice(0,4)-1}F`;
-  const pcs = subj ? (await getDocs(query(col("comments"), where("termCode","==",prevTerm)))).docs.map(d=>d.data()).filter(x=>x.subject===subj) : [];
+  const pcs = subj ? (await getDocs(query(col("comments"), where("termCode","==",prevTerm)))).docs.map(d=>d.data()).filter(x=>x.subject===subj&&kindOf(x)===mode) : [];
   const prev={}; pcs.forEach(x=>prev[x.studentId]=x.text);
-  $("#view").innerHTML=`<div class="card"><h2>세부능력 및 특기사항 — 과목별 입력</h2>
-    <div class="row" style="margin-bottom:12px"><input id="ct" value="${esc(term)}" style="max-width:90px" title="학기 코드"><select id="csub" style="max-width:320px"><option value="">과목 선택</option>${subjects.map(x=>`<option ${x===subj?"selected":""}>${esc(x)}</option>`).join("")}</select>
+  const miriRow=id=>grades.find(r=>r.studentId===id&&r.source==="miri"&&r.subjectKo===subj);
+  const isMiri=MIRI_ORDER.includes(subj);
+  const hint = mode==="pr" ? (subj===HOME?"학부모께 드리는 학기 종합 의견 (생활·태도·성장)":"학부모께 드리는 과목 의견 (잘한 점·더 노력할 점)") : `세특 (과정명·점수 없이, "~을 이해함 / ~을 설명할 수 있음")`;
+  $("#view").innerHTML=`<div class="card"><h2>${mode==="pr"?"Progress Report 의견":"세부능력 및 특기사항"} — 과목별 입력</h2>
+    <div class="row" style="margin-bottom:12px"><select id="cmode" style="max-width:230px"><option value="se" ${mode==="se"?"selected":""}>세특 (학습성장기록부)</option><option value="pr" ${mode==="pr"?"selected":""}>Progress Report 의견 (학부모용)</option></select>
+      <input id="ct" value="${esc(term)}" style="max-width:90px" title="학기 코드"><select id="csub" style="max-width:300px"><option value="">과목 선택</option>${subjects.map(x=>`<option ${x===subj?"selected":""}>${esc(x)}</option>`).join("")}</select>
+      <select id="chouse" style="max-width:180px"><option value="">모든 반</option>${houses.map(x=>`<option value="${x.id}" ${house&&x.id===house.id?"selected":""}>${esc(x.title)}</option>`).join("")}</select>
       <span class="muted">${subj?`${studs.length}명 · 칸에서 나가면 자동 저장 · Tab으로 다음 학생`:"이번 학기 성적 줄이 있는 과목만 보입니다"}</span></div>
-    ${subj?`<table><thead><tr><th style="width:60px">학년</th><th style="width:220px">학생</th><th>세특 (과정명·점수 없이, "~을 이해함 / ~을 설명할 수 있음")</th>${pcs.length?`<th style="width:28%">지난 학기 (${termLabel(prevTerm)})</th>`:""}</tr></thead><tbody>
-      ${studs.map(st=>{ const ex=existing[st.id+"|"+subj]; return `<tr><td>${esc(st.g)}</td><td class="nw">${esc(st.n)} <span class="muted">${esc(st.ko)}</span></td><td><textarea data-s="${st.id}" data-cid="${ex?ex.id:""}" rows="2" style="width:100%;resize:vertical;${ex?"background:#eef7ee":""}">${esc(ex?ex.text:"")}</textarea></td>${pcs.length?`<td class="muted" style="font-size:12.5px">${esc(prev[st.id]||"")}</td>`:""}</tr>`; }).join("")}
+    ${isMiri&&mode==="se"?`<p class="muted" style="margin-top:-4px">미리 과목은 통과한 주차의 단원 문장이 학습성장기록부 세특 앞에 자동으로 들어갑니다(가운데 회색 칸). 여기에는 그 뒤에 붙일 선생님 관찰만 쓰면 됩니다.</p>`:""}
+    ${subj?`<table><thead><tr><th style="width:60px">학년</th><th style="width:200px">학생</th>${isMiri?`<th style="width:30%">${mode==="se"?"자동 문장 (미리 단원)":"배운 단원 (자동)"}</th>`:""}<th>${hint}</th>${pcs.length?`<th style="width:22%">지난 학기 (${termLabel(prevTerm)})</th>`:""}</tr></thead><tbody>
+      ${studs.map(st=>{ const ex=existing[st.id+"|"+subj]; const mr=isMiri?miriRow(st.id):null; const u=mr?unitsOf(U,mr):[];
+        return `<tr><td>${esc(st.g)}</td><td class="nw">${esc(st.n)} <span class="muted">${esc(st.ko)}</span></td>${isMiri?`<td class="muted" style="font-size:12px;line-height:1.45">${u.length?(mode==="se"?esc(u.map(x=>x.s).join(" ")):u.map(x=>`${x.w}주 ${esc(x.t)}`).join("<br>")):"—"}</td>`:""}<td><textarea data-s="${st.id}" data-cid="${ex?ex.id:""}" rows="${isMiri?3:2}" style="width:100%;resize:vertical;${ex?"background:#eef7ee":""}">${esc(ex?ex.text:"")}</textarea></td>${pcs.length?`<td class="muted" style="font-size:12.5px">${esc(prev[st.id]||"")}</td>`:""}</tr>`; }).join("")}
       </tbody></table>`:""}</div>`;
-  const go=()=>{ location.hash=`#/comments/${$("#ct").value.trim()}/${encodeURIComponent($("#csub").value)}`; };
-  $("#csub").onchange=go; $("#ct").onchange=go;
+  const go=()=>{ location.hash=`#/comments/${$("#ct").value.trim()}/${encodeURIComponent($("#csub").value)}/${$("#cmode").value}/${$("#chouse").value}`; };
+  ["csub","ct","cmode","chouse"].forEach(i=>$("#"+i).onchange=go);
   document.querySelectorAll("textarea[data-s]").forEach(ta=>{
     let last=ta.value;
     ta.addEventListener("blur", async()=>{ const v=ta.value.trim(); if (v===last) return; last=v;
       if (ta.dataset.cid){ if (v) await updateDoc(ref("comments",ta.dataset.cid),{text:v,by:me.email,at:serverTimestamp()}); else { await deleteDoc(ref("comments",ta.dataset.cid)); ta.dataset.cid=""; } }
-      else if (v){ const r=doc(col("comments")); await setDoc(r,{studentId:ta.dataset.s,termCode:term,subject:subj,text:v,by:me.email,at:serverTimestamp()}); ta.dataset.cid=r.id; }
+      else if (v){ const r=doc(col("comments")); await setDoc(r,{studentId:ta.dataset.s,termCode:term,subject:subj,text:v,...(mode==="pr"?{kind:"pr"}:{}),by:me.email,at:serverTimestamp()}); ta.dataset.cid=r.id; }
       ta.style.background=v?"#eef7ee":""; toast("저장"); });
   });
 }
@@ -1025,6 +1076,185 @@ async function viewTranscript(id){
 }
 
 /* ---------- 학생 본인 ---------- */
+/* ---------- 변경 이력 보기 (교장·소유자) ---------- */
+const COL_KO={grades:"성적",attendance:"출결",incidents:"징계",students:"학생 정보",accounts:"계정",activities:"수상·활동",comments:"세특·의견",requests:"수정 요청",courses:"과목",sections:"반",progress:"진도",biweekly:"출결 확인서",memberships:"사용자 권한",school:"학교 설정",payments:"수납",calendar:"일정"};
+const OP_KO={set:"새로 씀",merge:"저장",update:"수정",delete:"삭제",batch:"일괄"};
+const AUDIT_HIDE=new Set(["at","updatedAt","importedAt","approvedAt","reviewedAt","doneAt","createdAt","by","updatedBy","importedBy","history"]);
+async function viewAudit(){
+  const stu=decodeURIComponent(location.hash.replace(/^#\/?/,"").split("/")[1]||"");
+  const q = stu ? query(col("audit"), where("studentIds","array-contains",stu)) : query(col("audit"), orderBy("at","desc"), limit(800));
+  const [as, ss] = await Promise.all([getDocs(q), getDocs(col("students"))]);
+  const names={}; ss.docs.forEach(d=>{ const x=d.data(); names[d.id]=`${x.last_en||""}, ${x.first_en||""}${x.name_ko?" "+x.name_ko:""}`; });
+  const rows=as.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at?.seconds||0)-(a.at?.seconds||0));
+  const users=[...new Set(rows.map(r=>r.by))].sort(), cols=[...new Set(rows.flatMap(r=>String(r.col||"").split(",")))].filter(Boolean).sort();
+  const parse = t => { try { return t? JSON.parse(t) : null; } catch(e){ return null; } };
+  const show = v => v==null||v==="" ? "∅" : typeof v==="object" ? JSON.stringify(v) : String(v);
+  const diff = r => { const d=parse(r.data), b=parse(r.before);
+    if (r.op==="batch") return `<details><summary>${r.count}건 (${Object.entries(r.cols||{}).map(([k,n])=>`${COL_KO[k]||k} ${n}`).join(", ")})</summary><div class="muted" style="font-size:12px;max-height:220px;overflow:auto">${(d||[]).map(x=>esc(`${x.op} ${x.path.split("/").slice(-2).join("/")}: ${show(x.d)}`.slice(0,300))).join("<br>")}${r.count>25?"<br>…":""}</div></details>`;
+    if (r.op==="delete") return `<span class="warn">삭제됨</span> <span class="muted" style="font-size:12px">${esc(Object.entries(b||{}).filter(([k])=>!AUDIT_HIDE.has(k)).map(([k,v])=>`${k}=${show(v)}`).join(" · ").slice(0,400))}</span>`;
+    const keys=Object.keys(d||{}).filter(k=>!AUDIT_HIDE.has(k));
+    const ch=keys.filter(k=>!b || show(b[k])!==show(d[k]));
+    if (!ch.length) return `<span class="muted">바뀐 값 없음</span>`;
+    return ch.slice(0,12).map(k=>`<div><b>${esc(k)}</b>: ${b?`<span class="muted" style="text-decoration:line-through">${esc(show(b[k]).slice(0,120))}</span> → `:""}${esc(show(d[k]).slice(0,200))}</div>`).join("")+(ch.length>12?`<div class="muted">외 ${ch.length-12}개</div>`:""); };
+  const when = r => r.at? new Date(r.at.seconds*1000).toLocaleString("ko-KR",{year:"2-digit",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) : "";
+  $("#view").innerHTML=`<div class="card"><h2>변경 이력 ${stu?`— <a href="#/students/${esc(stu)}">${esc(names[stu]||stu)}</a>`:""}</h2>
+    <p class="muted">성적·출결·징계·승인 등 모든 저장·수정·삭제가 누가·언제·무엇을 바꿨는지 자동으로 남습니다. 지우거나 고칠 수 없고 교장만 볼 수 있습니다. ${stu?`<a href="#/audit">전체 보기</a>`:"최근 800건 · 학생 화면의 '변경 이력'에서 학생별로 볼 수 있습니다."}</p>
+    <div class="row" style="margin-bottom:10px"><select id="fc" style="max-width:160px"><option value="">모든 항목</option>${cols.map(c=>`<option value="${c}">${COL_KO[c]||c}</option>`).join("")}</select>
+      <select id="fu" style="max-width:260px"><option value="">모든 사용자</option>${users.map(u=>`<option>${esc(u)}</option>`).join("")}</select>
+      <input id="fq" placeholder="검색 (학생 ID·내용)" style="max-width:220px"><span class="muted" id="fn"></span></div>
+    <div class="scroll"><table><thead><tr><th>시각</th><th>누가</th><th>항목</th><th>학생</th><th>동작</th><th>바뀐 내용 (전 → 후)</th></tr></thead><tbody id="atb"></tbody></table></div></div>`;
+  const draw=()=>{ const c=$("#fc").value, u=$("#fu").value, t=$("#fq").value.trim().toLowerCase();
+    const list=rows.filter(r=>(!c||String(r.col).split(",").includes(c))&&(!u||r.by===u)&&(!t||[r.path,r.data,r.before,(r.studentIds||[]).join(" ")].join(" ").toLowerCase().includes(t)));
+    $("#fn").textContent=`${list.length}건`;
+    $("#atb").innerHTML=list.slice(0,500).map(r=>`<tr><td class="nw">${when(r)}</td><td class="nw">${esc(String(r.by).split("@")[0])} <span class="muted">${esc(ROLES[r.role]||r.role||"")}</span></td><td class="nw">${esc(String(r.col).split(",").map(x=>COL_KO[x]||x).join(", "))}</td>
+      <td class="nw">${(r.studentIds||[]).slice(0,3).map(i=>`<a href="#/audit/${esc(i)}">${esc(names[i]?names[i].split(" ").slice(0,2).join(" "):i)}</a>`).join("<br>")}${(r.studentIds||[]).length>3?`<br><span class="muted">외 ${r.studentIds.length-3}명</span>`:""}</td>
+      <td class="nw">${OP_KO[r.op]||r.op}</td><td style="font-size:12.5px">${diff(r)}</td></tr>`).join("")||`<tr><td colspan=6 class=muted>기록 없음</td></tr>`; };
+  ["fc","fu"].forEach(i=>$("#"+i).onchange=draw); $("#fq").oninput=draw; draw();
+}
+
+/* ---------- Genius 갱신 (행정이 2주마다 붙여넣기) ---------- */
+const autoOf = b => b==null||isNaN(b) ? null : b<=4 ? "ontrack" : b<=10 ? "behind" : "far";
+const normT = t => stripSem(t).toLowerCase().replace(/[®™©]/g,"").replace(/[^a-z0-9가-힣]+/g," ").trim();
+const normN = n => String(n||"").toLowerCase().replace(/[^a-z가-힣,]+/g," ").replace(/\s*,\s*/g,",").replace(/\s+/g," ").trim();
+async function viewGenius(){
+  const term=school.termCode; let rows=[], plan=[];
+  $("#view").innerHTML=`<div class="card"><h2>Genius 갱신 — 이번 학기 점수·밀린 과제</h2>
+    <ol class="muted" style="line-height:1.7;margin-top:0"><li>Genius 로그인 → <b>Enrollments → Basic Search</b> (Status: ACTIVE) → <b>Get Data</b></li><li>결과 표를 머리줄까지 마우스로 끌어 선택 → 복사(⌘C / Ctrl+C)</li><li>아래 칸에 붙여넣고 '미리보기' → 열 짝 확인 → '반영'</li></ol>
+    <div class="row"><label>학기 <input id="gt" value="${esc(term)}" style="max-width:90px"></label><label>기준일 <input type="date" id="gd" value="${todayISO()}" style="max-width:160px"></label></div>
+    <textarea id="gp" rows="6" placeholder="Genius 표를 붙여넣으세요 (탭 구분)" style="margin-top:8px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn ghost" id="gparse">미리보기</button><span class="muted">점수·밀린 과제 수·진도 상태(0–4 On Track · 5–10 Behind · 11+ Behind 10+)만 바꿉니다. 성적(A·B…)과 학점은 건드리지 않습니다.</span></div></div>
+    <div class="card" id="gmap" hidden></div><div class="card" id="gprev" hidden></div>`;
+  const [ss, gs, cs] = await Promise.all([getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), loadCourses()]);
+  const studs=ss.docs.map(d=>({id:d.id,...d.data()}));
+  const nameIdx={}; const add=(k,s)=>{ k=normN(k); if(!k) return; (nameIdx[k]=nameIdx[k]||new Set()).add(s.id); };
+  studs.forEach(s=>{ add(`${s.last_en},${s.first_en}`,s); add(`${s.first_en} ${s.last_en}`,s); add(`${s.last_en} ${s.first_en}`,s); if (s.name_ko) add(s.name_ko,s); if (s.nickname) add(`${s.last_en},${s.nickname}`,s); });
+  let termGrades=gs.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.source!=="miri");
+  const COLS={stu:["학생 (이름 또는 ID)",/student|name|이름|학생/i], id:["학생 ID (있으면)",/^(student ?)?id$|genius ?id|sis ?id/i], course:["과목",/course|class|title|subject|과목/i], score:["현재 점수",/score|grade|%|avg|percent|점수/i], behind:["밀린 과제 수",/behind|late|past ?due|missing|overdue|밀린/i]};
+  $("#gparse").onclick=async()=>{
+    const term2=$("#gt").value.trim(); if (term2!==term){ termGrades=(await getDocs(query(col("grades"), where("termCode","==",term2)))).docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.source!=="miri"); }
+    const lines=$("#gp").value.replace(/\r/g,"").split("\n").filter(l=>l.includes("\t"));
+    if (lines.length<2) return toast("탭으로 나뉜 표가 아닙니다. 표를 머리줄까지 선택해 복사하세요");
+    rows=parseDelimited(lines.join("\n")); const hdr=Object.keys(rows[0]);
+    const guess=k=>hdr.find(h=>COLS[k][1].test(h))||"";
+    $("#gmap").hidden=false; $("#gmap").innerHTML=`<h2>열 짝 맞추기 <span class="muted" style="font-size:14px">${rows.length}줄</span></h2><div class="row">${Object.entries(COLS).map(([k,[l]])=>`<label style="font-size:13px">${l}<br><select data-m="${k}" style="max-width:220px"><option value="">(없음)</option>${hdr.map(h=>`<option ${h===guess(k)?"selected":""}>${esc(h)}</option>`).join("")}</select></label>`).join("")}<button class="btn sm" id="gplan" style="align-self:flex-end">짝 확인 → 대조</button></div>`;
+    $("#gplan").onclick=()=>buildPlan(term2); buildPlan(term2);
+  };
+  const buildPlan=(term2)=>{
+    const M={}; document.querySelectorAll("[data-m]").forEach(s=>M[s.dataset.m]=s.value);
+    if (!(M.stu||M.id)||!M.course) return toast("학생과 과목 열은 꼭 골라야 합니다");
+    const num=v=>{ const x=parseFloat(String(v??"").replace(/[^0-9.\-]/g,"")); return isNaN(x)?null:x; };
+    plan=rows.map(r=>{ const title=String(r[M.course]||"").trim(); if(!title) return null;
+      let cands=[]; const idv=String(r[M.id]||"").trim(); if (idv && studs.some(s=>s.id===idv)) cands=[idv]; else cands=[...(nameIdx[normN(r[M.stu])]||[])];
+      const nt=normT(title); let match=null;
+      if (cands.length>1){ const hit=cands.filter(c=>termGrades.some(g=>g.studentId===c&&normT(g.title)===nt)); if (hit.length===1) cands=hit; }
+      const stid=cands.length===1?cands[0]:"";
+      if (stid) match=termGrades.find(g=>g.studentId===stid&&normT(g.title)===nt)||null;
+      const behind=M.behind? num(r[M.behind]) : null;
+      return {raw:r[M.stu]||idv, cands, stid, title, match, score:M.score?num(r[M.score]):null, behind:behind==null?null:Math.max(0,Math.round(behind))}; }).filter(Boolean);
+    drawPlan(term2); };
+  const drawPlan=(term2)=>{
+    const ok=plan.filter(p=>p.stid), upd=ok.filter(p=>p.match), neu=ok.filter(p=>!p.match), bad=plan.filter(p=>!p.stid);
+    const sname=id=>{ const s=studs.find(x=>x.id===id); return s?`${s.last_en}, ${s.first_en} (${s.grade})`:id; };
+    $("#gprev").hidden=false; $("#gprev").innerHTML=`<h2>대조 결과 — 갱신 ${upd.length} · 새 과목 ${neu.length} · 학생 못 찾음 ${bad.length}</h2>
+      <div class="row" style="margin-bottom:10px"><button class="btn" id="gsave" ${ok.length?"":"disabled"}>반영 (${ok.length}줄)</button><span class="muted">새 과목은 '확인 필요'로 들어갑니다. 학생을 못 찾은 줄은 오른쪽에서 골라 주면 함께 반영됩니다.</span></div>
+      <div class="scroll" style="max-height:60vh"><table><thead><tr><th>Genius 학생</th><th>SIS 학생</th><th>과목</th><th>점수</th><th>밀린</th><th>상태</th><th>구분</th></tr></thead><tbody>
+      ${plan.map((p,i)=>`<tr ${p.stid?"":'style="background:#fff5f5"'}><td class="nw">${esc(p.raw)}</td><td class="nw">${p.stid?esc(sname(p.stid)):`<select data-pick="${i}" style="max-width:220px;padding:3px 6px"><option value="">— 고르기 —</option>${(p.cands.length?p.cands.map(c=>studs.find(s=>s.id===c)).filter(Boolean):studs.filter(s=>s.status==="active"||!s.status)).sort((a,b)=>String(a.last_en).localeCompare(b.last_en)).map(s=>`<option value="${s.id}">${esc(s.last_en)}, ${esc(s.first_en)} (${esc(s.grade)}) ${esc(s.id)}</option>`).join("")}</select>`}</td>
+        <td>${esc(p.title)}</td><td class="c">${p.score??""}${p.match&&p.match.score!=null&&p.match.score!==p.score?` <span class="muted">(${p.match.score})</span>`:""}</td><td class="c">${p.behind??""}</td><td class="nw">${PROG[autoOf(p.behind)]?.l||""}</td><td class="nw">${!p.stid?'<span class="warn">학생?</span>':p.match?"갱신":'<span class="tag">새 과목</span>'}</td></tr>`).join("")}</tbody></table></div>`;
+    document.querySelectorAll("[data-pick]").forEach(s=>s.onchange=()=>{ const p=plan[+s.dataset.pick]; p.stid=s.value; p.match=termGrades.find(g=>g.studentId===p.stid&&normT(g.title)===normT(p.title))||null; drawPlan(term2); });
+    $("#gsave").onclick=async()=>{ const asOf=$("#gd").value||todayISO(); let b=writeBatch(db), n=0, nn=0;
+      for (const p of plan.filter(x=>x.stid)){ const g={geniusAsOf:asOf}; if (p.score!=null) g.score=p.score; if (p.behind!=null){ g.behind=p.behind; g.auto=autoOf(p.behind); }
+        if (p.match) b.update(ref("grades",p.match.id),g);
+        else { const c=cs.find(x=>normT(x.title)===normT(p.title)); const cid=c? c.id : courseId({title:p.title}); const st=studs.find(s=>s.id===p.stid);
+          b.set(ref("grades",`${p.stid}_${term2}_${cid}`.replace(/[\/\s]/g,"_")),{studentId:p.stid,courseId:cid,code:c?.code||"",title:p.title,school:school.schoolName,gLevel:parseInt(st?.grade)||null,termCode:term2,grade:"IP",credit:c?.credit??0.5,weighted:!!c?.weighted,source:c?.platform==="cw"?"cw":"apex",...g,needsReview:true,importedAt:serverTimestamp(),importedBy:"genius-refresh"},{merge:true}); nn++; }
+        if (++n%400===0){ await b.commit(); b=writeBatch(db); } }
+      await b.commit(); toast(`${n}줄 반영 (새 과목 ${nn})`); location.hash="#/sections"; };
+  };
+}
+
+/* ---------- 미리 단원 (data/miri_units.json: "고졸|과학|1" → {t:제목, s:세특 문장}) ---------- */
+let MIRI_UNITS=null;
+async function loadUnits(){ if (!MIRI_UNITS){ try { MIRI_UNITS=await (await fetch("data/miri_units.json",{cache:"no-cache"})).json(); } catch(e){ console.warn(e); MIRI_UNITS={}; } } return MIRI_UNITS; }
+const unitWeeks = r => Array.isArray(r.weekList) ? r.weekList : Array.from({length:parseInt(r.weeks)||0},(_,i)=>i+1);
+const unitsOf = (U,r) => unitWeeks(r).map(w=>({w,...(U[`${r.level}|${r.subjectKo}|${w}`]||{})})).filter(x=>x.s);
+const unitSentence = (U,r) => unitsOf(U,r).map(x=>x.s).join(" ");
+
+/* ---------- Progress Report (한글 학업 보고서, 담임반 단위, 학생당 A4 1장) ---------- */
+async function viewReport(){
+  sectionCache=null; const secs=await loadSections();
+  const parts=location.hash.replace(/^#\/?/,"").split("/"); const term=parts[2]||school.termCode;
+  const houses=secs.filter(s=>s.kind==="house"&&s.termCode===term).sort((a,b)=>a.title.localeCompare(b.title));
+  const h=houses.find(x=>x.id===parts[1])||(me.role==="teacher"?houses.find(x=>x.teacherEmail===me.email):null)||null;
+  const go=()=>{ location.hash=`#/report/${$("#rH").value}/${$("#rT").value.trim()}`; };
+  const head=`<div class="noprint card" style="max-width:760px;margin:0 auto 12px"><h2>Progress Report (학업 보고서)</h2>
+    <div class="row"><select id="rH" style="max-width:220px"><option value="">담임반 선택</option>${houses.map(x=>`<option value="${x.id}" ${h&&x.id===h.id?"selected":""}>${esc(x.title)}</option>`).join("")}</select><input id="rT" value="${esc(term)}" style="max-width:90px" title="학기 코드">
+      ${h?`<button class="btn sm" id="pr">인쇄 / PDF 저장</button><a class="btn sm ghost" href="#/comments/${esc(term)}/${encodeURIComponent("담임 종합")}/pr/${h.id}">담임 종합 의견 쓰기</a>`:""}</div>
+    <p class="muted" style="margin:8px 0 0">학생당 A4 한 장. 과목 의견은 '세특·의견' 화면에서 종류를 <b>Progress Report 의견</b>으로 놓고 과목별로 한꺼번에 씁니다. 미리 과목의 '배운 내용'은 통과한 주차 단원으로 자동으로 채워집니다.</p></div>`;
+  if (!h){ $("#view").innerHTML=head+(houses.length?"":`<p class="muted" style="text-align:center">이 학기 담임반이 없습니다. '반·진도'에서 먼저 만드세요.</p>`); $("#rH").onchange=go; $("#rT").onchange=go; return; }
+  const ids=h.studentIds||[];
+  const [U, ss, gs, cs, as, ps] = await Promise.all([loadUnits(), getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), getDocs(query(col("comments"), where("termCode","==",term))), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term)))]);
+  const gnum=g=>parseInt(g)||99;
+  const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>ids.includes(s.id)).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
+  const grades=gs.docs.map(d=>d.data()); const att=as.docs.map(d=>d.data()); const prog=ps.docs.map(d=>d.data());
+  const cm={}; cs.docs.forEach(d=>{ const x=d.data(); if (x.kind==="pr") cm[x.studentId+"|"+x.subject]=x.text; });
+  const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
+  const teacherName=(h.teacherEmail||"").split("@")[0];
+  const page=st=>{
+    const mine=grades.filter(r=>r.studentId===st.id);
+    const miri=MIRI_ORDER.map(sub=>mine.find(r=>r.source==="miri"&&r.subjectKo===sub)).filter(Boolean);
+    const us_=mine.filter(r=>r.source!=="miri").sort((a,b)=>areaRank(a.code)-areaRank(b.code)||String(a.title).localeCompare(b.title));
+    const stOf=r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); const p=prog.filter(x=>x.studentId===st.id&&x.courseId===k&&x.status).sort((a,b)=>String(b.date).localeCompare(a.date))[0];
+      const s=(p&&(!r.auto||(p.date||"")>=(r.geniusAsOf||"")))?p.status:r.auto; return s?PROG[s]?.l||s:""; };
+    const t={"e.a":0,"e.t":0,"u.a":0,"u.t":0}; att.filter(a=>a.studentId===st.id).forEach(a=>t[finalCode(a)]++);
+    const miriRows=miri.map(r=>{ const u=unitsOf(U,r); return `<tr><td class="c" style="white-space:nowrap">${esc(r.subjectKo)}<br><span class="muted" style="font-size:7.5pt">${esc(r.level||"")}</span></td><td class="c">${r.score??""}</td><td class="c">${r.score!=null?miriGrade(r.score):""}</td>
+      <td><div class="units">${u.length?u.map(x=>`${x.w}주 ${esc(x.t)}`).join("<br>"):"<span class='muted'>통과한 주차 없음</span>"}</div>${cm[st.id+"|"+r.subjectKo]?`<div class="tcm">${esc(cm[st.id+"|"+r.subjectKo])}</div>`:""}</td></tr>`; }).join("");
+    const usRows=us_.map(r=>{ const k=stripSem(r.title); return `<tr><td>${esc(k)}${r.weighted?' <span class="muted">(Honors/AP)</span>':""}</td><td class="c">${r.score??""}</td><td class="c">${/^[A-F]|^P$/.test(r.grade||"")?esc(r.grade):""}</td><td class="c nw">${esc(stOf(r))}</td><td>${esc(cm[st.id+"|"+k]||"")}</td></tr>`; }).join("");
+    return `<div class="bw prp"><div class="bwh"><div><h2>학업 성취 보고서 <span style="font-size:10pt;font-weight:400">Progress Report</span></h2><div>[${termKo(term)}]</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}<br>${esc(school.schoolName)}</div></div>
+      <table class="sg"><tr><th>학생</th><td>${esc(st.last_en)}, ${esc(st.first_en)} ${st.name_ko?`(${esc(st.name_ko)})`:""}</td><th>학년</th><td class="c">${esc(st.grade)}</td><th>담임반</th><td>${esc(h.title)}</td><th>담임</th><td>${esc(teacherName)}</td></tr></table>
+      ${miriRows?`<div class="prh">한국 교육과정 (미리)</div><table class="sg"><thead><tr><th>과목</th><th>점수</th><th>성취도</th><th style="width:auto">배운 내용 · 선생님 의견</th></tr></thead><tbody>${miriRows}</tbody></table>`:""}
+      ${usRows?`<div class="prh">미국 교육과정</div><table class="sg"><thead><tr><th style="width:auto">과목</th><th>현재 점수</th><th>성적</th><th>진도</th><th style="width:45%">선생님 의견</th></tr></thead><tbody>${usRows}</tbody></table>`:""}
+      <table class="sg"><thead><tr><th style="width:auto">출결 (학기 누적)</th><th>인정 결석</th><th>인정 지각</th><th>무단 결석</th><th>무단 지각</th></tr></thead><tbody><tr><td>${termLabel(term)}</td><td class="c">${t["e.a"]}</td><td class="c">${t["e.t"]}</td><td class="c">${t["u.a"]}</td><td class="c">${t["u.t"]}</td></tr></tbody></table>
+      <table class="sg"><tr><th style="vertical-align:top;padding-top:6px">담임 종합 의견</th><td style="line-height:1.55;height:60px;vertical-align:top">${esc(cm[st.id+"|담임 종합"]||"")}</td></tr></table>
+      <div style="font-size:7.5pt;color:#444;margin:3px 0 6px">미리 점수는 주차별 평가 최고점의 평균이며 성취도는 A(60–100)·B(50–59)·C(40–49)·F(39 이하)입니다. 진도: On Track = 계획대로 · Behind = 밀린 과제 5–10개 · Behind (10+) = 11개 이상.</div>
+      <table class="sg sign3"><thead><tr><th style="width:auto">확인</th><th style="width:45%">서명</th><th style="width:25%">날짜</th></tr></thead><tbody><tr><td>학부모</td><td></td><td></td></tr><tr><td>담임 교사</td><td></td><td></td></tr></tbody></table></div>`; };
+  $("#view").innerHTML=head+`<div id="prList">${studs.map(page).join("")||`<p class="muted" style="text-align:center">이 반에 학생이 없습니다.</p>`}</div>`;
+  $("#rH").onchange=go; $("#rT").onchange=go;
+  $("#pr").onclick=()=>{ const t=document.title; document.title=`ProgressReport_${h.title}_${term}`; window.print(); document.title=t; };
+}
+
+/* ---------- 선택과목 성적 일괄 입력 (과거 자체 선택과목: DIY·R&D 등) ---------- */
+async function viewElectives(){
+  const parts=location.hash.replace(/^#\/?/,"").split("/"); const term=parts[1]||""; const cid=decodeURIComponent(parts[2]||""); const showAll=parts[3]==="all";
+  courseCache=null; const [cs, ss] = await Promise.all([loadCourses(), getDocs(col("students"))]);
+  const electives=cs.filter(c=>!c.code||String(c.code).startsWith("9")||c.platform==="inhouse").sort((a,b)=>String(a.title).localeCompare(b.title));
+  const c=cs.find(x=>x.id===cid);
+  const curAY=ayOf(school.termCode), ay=ayOf(term);
+  const gl=s=>{ const g=parseInt(s.grade); return g&&ay!=null? g-(curAY-ay) : null; };
+  const go=(all)=>{ location.hash=`#/electives/${$("#et").value.trim()}/${encodeURIComponent($("#ec").value)}${all?"/all":""}`; };
+  const termOK=/^\d{4}[FSU]$/.test(term);
+  $("#view").innerHTML=`<div class="card"><h2>선택과목 성적 입력</h2>
+    <p class="muted">과목과 학기를 고르면 그 학기 재학생 명단이 나옵니다. 성적을 고르고 '저장'. 과목이 목록에 없으면 '과목' 화면에서 코드 없이 추가하세요(코드 없는 자체 선택과목은 제목으로 구분). 여러 과목을 한꺼번에 넣을 때는 '가져오기 → 성적'에 CSV(studentId, termCode, title, grade, credit, source=elective)도 됩니다.</p>
+    <div class="row"><input id="et" value="${esc(term)}" placeholder="학기 (2023S)" style="max-width:110px"><select id="ec" style="max-width:380px"><option value="">과목 선택</option>${electives.map(x=>`<option value="${esc(x.id)}" ${x.id===cid?"selected":""}>${esc(x.title)}${x.code?` (${esc(x.code)})`:""} · ${x.credit}학점</option>`).join("")}</select>
+      ${termOK&&c?`<label style="font-size:13px"><input type="checkbox" id="eall" style="width:auto" ${showAll?"checked":""}> 학년과 상관없이 전체 학생</label>`:""}</div>
+    <div id="eb" style="margin-top:12px">${!termOK?`<p class="muted">학기 코드를 넣으세요 (예: 2024F = Fall 2024-25, 2025S = Spring 2024-25).</p>`:!c?`<p class="muted">과목을 고르세요.</p>`:""}</div></div>`;
+  $("#et").onchange=()=>go(); $("#ec").onchange=()=>go(); if ($("#eall")) $("#eall").onchange=e=>go(e.target.checked);
+  if (!termOK||!c) return;
+  const ex=(await getDocs(query(col("grades"), where("termCode","==",term)))).docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.courseId===c.id);
+  const exBy={}; ex.forEach(r=>exBy[r.studentId]=r);
+  const studs=ss.docs.map(d=>({id:d.id,...d.data()})).map(s=>({...s,gl:gl(s)})).filter(s=>exBy[s.id]||showAll||(s.gl!=null&&s.gl>=6&&s.gl<=12&&(s.status==="active"||!s.status||s.status==="graduated")))
+    .sort((a,b)=>(a.gl??99)-(b.gl??99)||String(a.last_en).localeCompare(b.last_en));
+  const G=["","A","B","C","D","F","P","IP"];
+  $("#eb").innerHTML=`<div class="row" style="margin-bottom:8px"><b>${esc(c.title)}</b><span class="muted">${termLabel(term)} · ${c.credit}학점${c.weighted?" · "+esc(c.weighted):""} · 입력된 ${ex.length}명</span><button class="btn sm" id="esave">저장</button><span class="muted">빈칸으로 바꾸면 그 학생 성적 줄은 지워집니다.</span></div>
+    <table><thead><tr><th>그때 학년</th><th>학생</th><th>성적</th></tr></thead><tbody>${studs.map(s=>`<tr><td>${s.gl??""}</td><td class="nw">${esc(s.last_en)}, ${esc(s.first_en)} <span class="muted">${esc(s.name_ko||"")} · ${esc(s.id)}</span></td>
+      <td><select data-eg="${s.id}" style="max-width:90px;padding:3px 6px;${exBy[s.id]?"background:#eef7ee":""}">${G.map(g=>`<option ${(exBy[s.id]?.grade||"")===g?"selected":""}>${g}</option>`).join("")}</select></td></tr>`).join("")||`<tr><td colspan=3 class=muted>해당 학년 학생이 없습니다 — '전체 학생'을 켜 보세요.</td></tr>`}</tbody></table>`;
+  $("#esave").onclick=async()=>{ let b=writeBatch(db), n=0, del=0;
+    document.querySelectorAll("[data-eg]").forEach(sel=>{ const sidv=sel.dataset.eg, g=sel.value, old=exBy[sidv]; const s=studs.find(x=>x.id===sidv);
+      if (!g){ if (old){ b.delete(ref("grades",old.id)); del++; } return; }
+      if (old && old.grade===g) return;
+      const gid=old?old.id:`${sidv}_${term}_${c.id}`.replace(/[\/\s]/g,"_");
+      b.set(ref("grades",gid),{studentId:sidv,courseId:c.id,code:c.code||"",title:c.title,school:school.schoolName,gLevel:s?.gl||null,termCode:term,grade:g,credit:parseFloat(c.credit)||0,weighted:!!c.weighted,source:"elective",needsReview:false,enteredBy:me.email,enteredAt:serverTimestamp()},{merge:true}); n++; });
+    await b.commit(); toast(`${n}명 저장${del?`, ${del}명 삭제`:""}`); viewElectives(); };
+}
+
 async function viewMe(){
   if (!me.studentId) { $("#view").innerHTML="<p>학생 ID가 연결되지 않았습니다. 학교에 문의하세요.</p>"; return; }
   return viewStudent(me.studentId);
