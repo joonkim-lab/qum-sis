@@ -1,4 +1,4 @@
-# qum-sis 인수인계 (2026-10-24, v32)
+# qum-sis 인수인계 (2026-10-25, v33)
 
 ## 현재 상태
 - 앱: https://joonkim-lab.github.io/qum-sis/ (GitHub Pages, 저장소 joonkim-lab/qum-sis, 단일 index.html + firestore.rules + data/)
@@ -18,6 +18,15 @@
   - 2주마다 갱신 필요: Genius 로그인 상태에서 같은 표를 긁어 score/behind/auto/geniusAsOf 업데이트. 지금은 클로드가 크롬으로 수행(행정용 버튼은 미구현)
   - Genius 페이지는 JS 실행 권한 없음 → get_page_text로 읽음. SIS 페이지에서는 콘솔 JS로 firebase 모듈 dynamic import해서 직접 쓰기 가능
 
+## 10/25 추가된 것 (v33)
+- **변경 이력(audit)**: setDoc/updateDoc/deleteDoc/writeBatch를 감싸서 모든 쓰기가 `schools/{sid}/audit`에 자동 기록(누가·언제·경로·바뀐 값·이전 값). 일괄 저장은 1건으로 묶어 기록. 메뉴 '변경 이력'(교장·소유자만), 학생 화면 탭에도 '변경 이력'. 규칙: 읽기 교장, 추가는 by==본인, 수정·삭제 불가
+- **Progress Report**(메뉴): 담임반·학기 → 학생당 A4 1장. 미리 과목 = 점수·성취도·통과 단원 목록 + 교사 의견, 미국 과목 = 현재 점수·진도 상태 + 의견, 학기 출결, 담임 종합 의견, 학부모 서명
+- **세특·의견** 화면: 종류 선택(세특 / Progress Report 의견, comments.kind="pr"), 반 필터, '담임 종합' 과목 추가. 미리 과목은 자동 문장 칸을 옆에 보여 줌
+- **Genius 갱신**(메뉴, 행정): Enrollments 표를 복사→붙여넣기 → 열 짝 자동 추정(학생·과목·점수·밀린 과제) → 대조(갱신/새 과목/학생 못 찾음) → 반영. score/behind/auto/geniusAsOf만 바꿈. 동명이인은 이번 학기 과목으로 자동 구분, 안 되면 직접 고름. **Genius 실제 열 이름은 아직 못 봄(로그아웃 상태) — 첫 사용 때 열 짝 확인 필요**
+- **미리 단원 문장**: `data/miri_units.json` 285단원(고졸·중졸·초졸 × 과목 × 1–15주) 제목+세특 문장. grades의 `weekList`(통과 주차)로 학습성장기록부 세특 앞에 자동으로 붙음(없으면 1..weeks). 2026F 통과 주차는 `data/grades_patch_miri_weeks_2026F.csv`를 가져오기→성적으로 올리면 반영(grade 열이 없는 CSV는 부분 갱신)
+- **학습성장기록부 출결**: 학년 합계 (1학기/2학기) 예: 8 (3/5). 교과 표기는 NEIS 방식 유지
+- **선택과목 성적**(메뉴, 행정): 학기·과목(코드 없는 자체 선택과목 포함) → 그때 학년 6–12 학생 명단 → 성적 드롭다운 → 저장(source=elective, gLevel 자동 계산). 빈칸으로 바꾸면 삭제
+
 ## 확정 규칙
 - ID = Genius ID, 신입생 9001부터
 - 학기 코드 2026F/2026S/2026U 저장, 출력 "Fall 2026-27". 8월 이후=F, 1~7월=S
@@ -33,13 +42,12 @@
 - 플랫폼: 제품은 Educclesia, 학교 데이터는 schools/{sid}
 
 ## 작업 방식
-- 집 맥북 ~/qum-sis에서 git push(클로드 세션에는 joonkim-lab GitHub 푸시 권한 없음 → 커밋까지 클로드, push는 준킴쌤)
+- 집 맥북 ~/qum-sis 또는 맥미니 ~/work/qum-sis에서 git push(클로드 세션에는 joonkim-lab GitHub 푸시 권한 없음 → 커밋까지 클로드, push는 준킴쌤)
 - firestore.rules 바뀌면 콘솔에 게시 필요(클로드가 맥 클립보드 + 크롬으로 붙여넣기 가능)
 - 명령 블록은 기기 라벨 `: 【맥북】` / `: 【맥미니】` 첫 줄
 
 ## 다음 할 일 (준킴쌤 지시 순서)
+0. (v33 올린 뒤) 콘솔에 firestore.rules 다시 게시(audit 추가) → 가져오기→성적에 grades_patch_miri_weeks_2026F.csv 올리기 → Genius 갱신 첫 사용 때 열 짝 확인
 1. **졸업 이수 현황**(Genius Transcript Analysis처럼): 학교 설정에 영역별 필요 학점 → 학생 화면에 이수/수강중/계획/부족. 학생 본인도 열람. 미리는 과목별 단원 기준
-2. **변경 이력(Student Log)**: 성적·출결·징계·승인 쓰기마다 누가·언제·무엇을 자동 기록. **교장만 열람**
-3. Progress Report = 한글 성적표(미리 중심): 배운 내용 + 교사 코멘트 학기 1회, **수업(반) 단위 일괄 입력**(학생마다 클릭해 들어가는 방식 X)
-4. Genius 갱신 버튼(행정이 직접 2주마다)
-5. 이전 목록: 안지연 2022-23 봄 성적 오류 확인, 학교 로고 업로드, 학부모 문자, 발행 자동화(맥미니 Playwright)
+2. 과거 선택과목(7–11학년 DIY·R&D 등) 자료 찾으면 '선택과목 성적'으로 입력
+3. 이전 목록: 안지연 2022-23 봄 성적 오류 확인, 학교 로고 업로드, 학부모 문자, 발행 자동화(맥미니 Playwright)

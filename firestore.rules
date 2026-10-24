@@ -73,6 +73,11 @@ service cloud.firestore {
         allow create: if isSelf(sid, request.resource.data.studentId);
         allow update, delete: if isManager(sid);
       }
+      match /audit/{id} {              // 변경 이력 — 본인 이름으로 추가만, 열람은 교장, 수정·삭제 불가
+        allow read: if isPrincipal(sid);
+        allow create: if (inSchool(sid) || isOwner()) && request.resource.data.by == email();
+        allow update, delete: if false;
+      }
       match /payments/{id} {
         allow read, write: if isManager(sid);
       }

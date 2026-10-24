@@ -1,0 +1,282 @@
+studentId,termCode,code,title,weekList
+4227,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),
+4227,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+4227,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+4236,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+4236,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+4236,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+4236,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+4236,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+4236,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+4368,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),
+4368,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+4368,2026F,K-ETH,Ethics · 도덕 (고졸),
+4368,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),
+4368,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),
+4407,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1
+4407,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1
+4407,2026F,K-ETH,Ethics · 도덕 (중졸),1
+4407,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+4407,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+4407,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+4409,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+4409,2026F,K-ETH,Ethics · 도덕 (고졸),1
+4409,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+4409,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+4409,2026F,K-HIS,Korean History · 한국사 (고졸),1
+4434,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+4434,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+4434,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+4434,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+4434,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+4434,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+4446,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+4446,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+4446,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+4446,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+4446,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+4446,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+4446,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+773,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+773,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+773,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+773,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+773,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+773,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+773,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+774,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+774,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1
+774,2026F,K-ETH,Ethics · 도덕 (중졸),1
+774,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1
+774,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1
+774,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1
+779,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+779,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+779,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+779,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+779,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1
+779,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1
+779,2026F,K-HIS,Korean History · 한국사 (고졸),1
+7953,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+7953,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),2
+7953,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),2
+7954,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+7954,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+7954,2026F,K-ETH,Ethics · 도덕 (고졸),1
+7954,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+7954,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1
+7954,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1
+7954,2026F,K-HIS,Korean History · 한국사 (고졸),1
+7955,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),2
+7955,2026F,K-KOR,Korean Language Arts · 국어 (중졸),2
+7955,2026F,K-ETH,Ethics · 도덕 (중졸),2
+7955,2026F,K-SOC,Korean Social Studies · 사회 (중졸),2
+7955,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),2
+7955,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),2
+7956,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+7956,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+7956,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+7956,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+7956,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+7956,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+799,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+799,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+799,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+799,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+799,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+799,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+799,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+7990,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+7990,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+7990,2026F,K-ETH,Ethics · 도덕 (고졸),1
+7990,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+7990,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1
+7990,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1
+7990,2026F,K-HIS,Korean History · 한국사 (고졸),1
+802,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+802,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+802,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+802,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+802,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+802,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+802,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+802,2026F,K-KOR,Korean Language Arts · 국어 (중졸),
+805,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+805,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+805,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+805,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+805,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+805,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+805,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+807,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+807,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+807,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+807,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+807,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+807,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+807,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+811,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+811,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+811,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+811,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+811,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+811,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+811,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+819,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+819,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+819,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+819,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+819,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+819,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+820,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+820,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+820,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+820,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+820,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+820,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+820,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+821,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+821,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+821,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+821,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+821,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+821,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+822,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+822,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+822,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+822,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+822,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+822,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+823,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+823,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+823,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+823,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+823,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+823,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+826,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+826,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+826,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+826,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+826,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+826,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+826,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+829,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+829,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+829,2026F,K-ETH,Ethics · 도덕 (고졸),1
+829,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+829,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1
+829,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+829,2026F,K-HIS,Korean History · 한국사 (고졸),1
+831,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+831,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+831,2026F,K-ETH,Ethics · 도덕 (고졸),1
+831,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+836,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+836,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+836,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+836,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+836,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+836,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+836,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+839,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+839,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+839,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+839,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+839,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+839,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+839,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+840,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+840,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+840,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+840,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1
+840,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1
+840,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1
+840,2026F,K-HIS,Korean History · 한국사 (고졸),1
+841,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+841,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+841,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+841,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+841,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+841,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+841,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+842,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+842,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+842,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+842,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+842,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+842,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+842,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+844,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+844,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+844,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+844,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+844,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+844,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+844,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+845,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+845,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+845,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+845,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+845,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+845,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+846,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+846,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+846,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+846,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+846,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+846,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+848,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),2
+848,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+848,2026F,K-ETH,Ethics · 도덕 (고졸),2
+848,2026F,K-SOC,Korean Social Studies · 사회 (고졸),2
+848,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+848,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+849,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+849,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+849,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+849,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+849,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+849,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+860,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1
+860,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+860,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+860,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+860,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+860,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+860,2026F,K-HIS,Korean History · 한국사 (고졸),1
+864,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+864,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+864,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+864,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+864,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+864,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+864,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+865,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1
+865,2026F,K-ETH,Ethics · 도덕 (고졸),1
+865,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1
+870,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+870,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+870,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+870,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+870,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+870,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+870,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+877,2026F,K-SCI,Science (Korean Curriculum) · 과학 (고졸),1 2
+877,2026F,K-KOR,Korean Language Arts · 국어 (고졸),1 2
+877,2026F,K-ETH,Ethics · 도덕 (고졸),1 2
+877,2026F,K-SOC,Korean Social Studies · 사회 (고졸),1 2
+877,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (고졸),1 2
+877,2026F,K-ENG,English (Korean Curriculum) · 영어 (고졸),1 2
+877,2026F,K-HIS,Korean History · 한국사 (고졸),1 2
+880,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1
+880,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+880,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+880,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+880,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+880,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
+891,2026F,K-SCI,Science (Korean Curriculum) · 과학 (중졸),1 2
+891,2026F,K-KOR,Korean Language Arts · 국어 (중졸),1 2
+891,2026F,K-ETH,Ethics · 도덕 (중졸),1 2
+891,2026F,K-SOC,Korean Social Studies · 사회 (중졸),1 2
+891,2026F,K-MATH,Mathematics (Korean Curriculum) · 수학 (중졸),1 2
+891,2026F,K-ENG,English (Korean Curriculum) · 영어 (중졸),1 2
