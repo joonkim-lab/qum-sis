@@ -90,6 +90,13 @@ td[contenteditable]{outline:none;background:#fffdf7;border-bottom:1px dashed var
 .tr td{padding:3px 5px;border-bottom:0}
 .tr tr.tot td{border-top:1px solid #999;font-weight:600;padding-bottom:8px}
 .tr tr:hover td{background:transparent}
+.sgdoc{font-family:"Noto Sans KR",sans-serif;font-size:9.5pt}
+.sgdoc h3{font-size:11pt;margin:16px 0 6px;font-family:"Noto Serif KR",serif}
+.sg{width:100%;border-collapse:collapse;border:1.2px solid #000;margin-bottom:4px}
+.sg th,.sg td{border:0.6px solid #000;padding:5px 7px;font-size:9pt;vertical-align:middle}
+.sg th{background:#f1f1f1;color:#000;text-align:center;font-weight:600;position:static}
+.sg td.c{text-align:center}
+.sg tr:hover td{background:transparent}
 .tr .legend{display:grid;grid-template-columns:1.5fr 1.3fr 1fr auto;gap:22px;margin-top:16px;font-size:8.5pt;align-items:start}
 .tr .legend>div{min-width:0}
 .tr .legend>div:last-child{justify-self:end;text-align:left}
@@ -233,6 +240,7 @@ const routes = {
   "courses": {label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
   "attendance":{label:"출결",     show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
   "slips":   {label:"슬립 승인",  show:()=>can.manage(),  view:viewSlips},
+  "comments":{label:"세특",       show:()=>can.manage() || me.role==="teacher", view:viewComments},
   "requests":{label:"수정 요청",  show:()=>can.manage(),  view:viewRequests},
   "new":     {label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
   "import":  {label:"가져오기",   show:()=>can.manage(),  view:viewImport},
@@ -251,7 +259,8 @@ async function route(){
   const v = $("#view"); v.innerHTML = `<p class="muted">불러오는 중…</p>`;
   const sub = location.hash.replace(/^#\/?/,"").split("/")[2];
   try {
-    if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg));
+    if (k==="comments") return await viewComments();
+  if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg));
     if (k==="transcript" && arg) return await viewTranscript(arg);
     if (k==="miri" && arg) return await viewMiri(arg);
   } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; return; }
@@ -468,7 +477,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">미리 성적표</a></div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a></div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -704,33 +713,105 @@ async function viewRequests(){
   document.querySelectorAll("[data-done]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("requests",el.dataset.done),{status:el.checked?"done":"open",doneBy:me.email,doneAt:serverTimestamp()}); });
 }
 
-/* ---------- 미리 성적표 (한국 과정) ---------- */
-const MIRI_ORDER=["국어","수학","영어","사회","과학","도덕","한국사"];
+/* ---------- 학습성장기록부 (한국 생기부 양식) ---------- */
+const MIRI_ORDER=["국어","수학","영어","사회","도덕","한국사","과학"];
+const KO_GROUP={"국어":"국어","수학":"수학","영어":"영어","사회":"사회(역사포함)/도덕","도덕":"사회(역사포함)/도덕","한국사":"사회(역사포함)/도덕","과학":"과학"};
 const miriGrade = sc => sc>=60?"A":sc>=50?"B":sc>=40?"C":"F";
+const ayOf = tc => { const m=/^(\d{4})([FSU])$/.exec(tc||""); return m? (m[2]==="F"? +m[1] : +m[1]-1) : null; };
+const AREA_KO={"1":"사회","2":"영어","3":"수학","4":"과학","5":"외국어","6":"예술","7":"교양","8":"체육","9":"선택"};
 async function viewMiri(id){
-  const [s, all]=await Promise.all([getDoc(ref("students",id)), loadGrades(id)]);
+  const staff=can.manage()||me.role==="teacher";
+  const [s, all, as, acts, cms]=await Promise.all([getDoc(ref("students",id)), loadGrades(id), getDocs(query(col("attendance"), where("studentId","==",String(id)))), getDocs(query(col("activities"), where("studentId","==",String(id)))), staff?getDocs(query(col("comments"), where("studentId","==",String(id)))):Promise.resolve({docs:[]})]);
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
-  const d=s.data(); const rows=all.filter(r=>r.source==="miri");
-  const terms=[...new Set(rows.map(r=>r.termCode))].sort((a,b)=>termKey(a)-termKey(b)); const term=location.hash.split("/")[3]||terms[terms.length-1]||school.termCode;
-  const tr=rows.filter(r=>r.termCode===term).sort((a,b)=>MIRI_ORDER.indexOf(a.subjectKo)-MIRI_ORDER.indexOf(b.subjectKo));
-  const level=tr[0]?.level||""; const avg=tr.length?Math.round(tr.reduce((a,r)=>a+(r.score||0),0)/tr.length):0;
-  const y=term.slice(0,4), sem=term.endsWith("F")?"1":"2"; const today=new Date().toISOString().slice(0,10);
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:820px;margin:0 auto 12px">${subNav(id,"miri")}<select id="miTerm" style="max-width:150px;padding:5px 8px">${terms.map(t=>`<option value="${t}" ${t===term?"selected":""}>${y}학년도 ${t.endsWith("F")?"1":"2"}학기</option>`).join("")}</select><button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
-  <div class="tr" style="max-width:820px">
-    <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 style="font-family:'Noto Serif KR',serif">미리 학습 성적표</h1><div style="font-size:9pt;color:#444;margin-top:4px">한국 교육과정 (검정고시 과정) · Korean National Curriculum</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}\n${esc(school.schoolName)}</div></div>
-    <div class="info" style="grid-template-columns:1.4fr 1fr 1fr 1fr"><div><b>학생</b>${esc(d.name_ko||"")} ${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>학번</b>${esc(id)}</div><div><b>학년</b>${esc(d.grade)}</div><div><b>과정</b>${esc(level)}</div>
-      <div><b>학기</b>${y}학년도 ${sem}학기</div><div><b>트랙</b>${esc(d.track||"")}</div><div><b>학기 평균</b>${avg}점</div><div><b>발행일</b>${today}</div></div>
-    <table style="margin-top:8px"><thead><tr><th>과목</th><th>Course</th><th>학습 주차</th><th>평균 점수</th><th>등급</th><th>이수</th></tr></thead><tbody>
-    ${tr.map(r=>`<tr><td class="c"><b>${esc(r.subjectKo)}</b></td><td>${esc(r.title.split(" · ")[0])}</td><td class="c">${r.weeks||""}</td><td class="c">${r.score}</td><td class="c"><b>${miriGrade(r.score)}</b></td><td class="c">${r.score>=60?"이수":"미이수"}</td></tr>`).join("")||`<tr><td colspan="6" class="c muted">이 학기 기록 없음</td></tr>`}
-    </tbody></table>
-    <div class="legend" style="grid-template-columns:1fr 1fr;margin-top:18px">
-      <div><h4>등급 기준</h4><table><tr><th>등급</th><th>점수</th><th>의미</th></tr><tr><td>A</td><td>60–100</td><td>합격 수준 이수</td></tr><tr><td>B</td><td>50–59</td><td>보완 필요</td></tr><tr><td>C</td><td>40–49</td><td>재학습 필요</td></tr><tr><td>F</td><td>0–39</td><td>미이수</td></tr></table><div style="font-size:8pt;color:#555;margin-top:4px">점수는 주차별 학습 평가의 최고점 평균입니다. 검정고시 합격 기준(과목 60점)에 맞춘 등급입니다.</div></div>
-      <div><h4>안내</h4><div style="font-size:8.5pt;line-height:1.6">이 성적표는 본교 자체 운영 한국 교육과정(미리)의 학습 결과입니다.<br>미국 학제 성적표(Transcript)에는 국어·한국사·사회·도덕이 Pass/Fail로 기재되며 GPA에 포함되지 않습니다.<br>수학·영어·과학은 미국 교육과정 성적이 별도로 기재됩니다.</div></div>
-    </div>
-    <div class="sign"><div class="left">* 본 성적표는 학교 직인이 없으면 참고용입니다.</div><div><div class="sp"></div><div class="line">${esc(school.schoolNameKo||school.schoolName)} 교장 ${esc(school.principalKo||school.principal)}</div></div></div>
-  </div>`;
-  $("#miTerm").onchange=e=>{ location.hash=`#/miri/${id}/${e.target.value}`; };
-  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_MIRI_${term}`; window.print(); document.title=t; };
+  const d=s.data(); const curAY=ayOf(school.termCode)||new Date().getFullYear(); const grade=parseInt(d.grade)||0;
+  const gradeOfAY = ay => grade-(curAY-ay);
+  const today=new Date(); const todayKo=`${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
+  const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
+  // 출결: 학년별
+  const att={}; as.docs.forEach(x=>{ const r=x.data(); const g=gradeOfAY(ayOf(r.termCode)); const t=att[g]=att[g]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
+  const attGrades=Object.keys(att).map(Number).sort((a,b)=>a-b);
+  // 수상·활동·봉사 (승인된 것만)
+  const A=acts.docs.map(x=>x.data()).filter(a=>a.approved);
+  const awards=A.filter(a=>a.kind==="award").sort((a,b)=>String(a.date||"").localeCompare(b.date||""));
+  const activities=A.filter(a=>a.kind==="activity").sort((a,b)=>String(a.startDate||"").localeCompare(b.startDate||""));
+  const vols=A.filter(a=>a.kind==="volunteer").sort((a,b)=>String(a.date||"").localeCompare(b.date||""));
+  // 교과: 학년별 → 학기별
+  const miri=all.filter(r=>r.source==="miri"); const apex=all.filter(r=>r.source!=="miri" && r.grade!=="IP" && r.credit>0 && r.school===school.schoolName);
+  const ays=[...new Set([...miri,...apex].map(r=>ayOf(r.termCode)))].filter(x=>x).sort();
+  const comments=cms.docs.map(x=>({id:x.id,...x.data()}));
+  const cell=(v)=>v==null||v===""?"&nbsp;":esc(v);
+  const T=(hdr,rows,cls="")=>`<table class="sg ${cls}"><thead><tr>${hdr.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.length?rows.join(""):`<tr><td colspan="${hdr.length}" class="c">해당 사항 없음</td></tr>`}</tbody></table>`;
+  const subjectRows = ay => {
+    const g=gradeOfAY(ay); const out=[];
+    for (const sem of ["1","2"]){ const tc = sem==="1"? `${ay}F` : `${ay+1}S`;
+      for (const sub of MIRI_ORDER){ const r=miri.find(x=>x.termCode===tc&&x.subjectKo===sub); if (!r) continue;
+        out.push(`<tr><td class="c">${sem}</td><td>${KO_GROUP[sub]}</td><td>${sub}</td><td class="c">${r.score}</td><td class="c">${miriGrade(r.score)}</td><td class="muted">미리</td></tr>`); }
+      for (const r of apex.filter(x=>x.termCode===tc).sort((a,b)=>areaRank(a.code)-areaRank(b.code))){
+        out.push(`<tr><td class="c">${sem}</td><td>${AREA_KO[String(r.code||"9")[0]]||"선택"} (심화)</td><td>${esc(r.title)}</td><td class="c">—</td><td class="c">${esc(r.grade)}</td><td class="muted">미국 교육과정${r.weighted?" · Honors/AP":""}</td></tr>`); }
+    }
+    return out; };
+  const commentRows = ay => comments.filter(c=>ayOf(c.termCode)===ay).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode)).map(c=>`<div><b>(${c.termCode.endsWith("F")?"1":"2"}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`).join("")||`<div class="muted">기록 없음</div>`;
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:860px;margin:0 auto 12px">${subNav(id,"miri")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
+  <div class="tr sgdoc" style="max-width:860px">
+    <h1 style="text-align:center;font-size:19pt;margin:0 0 18px;font-family:'Noto Serif KR',serif">학습성장기록부</h1>
+    <table class="sg" style="margin-bottom:14px"><tr><th style="width:90px">학교</th><td>${esc(school.schoolNameKo||school.schoolName)}</td><th style="width:90px">학번</th><td>${esc(id)}</td><th style="width:90px">현재 학년</th><td>${esc(d.grade)}</td></tr></table>
+    <h3>1. 인적·학적사항</h3>
+    <table class="sg"><tr><th style="width:90px">학생정보</th><td colspan="5"><div>성명 : ${esc(d.name_ko||"")} (${esc(d.last_en)}, ${esc(d.first_en)}) &nbsp;&nbsp; 성별 : ${d.gender==="F"?"여":d.gender==="M"?"남":""} &nbsp;&nbsp; 생년월일 : ${us(d.dob)}</div><div>주소 : ${esc(d.address_ko||d.address_en||"")}</div></td></tr>
+      <tr><th>학적사항</th><td colspan="5">${d.enrollDate?`${us(d.enrollDate)} ${esc(school.schoolNameKo||school.schoolName)} 입학`:""}${d.prevSchool?` (${esc(d.prevSchool)} 에서 전입)`:""}${d.track?` · 트랙 ${esc(d.track)}`:""}</td></tr>
+      <tr><th>특기사항</th><td colspan="5">${esc(d.distinctions||"")}&nbsp;</td></tr></table>
+    <h3>2. 출결상황</h3>
+    ${T(["학년","결석 (인정)","결석 (미인정)","지각 (인정)","지각 (미인정)","특기사항"], attGrades.map(g=>`<tr><td class="c">${g}</td><td class="c">${att[g]["e.a"]}</td><td class="c">${att[g]["u.a"]}</td><td class="c">${att[g]["e.t"]}</td><td class="c">${att[g]["u.t"]}</td><td>&nbsp;</td></tr>`))}
+    <h3>3. 수상경력</h3>
+    ${T(["학년","수상명","등급(위)","수상연월일","수여기관"], awards.map(a=>`<tr><td class="c">${a.date?gradeOfAY(ayOf(termOf(a.date))):""}</td><td>${esc(a.name)}</td><td class="c">${esc(a.description||"")}</td><td class="c">${us(a.date)}</td><td class="c">${a.awardType==="School"?esc(school.schoolNameKo||school.schoolName):esc(a.awardType||"")}</td></tr>`))}
+    <h3>4. 창의적 체험활동상황</h3>
+    ${T(["학년","영역","활동명","역할·결과","기간","특기사항"], activities.map(a=>`<tr><td class="c">${a.startDate?gradeOfAY(ayOf(termOf(a.startDate))):""}</td><td class="c">${esc(a.category||"")}</td><td>${esc(a.name)}</td><td>${esc([a.position,a.rank].filter(Boolean).join(" · "))}</td><td class="c nw">${us(a.startDate)}${a.endDate?" ~ "+us(a.endDate):""}</td><td>${esc(a.description||"")}</td></tr>`))}
+    <div style="margin-top:8px"><b>봉사활동실적</b></div>
+    ${T(["일자 또는 기간","장소 또는 주관기관명","활동내용","시간","누계시간"], (()=>{let acc=0; return vols.map(v=>{acc+=parseFloat(v.hours)||0; return `<tr><td class="c nw">${us(v.date)}</td><td class="c">${esc(school.schoolNameKo||school.schoolName)}${v.givenBy?" ("+esc(v.givenBy)+")":""}</td><td>${esc(v.name)}</td><td class="c">${v.hours||""}</td><td class="c">${acc}</td></tr>`;});})())}
+    <h3>5. 교과학습발달상황</h3>
+    ${ays.map(ay=>`<div style="margin:8px 0 4px"><b>[${gradeOfAY(ay)}학년]</b> <span class="muted">${ay}학년도</span></div>
+      ${T(["학기","교과","과목","원점수","성취도","비고"], subjectRows(ay))}
+      <table class="sg" style="margin-top:-1px"><tr><th style="width:90px;vertical-align:top">세부능력 및 특기사항</th><td style="line-height:1.7">${commentRows(ay)}</td></tr></table>`).join("")||`<p class="muted">교과 기록 없음</p>`}
+    <div style="font-size:8.5pt;color:#444;margin-top:12px;line-height:1.6">· 미리 과목의 원점수는 주차별 학습 평가 최고점의 학기 평균이며, 성취도는 A(60–100) · B(50–59) · C(40–49) · F(39 이하)로 표기합니다(검정고시 합격 기준 60점).<br>· 심화 과목은 미국 교육과정(Apex Learning) 성적을 그대로 표기합니다.</div>
+    <div class="sign" style="margin-top:24px"><div class="left">* 본 기록부는 학교 직인이 없으면 참고용입니다.</div><div><div class="sp"></div><div class="line">${esc(school.schoolNameKo||school.schoolName)} 교장 ${esc(school.principalKo||school.principal)}</div><div style="margin-top:4px;text-align:center">${todayKo}</div></div></div>
+  </div>
+  ${staff?`<div class="card noprint" style="max-width:860px;margin:16px auto"><h2>세부능력 및 특기사항 입력</h2>
+    <form id="cf" class="row"><input name="termCode" value="${esc(school.termCode)}" style="max-width:90px" required><select name="subject" style="max-width:130px"><option>공통</option>${MIRI_ORDER.map(x=>`<option>${x}</option>`).join("")}<option>심화</option><option>체육</option><option>예술</option></select><input name="text" placeholder="~을 이해함, ~을 설명할 수 있음 (과정명·점수는 쓰지 않음)" style="flex:1;min-width:300px" required><button class="btn sm">추가</button></form>
+    <table style="margin-top:10px"><tbody>${comments.sort((a,b)=>termKey(b.termCode)-termKey(a.termCode)).map(c=>`<tr><td class="nw">${termLabel(c.termCode)}</td><td class="nw">${esc(c.subject)}</td><td>${esc(c.text)}</td><td class="muted nw">${esc(c.by||"")}</td><td><button class="btn sm ghost" data-cdel="${c.id}">×</button></td></tr>`).join("")}</tbody></table></div>`:""}`;
+  $("#pr").onclick=()=>{ const t=document.title; document.title=`${d.last_en}_${d.first_en}_학습성장기록부_${today.toISOString().slice(0,10)}`; window.print(); document.title=t; };
+  const cf=$("#cf"); if (cf){ cf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(cf); await setDoc(doc(col("comments")),{studentId:String(id),termCode:v.termCode,subject:v.subject,text:v.text,by:me.email,at:serverTimestamp()}); toast("저장"); viewMiri(id); };
+    document.querySelectorAll("[data-cdel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("comments",b.dataset.cdel)); viewMiri(id); }); }
+}
+
+/* ---------- 세특 과목별 일괄 입력 ---------- */
+async function viewComments(){
+  const term = location.hash.split("/")[1] || school.termCode; const subj = decodeURIComponent(location.hash.split("/")[2]||"");
+  const [gs, ss, cs] = await Promise.all([getDocs(query(col("grades"), where("termCode","==",term))), getDocs(col("students")), getDocs(query(col("comments"), where("termCode","==",term)))]);
+  const names={}; ss.docs.forEach(d=>{ const x=d.data(); names[d.id]={n:`${x.last_en}, ${x.first_en}`, ko:x.name_ko||"", g:x.grade}; });
+  const grades=gs.docs.map(d=>d.data());
+  // 과목 목록: 미리 과목(subjectKo) + 그 외 과목 제목
+  const subjects=[...new Set(grades.map(r=>r.source==="miri"? r.subjectKo : r.title.replace(/\s+Sem\s*[12].*$/,"")))].sort((a,b)=>a.localeCompare(b,"ko"));
+  const roster = subj ? grades.filter(r=>(r.source==="miri"? r.subjectKo : r.title.replace(/\s+Sem\s*[12].*$/,""))===subj).map(r=>r.studentId) : [];
+  const studs=[...new Set(roster)].map(id=>({id,...names[id]})).sort((a,b)=>(parseInt(a.g)||0)-(parseInt(b.g)||0)||String(a.n).localeCompare(b.n));
+  const existing={}; cs.docs.forEach(d=>{ const x=d.data(); existing[x.studentId+"|"+x.subject]={id:d.id,text:x.text}; });
+  // 지난 학기 참고
+  const prevTerm = term.endsWith("F") ? `${term.slice(0,4)}S` : `${+term.slice(0,4)-1}F`;
+  const pcs = subj ? (await getDocs(query(col("comments"), where("termCode","==",prevTerm)))).docs.map(d=>d.data()).filter(x=>x.subject===subj) : [];
+  const prev={}; pcs.forEach(x=>prev[x.studentId]=x.text);
+  $("#view").innerHTML=`<div class="card"><h2>세부능력 및 특기사항 — 과목별 입력</h2>
+    <div class="row" style="margin-bottom:12px"><input id="ct" value="${esc(term)}" style="max-width:90px" title="학기 코드"><select id="csub" style="max-width:320px"><option value="">과목 선택</option>${subjects.map(x=>`<option ${x===subj?"selected":""}>${esc(x)}</option>`).join("")}</select>
+      <span class="muted">${subj?`${studs.length}명 · 칸에서 나가면 자동 저장 · Tab으로 다음 학생`:"이번 학기 성적 줄이 있는 과목만 보입니다"}</span></div>
+    ${subj?`<table><thead><tr><th style="width:60px">학년</th><th style="width:220px">학생</th><th>세특 (과정명·점수 없이, "~을 이해함 / ~을 설명할 수 있음")</th>${pcs.length?`<th style="width:28%">지난 학기 (${termLabel(prevTerm)})</th>`:""}</tr></thead><tbody>
+      ${studs.map(st=>{ const ex=existing[st.id+"|"+subj]; return `<tr><td>${esc(st.g)}</td><td class="nw">${esc(st.n)} <span class="muted">${esc(st.ko)}</span></td><td><textarea data-s="${st.id}" data-cid="${ex?ex.id:""}" rows="2" style="width:100%;resize:vertical;${ex?"background:#eef7ee":""}">${esc(ex?ex.text:"")}</textarea></td>${pcs.length?`<td class="muted" style="font-size:12.5px">${esc(prev[st.id]||"")}</td>`:""}</tr>`; }).join("")}
+      </tbody></table>`:""}</div>`;
+  const go=()=>{ location.hash=`#/comments/${$("#ct").value.trim()}/${encodeURIComponent($("#csub").value)}`; };
+  $("#csub").onchange=go; $("#ct").onchange=go;
+  document.querySelectorAll("textarea[data-s]").forEach(ta=>{
+    let last=ta.value;
+    ta.addEventListener("blur", async()=>{ const v=ta.value.trim(); if (v===last) return; last=v;
+      if (ta.dataset.cid){ if (v) await updateDoc(ref("comments",ta.dataset.cid),{text:v,by:me.email,at:serverTimestamp()}); else { await deleteDoc(ref("comments",ta.dataset.cid)); ta.dataset.cid=""; } }
+      else if (v){ const r=doc(col("comments")); await setDoc(r,{studentId:ta.dataset.s,termCode:term,subject:subj,text:v,by:me.email,at:serverTimestamp()}); ta.dataset.cid=r.id; }
+      ta.style.background=v?"#eef7ee":""; toast("저장"); });
+  });
 }
 
 /* ---------- Transcript ---------- */
