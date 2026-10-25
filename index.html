@@ -289,7 +289,7 @@ const routes = {
   "electives":{g:"gr",  label:"선택과목 성적", show:()=>can.manage(), view:viewElectives},
   "comments":{g:"gr",   label:"세특·의견",   show:()=>can.manage() || me.role==="teacher", view:viewComments},
   "report":  {g:"gr",   label:"Progress Report", show:()=>can.manage() || me.role==="teacher", view:viewReport},
-  "attendance":{g:"att",label:"출결 입력",   show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
+  "attendance":{g:"att",label:"출결 보기",   show:()=>can.manage() || me.role==="teacher", view:viewAttendance},
   "sections":{g:"att",  label:"반·진도",    show:()=>can.manage() || me.role==="teacher", view:viewSections},
   "biweekly":{g:"att",  label:"격주 출결 확인서", show:()=>can.manage() || me.role==="teacher", view:viewBiweekly},
   "slips":   {g:"att",  label:"슬립 승인",  show:()=>can.manage(),  view:viewSlips},
@@ -667,6 +667,8 @@ const DISP_OPTS=["Lines (Incident Report)","Detention 5일","Suspension 10일","
 /* ---------- 출결 ---------- */
 const ATT_CODES={"u.t":"무단 지각","u.a":"무단 결석","e.t":"사유 지각","e.a":"사유 결석"};
 const termOf = d => { const [y,m]=String(d).split("-").map(Number); return m>=8 ? `${y}F` : `${y}S`; };
+const ATT_SHEET = "https://docs.google.com/spreadsheets/d/1-tj3-aA2YOvjthGTgRQOwntrbuYrPimp9FksSeVfrCo/edit";   /* 출결 입력은 이 시트에서 — 시트가 15분마다 qum-sis로 보냄. 앱은 보기 전용 */
+const attSheetNote = () => `<p class="tag" style="display:inline-block;margin:0 0 10px">출결 입력·슬립 승인은 <a href="${ATT_SHEET}" target="_blank" rel="noopener"><b>출결 원본 시트</b></a>에서 합니다. 여기는 보기 전용이며 15분마다 갱신됩니다.</p>`;
 const finalCode = a => a.approved ? a.code.replace("u.","e.") : a.code;
 const todayISO = () => { const t=new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return t.toISOString().slice(0,10); };
 async function viewAttendance(dateSel){
@@ -676,15 +678,15 @@ async function viewAttendance(dateSel){
   const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>s.status==="active"||!s.status).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
   const recs={}; as.docs.forEach(d=>recs[d.data().studentId]=d.data());
   const day=["일","월","화","수","목","금","토"][new Date(date+"T00:00:00").getDay()];
-  $("#view").innerHTML=`<div class="card"><h2>출결 입력</h2>
+  $("#view").innerHTML=`<div class="card"><h2>출결 보기</h2>${attSheetNote()}
     <div class="row" style="margin-bottom:12px"><input type="date" id="dt" value="${date}" style="max-width:170px"><span class="tag">${day}요일 · ${termLabel(termOf(date))}</span><span class="muted">아무 표시 없음 = 출석. 지각·결석만 누르세요. 누르면 바로 저장.</span></div>
     <div class="scroll" style="max-height:75vh"><table><thead><tr><th>학년</th><th>이름</th><th>트랙</th><th>출결</th><th>메모</th></tr></thead><tbody>
     ${studs.map(s=>{ const r=recs[s.id]||{}; return `<tr data-s="${s.id}"><td>${esc(s.grade)}</td><td>${esc(s.last_en)}, ${esc(s.first_en)} <span class="muted">${esc(s.name_ko||"")}</span></td><td class="muted">${esc(s.track||"")}</td>
-      <td class="nw">${Object.entries(ATT_CODES).map(([c,l])=>`<button class="btn sm ${r.code===c?"":"ghost"}" data-c="${c}" title="${l}">${c}</button>`).join(" ")}</td>
-      <td><input data-note value="${esc(r.note||"")}" placeholder="사유" ${r.code?"":"disabled"} style="padding:4px 8px"></td></tr>`; }).join("")}
+      <td class="nw">${Object.entries(ATT_CODES).map(([c,l])=>`<button class="btn sm ${r.code===c?"":"ghost"}" data-c="${c}" title="${l}" ${ATT_SHEET?"disabled":""}>${c}</button>`).join(" ")}</td>
+      <td><input data-note value="${esc(r.note||"")}" placeholder="사유" ${r.code&&!ATT_SHEET?"":"disabled"} style="padding:4px 8px"></td></tr>`; }).join("")}
     </tbody></table></div></div>`;
   $("#dt").onchange=e=>viewAttendance(e.target.value);
-  document.querySelectorAll("tr[data-s]").forEach(tr=>{
+  if (!ATT_SHEET) document.querySelectorAll("tr[data-s]").forEach(tr=>{
     const sid=tr.dataset.s, note=tr.querySelector("[data-note]");
     tr.querySelectorAll("[data-c]").forEach(b=>b.onclick=async()=>{
       const on=!b.classList.contains("ghost"); const id=`${sid}_${date}`;
@@ -702,15 +704,15 @@ async function viewSlips(){
   const rows=as.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.code.startsWith("u.")).sort((a,b)=>b.date.localeCompare(a.date));
   const q=(l)=> l.length? `<table><thead><tr><th>날짜</th><th>학생</th><th>코드</th><th>메모</th><th>서류번호</th><th>승인</th><th>최종</th></tr></thead><tbody>${l.map(r=>`<tr>
     <td class="nw">${r.date}</td><td>${esc(names[r.studentId]||r.studentId)}</td><td>${r.code}</td><td class="muted">${esc(r.note)}</td>
-    <td><input data-slip="${r.id}" value="${esc(r.slipNo)}" placeholder="26F-Q1-013" style="max-width:130px;padding:4px 8px"></td>
-    <td><input type="checkbox" data-ok="${r.id}" ${r.approved?"checked":""} style="width:auto"></td><td>${finalCode(r)}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">없음</p>`;
+    <td><input data-slip="${r.id}" value="${esc(r.slipNo)}" placeholder="26F-Q1-013" style="max-width:130px;padding:4px 8px" ${ATT_SHEET?"disabled":""}></td>
+    <td><input type="checkbox" data-ok="${r.id}" ${r.approved?"checked":""} ${ATT_SHEET?"disabled":""} style="width:auto"></td><td>${finalCode(r)}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">없음</p>`;
   const pending=rows.filter(r=>r.slipNo&&!r.approved), open=rows.filter(r=>!r.slipNo&&!r.approved), done=rows.filter(r=>r.approved);
-  $("#view").innerHTML=`<div class="card"><h2>슬립 승인 · ${termLabel(term)}</h2><p class="muted">종이 슬립에 찍은 번호를 넣고 승인하면 u.t→e.t, u.a→e.a로 바뀝니다. 원본 기록은 남습니다.</p>
+  $("#view").innerHTML=`<div class="card"><h2>슬립 승인 · ${termLabel(term)}</h2>${attSheetNote()}<p class="muted">종이 슬립에 찍은 번호를 넣고 승인하면 u.t→e.t, u.a→e.a로 바뀝니다. 원본 기록은 남습니다.</p>
     <h3 style="font-size:14px;color:var(--pending);margin:14px 0 6px">접수됨 · 검토 중 (${pending.length})</h3>${q(pending)}
     <h3 style="font-size:14px;color:var(--warn);margin:14px 0 6px">슬립 없음 (${open.length})</h3>${q(open)}
     <h3 style="font-size:14px;color:var(--ok);margin:14px 0 6px">승인 완료 (${done.length})</h3>${q(done)}</div>`;
-  document.querySelectorAll("[data-slip]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.slip),{slipNo:el.value.trim(),slipAt:serverTimestamp()}); toast("저장"); });
-  document.querySelectorAll("[data-ok]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.ok),{approved:el.checked,approvedBy:me.email,approvedAt:serverTimestamp()}); viewSlips(); });
+  if (!ATT_SHEET) document.querySelectorAll("[data-slip]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.slip),{slipNo:el.value.trim(),slipAt:serverTimestamp()}); toast("저장"); });
+  if (!ATT_SHEET) document.querySelectorAll("[data-ok]").forEach(el=>el.onchange=async()=>{ await updateDoc(ref("attendance",el.dataset.ok),{approved:el.checked,approvedBy:me.email,approvedAt:serverTimestamp()}); viewSlips(); });
 }
 async function viewStudentAttendance(id){
   const [s, as]=await Promise.all([getDoc(ref("students",id)), getDocs(query(col("attendance"), where("studentId","==",String(id))))]);
@@ -1082,7 +1084,7 @@ async function viewTranscript(id){
   const dist=(d.distinctions||"").split(/;|\n/).map(x=>x.trim()).filter(Boolean);
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
-  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${miriHtml?`<label style="font-size:13px"><input type="checkbox" id="miriOn" style="width:auto"> 미리 포함</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
+  $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button><div style="flex-basis:100%;height:0"></div>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}${miriHtml?`<label style="font-size:13px"><input type="checkbox" id="miriOn" style="width:auto"> 미리 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
   <div class="tr">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial ${level==="ms"?"Middle School ":""}Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
