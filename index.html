@@ -290,6 +290,7 @@ const routes = {
   "":        {g:"home", label:"현황",       show:()=>me.role!=="student", view:viewHome},
   "students":{g:"stu",  label:"학생 목록",   show:()=>can.manage() || me.role==="teacher", view:viewStudents},
   "new":     {g:"stu",  label:"신입생 등록", show:()=>can.manage(),  view:viewNew},
+  "discipline":{g:"stu", label:"징계 기록", show:()=>can.manage() || me.role==="teacher", view:()=>viewDiscipline()},
   "requests":{g:"stu",  label:"수정 요청",  show:()=>can.manage(),  view:viewRequests},
   "courses": {g:"gr",   label:"과목",       show:()=>can.manage() || me.role==="teacher", view:viewCourses},
   "electives":{g:"gr",  label:"선택과목 성적", show:()=>can.manage(), view:viewElectives},
@@ -330,7 +331,7 @@ async function route(){
     if (k==="comments") return await viewComments();
     if (k==="biweekly") return await viewBiweekly();
     if (k==="sections" && arg) return await viewSection(arg);
-  if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : viewStudent(arg));
+  if (k==="students" && arg) return await (sub==="grades" ? viewStudentGrades(arg) : sub==="attendance" ? viewStudentAttendance(arg) : sub==="activities" ? viewStudentActivities(arg) : sub==="discipline" ? viewDiscipline(arg) : viewStudent(arg));
     if (k==="transcript" && arg) return await viewTranscript(arg);
     if (k==="miri" && arg) return await viewMiri(arg);
   } catch(e){ console.error(e); v.innerHTML=`<div class="card"><p class="warn">오류: ${esc(e.code||e.message)}</p></div>`; return; }
@@ -566,7 +567,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a><a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a>${me&&can.settings()?`<a href="#/audit/${id}">변경 이력</a>`:""}</div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a>${me&&(can.manage()||me.role==="teacher")?`<a href="#/students/${id}/discipline" class="${on==="disc"?"on":""}">징계</a>`:""}<a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a>${me&&can.settings()?`<a href="#/audit/${id}">변경 이력</a>`:""}</div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -725,32 +726,60 @@ async function viewStudentAttendance(id){
   if (!s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
   const d=s.data(), rows=as.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date));
   const staff=can.manage()||me.role==="teacher";
-  const inc = staff ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date)) : [];
   const terms={}; rows.forEach(r=>{ const t=terms[r.termCode]=terms[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const tk=Object.keys(terms).sort((a,b)=>termKey(a)-termKey(b));
   $("#view").innerHTML=`<div class="card"><h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"att")}
     <table style="max-width:520px;margin-bottom:18px"><thead><tr><th>학기</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${tk.map(t=>`<tr><td>${termLabel(t)}</td><td>${terms[t]["e.a"]}</td><td>${terms[t]["e.t"]}</td><td>${terms[t]["u.a"]}</td><td>${terms[t]["u.t"]}</td></tr>`).join("")||"<tr><td colspan=5 class=muted>기록 없음</td></tr>"}</tbody></table>
-    <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div>
-    ${staff?`<h3 style="font-size:15px;color:var(--brand);margin:22px 0 8px">징계·사건 기록 (Incident Reports)</h3>
-    ${can.manage()?`<form id="incf" style="margin-bottom:10px;background:var(--paper);padding:12px;border-radius:8px"><div class="grid" style="grid-template-columns:150px 1.2fr 1fr 1.6fr">
+    <div class="scroll"><table><thead><tr><th>날짜</th><th>학기</th><th>기록</th><th>최종</th><th>메모</th><th>서류번호</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">${termLabel(r.termCode)}</td><td>${r.code}</td><td>${finalCode(r)}${r.approved?' <span class="tag ok">승인</span>':""}</td><td class="muted">${esc(r.note)}</td><td>${esc(r.slipNo)}</td></tr>`).join("")}</tbody></table></div></div>`;
+}
+
+/* ---------- 징계 기록 (학생 탭 · 메뉴) — 추가: 행정·교장, 수정·삭제·성적표 기록 결정: 교장 ---------- */
+async function viewDiscipline(id){
+  const boss=can.settings(), staff=can.manage()||me.role==="teacher";
+  if (!staff) return $("#view").innerHTML="<p>권한이 없습니다.</p>";
+  const [s, is, ss] = await Promise.all([id?getDoc(ref("students",id)):null, getDocs(id?query(col("incidents"), where("studentId","==",String(id))):col("incidents")), id?null:getDocs(col("students"))]);
+  if (id && !s.exists()) return $("#view").innerHTML="<p>없는 학생입니다.</p>";
+  const d=id?s.data():null;
+  const studs = ss ? ss.docs.map(x=>({id:x.id,...x.data()})) : [];
+  const nm={}; studs.forEach(x=>nm[x.id]=`${x.last_en||""}, ${x.first_en||""}${x.name_ko?" ("+x.name_ko+")":""}`);
+  const act = studs.filter(x=>!x.status||x.status==="active"||x.status==="pending").sort((a,b)=>(parseInt(a.grade)||99)-(parseInt(b.grade)||99)||String(a.last_en).localeCompare(String(b.last_en)));
+  const inc = is.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date));
+  const head = id ? `<h2>${esc(d.last_en)}, ${esc(d.first_en)} <span class="muted" style="font-size:14px">ID ${esc(id)}</span></h2>${subNav(id,"disc")}` : `<h2>징계 기록</h2>`;
+  const form = can.manage() ? `<form id="incf" style="margin-bottom:12px;background:var(--paper);padding:12px;border-radius:8px"><input type="hidden" name="eid" value="">
+    <div class="grid" style="grid-template-columns:${id?"":"1.4fr "}150px 1.2fr 1fr 1.6fr">
+      ${id?"":`<div><label>학생</label><select name="sid" required><option value="">선택</option>${act.map(x=>`<option value="${x.id}">${esc(x.grade||"")} · ${esc(nm[x.id])}</option>`).join("")}</select></div>`}
       <div><label>날짜</label><input type="date" name="date" value="${todayISO()}" required></div>
       <div><label>단계</label><select name="action" id="dAct"><option value="">선택</option>${Object.entries(DISC).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("")}</select></div>
       <div><label>카테고리</label><select name="category" id="dCat" disabled><option value="">먼저 단계 선택</option></select></div>
       <div><label>해당 행위</label><select name="behavior" id="dBeh" disabled><option value="">먼저 카테고리 선택</option></select></div>
-      <div style="grid-column:1/3"><label>처분</label><select name="disposition" id="dDisp">${DISP_OPTS.map(o=>`<option>${o}</option>`).join("")}</select><div class="muted" id="dHint" style="font-size:12px;margin-top:3px"></div></div>
-      <div style="grid-column:3/5"><label>메모 (경위·소명·SAC 의결·최종 결과)</label><input name="note" placeholder="예: 10/23 SAC 의결, 보호자 고지 완료, 11/1 복귀"></div>
-      <div><label>성적표 기록</label><select name="record"><option value="N">기록 안 함</option><option value="Y">기록</option></select></div>
-      </div><div class="row" style="margin-top:10px"><button class="btn sm">추가</button><span class="muted">Action 1은 성적표 미기록 · 2~3은 SAC 결정 · 4 이상은 반드시 기록 (규정 제16조)</span></div></form>`:""}
-    <table><thead><tr><th>날짜</th><th>단계</th><th>카테고리</th><th>행위</th><th>처분</th><th>메모</th><th>기록</th><th>기록자</th><th></th></tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${r.date}</td><td class="nw">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td>${esc(r.behavior||r.description)}</td><td>${esc(r.disposition)}</td><td class="muted">${esc(r.note)}</td><td>${r.record?'<span class="tag warn">기록</span>':''}</td><td class="muted">${esc(r.by)}</td><td>${can.manage()?`<button class="btn sm ghost" data-idel="${r.id}">×</button>`:""}</td></tr>`).join("")||`<tr><td colspan=9 class=muted>없음</td></tr>`}</tbody></table>`:""}</div>`;
+    </div><div class="grid" style="grid-template-columns:1fr 1.4fr 1.6fr 140px;margin-top:8px">
+      <div><label>처분</label><select name="disposition" id="dDisp">${DISP_OPTS.map(o=>`<option>${o}</option>`).join("")}</select><div class="muted" id="dHint" style="font-size:12px;margin-top:3px"></div></div>
+      <div><label>성적표 사유 (영문 · 성적표 Note 칸)</label><input name="trNote" placeholder="예: Organized a collective class boycott"></div>
+      <div><label>내부 메모 (경위·소명·SAC 의결 — 성적표에 안 나감)</label><input name="note" placeholder="예: 10/23 SAC 의결, 보호자 고지 완료, 11/1 복귀"></div>
+      <div><label>성적표 기록</label><select name="record" ${boss?"":"disabled"}><option value="N">기록 안 함</option><option value="Y">기록</option></select>${boss?"":`<div class="muted" style="font-size:12px;margin-top:3px">교장 결정</div>`}</div>
+    </div><div class="row" style="margin-top:10px"><button class="btn sm" id="incBtn">추가</button><button type="button" class="btn sm ghost" id="incCancel" hidden>수정 취소</button><span class="muted">Action 1은 성적표 미기록 · 2~3은 SAC 결정 · 4 이상은 반드시 기록 (규정 제16조)${boss?"":" · 수정·삭제는 교장에게 요청"}</span></div></form>` : "";
+  $("#view").innerHTML=`<div class="card">${head}${form}
+    <div class="scroll"><table><thead><tr><th>날짜</th>${id?"":"<th>학생</th>"}<th>단계</th><th>카테고리</th><th>행위</th><th>처분</th><th>성적표 사유</th><th>내부 메모</th><th>성적표</th><th>기록자</th>${boss?"<th></th>":""}</tr></thead><tbody>${inc.map(r=>`<tr><td class="nw">${r.date}</td>${id?"":`<td class="nw"><a href="#/students/${r.studentId}/discipline">${esc(nm[r.studentId]||r.studentId)}</a></td>`}<td class="nw">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td>${esc(r.behavior||r.description)}</td><td>${esc(r.disposition)}</td><td>${esc(r.trNote||"")}</td><td class="muted">${esc(r.note)}</td><td class="nw">${boss?`<label style="font-size:12.5px"><input type="checkbox" data-irec="${r.id}" ${r.record?"checked":""} style="width:auto"> 기록</label>`:(r.record?'<span class="tag warn">기록</span>':'<span class="muted">—</span>')}</td><td class="muted">${esc(r.by)}</td>${boss?`<td class="nw"><button class="btn sm ghost" data-iedit="${r.id}">수정</button> <button class="btn sm ghost" data-idel="${r.id}">×</button></td>`:""}</tr>`).join("")||`<tr><td colspan=11 class=muted>없음</td></tr>`}</tbody></table></div></div>`;
+  const back=()=>viewDiscipline(id);
   const incf=$("#incf"); if (incf){
     const act=$("#dAct"), cat=$("#dCat"), beh=$("#dBeh"), disp=$("#dDisp"), rec=incf.querySelector("[name=record]");
-    act.onchange=()=>{ const D=DISC[act.value]; cat.innerHTML=D?`<option value="">선택</option>`+Object.keys(D.cats).map(c=>`<option>${c}</option>`).join(""):`<option value="">먼저 단계 선택</option>`; cat.disabled=!D; beh.innerHTML=`<option value="">먼저 카테고리 선택</option>`; beh.disabled=true;
-      if (D){ disp.value=DISP_OPTS[+act.value-1]; $("#dHint").textContent=D.disp; rec.value=D.record===true?"Y":"N"; } };
-    cat.onchange=()=>{ const L=DISC[act.value]?.cats[cat.value]||[]; beh.innerHTML=`<option value="">선택</option>`+L.map(b=>`<option>${b}</option>`).join("")+`<option value="__other">기타(메모에 적기)</option>`; beh.disabled=!L.length; };
-    incf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(incf); if(!v.action||!v.category) return toast("단계와 카테고리를 고르세요");
-      await setDoc(doc(col("incidents")),{studentId:String(id),date:v.date,termCode:termOf(v.date),action:v.action,category:v.category,behavior:v.behavior==="__other"?"기타":v.behavior,disposition:v.disposition,note:v.note,record:v.record==="Y",by:me.email,at:serverTimestamp()}); toast("저장"); viewStudentAttendance(id); };
+    const fillCats=()=>{ const D=DISC[act.value]; cat.innerHTML=D?`<option value="">선택</option>`+Object.keys(D.cats).map(c=>`<option>${c}</option>`).join(""):`<option value="">먼저 단계 선택</option>`; cat.disabled=!D; beh.innerHTML=`<option value="">먼저 카테고리 선택</option>`; beh.disabled=true; return D; };
+    const fillBeh=()=>{ const L=DISC[act.value]?.cats[cat.value]||[]; beh.innerHTML=`<option value="">선택</option>`+L.map(b=>`<option>${b}</option>`).join("")+`<option value="__other">기타(메모에 적기)</option>`; beh.disabled=!L.length; };
+    act.onchange=()=>{ const D=fillCats(); if (D){ disp.value=DISP_OPTS[+act.value-1]; $("#dHint").textContent=D.disp; rec.value=D.record===true?"Y":"N"; } };
+    cat.onchange=fillBeh;
+    incf.onsubmit=async e=>{ e.preventDefault(); const v=readForm(incf); const stu=id||v.sid; if(!stu) return toast("학생을 고르세요"); if(!v.action||!v.category) return toast("단계와 카테고리를 고르세요");
+      const data={date:v.date,termCode:termOf(v.date),action:v.action,category:v.category,behavior:v.behavior==="__other"?"기타":v.behavior,disposition:v.disposition,trNote:v.trNote,note:v.note,record:rec.value==="Y"};
+      if (v.eid){ await updateDoc(ref("incidents",v.eid),{...data,updatedBy:me.email,updatedAt:serverTimestamp()}); }
+      else await setDoc(doc(col("incidents")),{studentId:String(stu),...data,by:me.email,at:serverTimestamp()});
+      toast("저장"); back(); };
+    $("#incCancel").onclick=back;
+    document.querySelectorAll("[data-iedit]").forEach(b=>b.onclick=()=>{ const r=inc.find(x=>x.id===b.dataset.iedit); const f=incf.elements;
+      f.eid.value=r.id; if (f.sid){ f.sid.value=r.studentId; f.sid.disabled=true; } f.date.value=r.date; act.value=r.action; fillCats(); cat.value=r.category; fillBeh();
+      beh.value=[...beh.options].some(o=>o.value===r.behavior)?r.behavior:(r.behavior?"__other":""); disp.value=r.disposition; f.trNote.value=r.trNote||""; f.note.value=r.note||""; rec.value=r.record?"Y":"N";
+      $("#incBtn").textContent="수정 저장"; $("#incCancel").hidden=false; incf.scrollIntoView({behavior:"smooth"}); });
   }
-  document.querySelectorAll("[data-idel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요?")) return; await deleteDoc(ref("incidents",b.dataset.idel)); viewStudentAttendance(id); });
+  document.querySelectorAll("[data-irec]").forEach(c=>c.onchange=async()=>{ await updateDoc(ref("incidents",c.dataset.irec),{record:c.checked,recordBy:me.email,updatedAt:serverTimestamp()}); toast(c.checked?"성적표에 기록":"성적표에서 뺌"); });
+  document.querySelectorAll("[data-idel]").forEach(b=>b.onclick=async()=>{ if(!confirm("지울까요? (변경 이력에는 남습니다)")) return; await deleteDoc(ref("incidents",b.dataset.idel)); back(); });
 }
 
 /* ---------- 반(section) · 진도 상태 ---------- */
@@ -1084,7 +1113,7 @@ async function viewTranscript(id){
   const incR = inc.filter(r=>r.record);
   const staffV = can.manage()||me.role==="teacher";
   const incTable = `<div id="incBox"><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead>
-    <tbody id="incRows" hidden>${incR.map(r=>`<tr><td class="nw c">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw c">${esc(r.category)}</td><td class="nw c">${esc(r.disposition)}</td><td class="c">${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody>
+    <tbody id="incRows" hidden>${incR.map(r=>`<tr><td class="nw c">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw c">${esc(r.category)}</td><td class="nw c">${esc(r.disposition)}</td><td class="c">${esc(r.trNote||"")}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody>
     <tbody id="incBlank"><tr><td colspan="5">&nbsp;</td></tr></tbody></table></div>`;
   const incHtml = staffV ? incTable : "";
   const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table></div>${incHtml||"<div></div>"}

@@ -50,9 +50,10 @@ service cloud.firestore {
         allow create: if isStaff(sid) || isSelf(sid, request.resource.data.studentId);
         allow update, delete: if isManager(sid) || (isSelf(sid, resource.data.studentId) && resource.data.approved != true);
       }
-      match /incidents/{id} {          // 징계·사건 기록 — 교직원만
+      match /incidents/{id} {          // 징계·사건 기록 — 읽기 교직원, 추가 행정·교장, 수정·삭제 교장만
         allow read: if isStaff(sid);
-        allow write: if isManager(sid);
+        allow create: if isManager(sid);
+        allow update, delete: if isPrincipal(sid);
       }
       match /comments/{id} {           // 세특·교사 코멘트
         allow read, write: if isStaff(sid);
