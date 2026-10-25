@@ -100,6 +100,7 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 .tr td.nw,.tr th.nw{white-space:nowrap}
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
 .tr td.c{text-align:center}
+.tr.miri-off .miri{display:none}
 .tr .side{display:grid;grid-template-columns:2fr 3fr;gap:4px 18px;align-items:start;margin:0 0 12px}
 .tr .side .ft{font-size:8pt;color:#555}
 .tr .side>div{min-width:0}
@@ -1073,15 +1074,17 @@ async function viewTranscript(id){
   const miriRows = rows.filter(r=>r.source==="miri" && ["국어","한국사","도덕"].includes(r.subjectKo)).sort((a,b)=>termKey(a.termCode)-termKey(b.termCode));
   rows = rows.filter(r=>r.source!=="miri");
   rows = level==="ms" ? rows.filter(r=>r.gLevel>=6&&r.gLevel<=8) : rows.filter(r=>!(r.gLevel>=6&&r.gLevel<=8));
-  const miriHtml = miriRows.length ? `<div id="miriBox" hidden style="margin:10px 0 4px"><table><thead><tr><th class="nw" style="text-align:left">Korean National Curriculum (Pass/Fail)</th><th>Term</th><th>Grade</th></tr></thead><tbody>${miriRows.map(r=>`<tr><td>${esc(r.title.split(" · ")[0])}</td><td class="nw c">${termLabel(r.termCode)}</td><td class="c">${r.transcriptGrade||(r.score>=60?"P":"F")}</td></tr>`).join("")}</tbody></table><div style="font-size:8pt;color:#555;margin-top:3px">Korean Language Arts, Korean History and Ethics (school-run Korean national curriculum) are recorded Pass/Fail and are not included in GPA or credit totals.</div></div>` : "";
-  const g=gpaOf(rows), terms=[...new Set(rows.map(r=>r.termCode))];
+  const lvOk=r=>r.gLevel==null?true:(level==="ms"?(r.gLevel>=6&&r.gLevel<=8):!(r.gLevel>=6&&r.gLevel<=8));
+  const miriT=miriRows.filter(lvOk);
+  const miriHtml = miriT.length ? "1" : "";
+  const g=gpaOf(rows), terms=[...new Set([...rows,...miriT].map(r=>r.termCode))].sort((a,b)=>termKey(a)-termKey(b));
   const att={}; as.docs.forEach(x=>{ const r=x.data(); const t=att[r.termCode]=att[r.termCode]||{"e.a":0,"e.t":0,"u.a":0,"u.t":0}; t[finalCode(r)]++; });
   const attTerms=Object.keys(att).sort((a,b)=>termKey(a)-termKey(b));
   const inc = can.manage()||me.role==="teacher" ? (await getDocs(query(col("incidents"), where("studentId","==",String(id))))).docs.map(x=>x.data()).sort((a,b)=>a.date.localeCompare(b.date)) : [];
   const incR = inc.filter(r=>r.record);
   const staffV = can.manage()||me.role==="teacher";
   const incTable = `<div id="incBox"><table><thead><tr><th>Incident Reports</th><th>Level</th><th>Category</th><th>Disposition</th><th>Note</th></tr></thead>
-    <tbody id="incRows" hidden>${incR.map(r=>`<tr><td class="nw">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw">${esc(r.category)}</td><td class="nw">${esc(r.disposition)}</td><td>${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody>
+    <tbody id="incRows" hidden>${incR.map(r=>`<tr><td class="nw c">${us(r.date)}</td><td class="nw c">Action ${esc(r.action)}</td><td class="nw c">${esc(r.category)}</td><td class="nw c">${esc(r.disposition)}</td><td class="c">${esc(r.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="c" style="color:#777">No incidents on record</td></tr>`}</tbody>
     <tbody id="incBlank"><tr><td colspan="5">&nbsp;</td></tr></tbody></table></div>`;
   const incHtml = staffV ? incTable : "";
   const attHtml=attTerms.length?`<div id="attBox" hidden class="side"><div><table><thead><tr><th>Attendance</th><th>e.a</th><th>e.t</th><th>u.a</th><th>u.t</th></tr></thead><tbody>${attTerms.map(t=>`<tr><td class="nw">${termLabel(t)}</td><td class="c">${att[t]["e.a"]}</td><td class="c">${att[t]["e.t"]}</td><td class="c">${att[t]["u.a"]}</td><td class="c">${att[t]["u.t"]}</td></tr>`).join("")}</tbody></table></div>${incHtml||"<div></div>"}
@@ -1090,7 +1093,7 @@ async function viewTranscript(id){
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
   $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button><div style="flex-basis:100%;height:0"></div>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}${miriHtml?`<label style="font-size:13px"><input type="checkbox" id="miriOn" style="width:auto"> 미리 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
-  <div class="tr">
+  <div class="tr miri-off">
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial ${level==="ms"?"Middle School ":""}Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
       <div><b>Student ID</b>${esc(id)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div>
@@ -1098,22 +1101,22 @@ async function viewTranscript(id){
     ${attHtml}
     <div class="cum"><b>Cumulative Totals for All Grade Levels</b><span>Unweighted GPA: <b>${f2(g.u)}</b></span><span>Weighted GPA: <b>${f2(g.w)}</b></span><span>Credits: <b>${g.credits}</b></span></div>
     <table><thead><tr><th class="nw">G.Level</th><th class="nw">School</th><th>Code</th><th>Course Title</th><th class="nw">Term</th><th>Grade</th><th>GPA</th><th>Credit</th></tr></thead><tbody>
-    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr);
+    ${terms.map(t=>{ const tr=rows.filter(r=>r.termCode===t); const tg=gpaOf(tr); const mr=miriT.filter(r=>r.termCode===t);
       return tr.map(r=>`<tr><td class="c">${r.gLevel??""}</td><td class="nw c">${esc(r.school)}</td><td class="c">${esc(r.code)}</td><td class="ct">${esc(r.title)}${r.weighted?" <b>+</b>":""}</td><td class="nw c">${termLabel(t)}</td><td class="c">${esc(r.grade)}</td><td class="c">${r.grade in PTS?f2((r.weighted?WPTS:PTS)[r.grade]):"0.00"}</td><td class="c">${r.grade in PTS?r.credit.toFixed(2):"0.00"}</td></tr>`).join("")
-        +`<tr class="tot"><td colspan="6" style="text-align:right">Semester Totals:</td><td class="c">${f2(tg.w)}</td><td class="c">${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
+        +mr.map(r=>`<tr class="miri"><td class="c">${r.gLevel??""}</td><td class="nw c">${esc(r.school||school.schoolName)}</td><td class="c"></td><td class="ct">${esc(r.title.split(" · ")[0])} (P/F)</td><td class="nw c">${termLabel(t)}</td><td class="c">${r.transcriptGrade||(r.score>=60?"P":"F")}</td><td class="c">—</td><td class="c">—</td></tr>`).join("")
+        +`<tr class="tot${tr.length?"":" miri"}"><td colspan="6" style="text-align:right">Semester Totals:</td><td class="c">${f2(tg.w)}</td><td class="c">${tg.credits.toFixed(2)}</td></tr>`; }).join("")}
     </tbody></table>
-    ${miriHtml}
     <div class="legend">
       <div><h4>GRADE</h4><table><tr><th>Grade</th><th>CORE</th><th>H / AP</th><th>%</th></tr><tr><td>A</td><td>4.0</td><td>5.0</td><td>90-100</td></tr><tr><td>B</td><td>3.0</td><td>4.0</td><td>80-89</td></tr><tr><td>C</td><td>2.0</td><td>3.0</td><td>70-79</td></tr><tr><td>D</td><td>1.0</td><td>2.0</td><td>60-69</td></tr><tr><td>F</td><td>0.0</td><td>1.7</td><td>0-59</td></tr></table></div>
       <div><h4>Distinctions</h4>${dist.map(x=>`<div>${esc(x)}</div>`).join("")||"<div>—</div>"}</div>
       <div><h4>Enrollment Summary</h4><div>Start Date: ${us(d.enrollDate)}</div><div>End Date: ${us(d.endDate)}</div><div>Graduation Date: ${us(d.gradDate||d.endDate)}</div></div>
-      <div><h4>Legend</h4><div>IP = In Progress</div><div>DC = Dual Credit</div><div>MB = Minerva Baccalaureate</div><div>+ = Weighted Course (Honors/AP)</div></div>
+      <div><h4>Legend</h4><div>IP = In Progress</div><div>DC = Dual Credit</div><div>MB = Minerva Baccalaureate</div><div>+ = Weighted Course (Honors/AP)</div><div class="miri">P/F = Korean national curriculum (school-run), not in GPA or credits</div></div>
     </div>
     <div class="wasc">${esc(school.accreditation||"")}${school.accreditation?"<br>":""}${esc(school.schoolName)} does not rank students.</div>
     <div class="sign"><div class="left" id="trNote">* This transcript is unofficial unless signed and sealed by a School Official.</div>
       <div><div class="sp"></div><div class="line" id="trSig" style="border-top:0">Printed on ${us(today)}</div></div></div>
   </div>`;
-  const mo=$("#miriOn"); if (mo) mo.onchange=()=>{ $("#miriBox").hidden=!mo.checked; };
+  const mo=$("#miriOn"); if (mo) mo.onchange=()=>{ document.querySelector(".tr").classList.toggle("miri-off",!mo.checked); };
   $("#trLevel").onchange=e=>{ location.hash=`#/transcript/${id}/${e.target.value}`; };
   const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=(on?"Official ":"Unofficial ")+(level==="ms"?"Middle School ":"")+"Transcript";
     $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
