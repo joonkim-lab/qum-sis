@@ -3,6 +3,15 @@ const SCHOOL = 'qum';
 const BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`;
 const DOC = `projects/${PROJECT}/databases/(default)/documents/schools/${SCHOOL}/`;
 const LOG_SHEET = '동기화 기록';
+const LIVE_FROM = '2026F';
+const ALIAS_SHEET = 'ID 짝';
+const SEED_ALIASES = [
+  ['jihye.choi', 743, 'Choi, Ji Hye = Choi, Julia'], ['shawn.lee2', 706, 'Lee, Shawn (Kyung Hyun)'], ['shawn.lee', 706, 'Lee, Shawn'],
+  ['reuben.lee', 784, 'Lee, Reuben'], ['jinseo.park', 854, 'Park, Jinseo = Park, Vivian'], ['hwang.seo', 710, 'Seo, Andrew Hwang'],
+  ['sophie.shim', 913, 'Shim, Sophie Ga Eun'], ['joowon.oh', 860, 'Oh, Joowon = Oh, Juwon (재학)'], ['Oh, Joowon', 860, '계정 없는 줄'],
+  ['jordanh.chun', 828, 'Chun, Jordan (졸업)'], ['Han, Daniel Heesoo', 850, 'Han, Daniel (졸업)'], ['hannahyujin.lee', 858, 'Lee, Hannah Yujin (졸업)'],
+  ['yujin.lee', 858, 'Lee, Hannah Yujin (졸업)'], ['sungmin.so', 753, 'So, Seongmin (졸업)'], ['jihoon.cho', 809, 'Cho, Matthew (자퇴)'],
+];
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('qum-sis')
@@ -21,9 +30,11 @@ function installTrigger() {
 }
 
 const slug_ = t => String(t || '').toLowerCase().replace(/[^a-z0-9가-힣]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
-const normTitle_ = t => String(t || '').replace(/\.\.\.\s*$/, '').replace(/\s+Sem\s*[12].*$/i, '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
-const sameTitle_ = (a, b) => a === b || (Math.min(a.length, b.length) >= 18 && (a.startsWith(b) || b.startsWith(a)));
+const normTitle_ = t => String(t || '').replace(/\.\.\.\s*$/, '').replace(/\s*\((Spring|Fall)[^)]*\)/gi, '').replace(/\s+Sem\s*[12].*$/i, '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
+const sameTitle_ = (a, b) => a === b || (Math.min(a.length, b.length) >= 10 && (a.startsWith(b) || b.startsWith(a)));
 const normName_ = n => String(n || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z]/g, '');
+const termKey_ = t => { const m = /^(\d{4})([FSU])$/.exec(t || ''); return m ? +m[1] + ({ F: 0.5, S: 0, U: 0.25 })[m[2]] : 0; };
+const isLive_ = t => termKey_(t) >= termKey_(LIVE_FROM);
 const letterOf_ = s => s >= 90 ? 'A' : s >= 80 ? 'B' : s >= 70 ? 'C' : s >= 60 ? 'D' : 'F';
 
 function api_(method, path, body) {
@@ -49,7 +60,7 @@ function run_(dry) {
   if (!lock.tryLock(5000)) return;
   const ss = SpreadsheetApp.getActive();
   const issues = [];
-  const stat = { rows: 0, changed: 0, update: 0, same: 0, create: 0, remove: 0, noStudent: 0, onlyInSis: 0 };
+  const stat = { rows: 0, missingPast: 0, changed: 0, update: 0, same: 0, create: 0, remove: 0, noStudent: 0, onlyInSis: 0 };
   try {
     // 학생: qum-sis 명부에서 Username·이름 → Genius ID
     const byUser = {}, byName = {}, ids = {};
@@ -62,6 +73,21 @@ function run_(dry) {
     });
 
     // 과목: Courses 탭의 Genius Code / 확정 과목명
+    // 'ID 짝' 탭: Username(또는 '성, 이름') → Genius ID. 없으면 만들어 둠
+    let at = ss.getSheetByName(ALIAS_SHEET);
+    if (!at) {
+      at = ss.insertSheet(ALIAS_SHEET);
+      at.getRange(1, 1, 1, 3).setValues([['Username 또는 시트의 학생 이름', 'Genius ID', '메모']]).setFontWeight('bold');
+      at.getRange(2, 1, SEED_ALIASES.length, 3).setValues(SEED_ALIASES);
+      at.setColumnWidth(1, 260); at.setColumnWidth(3, 300);
+    }
+    if (at.getLastRow() > 1) at.getRange(2, 1, at.getLastRow() - 1, 2).getValues().forEach(([k, v]) => {
+      const key = String(k || '').trim(), id = String(v || '').trim();
+      if (!key || !id) return;
+      if (key.includes(',')) byName[normName_(key)] = id;
+      else byUser[key.toLowerCase().split('@')[0]] = id;
+    });
+
     const courses = {};
     const cs = ss.getSheetByName('Courses');
     cs.getRange(2, 1, Math.max(cs.getLastRow() - 1, 1), 7).getValues().forEach(r => {
@@ -120,6 +146,9 @@ function run_(dry) {
         const fields = { grade: { stringValue: r.grade }, syncedFrom: { stringValue: 'sheet' }, syncedAt: { timestampValue: now } };
         if (r.score !== null) fields.score = { doubleValue: r.score };
         writes.push({ update: { name: DOC + 'grades/' + hit.id, fields }, updateMask: { fieldPaths: Object.keys(fields) } });
+      } else if (!isLive_(r.term)) {
+        stat.missingPast++;
+        issues.push([r.term, r.rowNo, `qum-sis에 없음 (지난 학기라 자동으로 넣지 않음): ${r.title} (${r.sid}) ${r.grade}`]);
       } else {
         stat.create++;
         issues.push([r.term, r.rowNo, `새로 추가됨: ${r.title} (${r.sid})`]);
@@ -144,7 +173,7 @@ function run_(dry) {
       idFill.forEach(([rowNo, sid]) => sh.getRange(rowNo, 2).setValue(Number(sid) || sid));
     }
     const head = dry ? '미리보기 (아직 안 보냄)' : 'OK (보냄)';
-    log_(ss, `${head} · 시트 ${stat.rows}줄 · 연결됨 ${stat.same + stat.update} (그중 성적 바뀜 ${stat.changed}) · 새로 추가 ${stat.create} · 삭제 ${stat.remove} · 학생 못 찾음 ${stat.noStudent} · qum-sis에만 있음 ${stat.onlyInSis} · ID 자동 채움 ${idFill.length}`, issues);
+    log_(ss, `${head} · 시트 ${stat.rows}줄 · 연결됨 ${stat.same + stat.update} (그중 성적 바뀜 ${stat.changed}) · 새로 추가 ${stat.create} · 지난 학기 qum-sis에 없음 ${stat.missingPast} · 삭제 ${stat.remove} · 학생 못 찾음 ${stat.noStudent} · qum-sis에만 있음 ${stat.onlyInSis} · ID 자동 채움 ${idFill.length}`, issues);
   } catch (e) {
     log_(ss, '실패: ' + e.message, issues);
     throw e;
