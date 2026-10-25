@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Qum Academic System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --brand:#23262B;        /* 차콜 */
@@ -13,63 +13,68 @@
   --accent:#C8553D;       /* 테라코타 */
   --accent-ink:#A9442F;
   --accent-bg:#FBEAE5;
-  --paper:#FAFAF9;
-  --paper-2:#F1F0EE;
-  --ink:#23262B;
-  --muted:#6B6E74;
-  --line:#E4E3E0;
-  --ok:#2f6b3a; --warn:#b3261e; --pending:#8a6d1f;
+  --paper:#FAFAF9;        /* v37 C안: 버셀식 구조 + 따뜻한 회색(stone) */
+  --paper-2:#F5F5F4;
+  --ink:#1C1917;
+  --muted:#78716C;
+  --line:#E7E5E4;
+  --line-2:#D6D3D1;
+  --ok:#3F6B4E; --warn:#9A3A26; --pending:#8A5A12;
+  --mono:"Geist Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:14px}
-h1,h2,h3{font-family:"Noto Serif KR",serif;margin:0}
-a{color:var(--accent-ink)}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"Geist","Noto Sans KR",system-ui,sans-serif;font-size:14px;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;letter-spacing:-.01em}
+a{color:var(--ink);text-decoration-color:var(--line-2);text-underline-offset:2px}
+a:hover{text-decoration-color:var(--ink)}
 button{font:inherit;cursor:pointer}
 input,select,textarea{font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;width:100%}
+input:hover,select:hover,textarea:hover{border-color:var(--line-2)}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:7px 14px;font-weight:500}
-.btn.ghost{background:#fff;color:var(--brand);border:1px solid #D4D3CF}
-.btn:hover{filter:brightness(.95)}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:6px;padding:7px 14px;font-weight:500}
+.btn.ghost{background:#fff;color:var(--ink);border:0;box-shadow:0 0 0 1px var(--line)}
+.btn.ghost:hover{box-shadow:0 0 0 1px var(--line-2);background:var(--paper);filter:none}
+.btn:hover{filter:brightness(1.25)}
 .btn.sm{padding:5px 10px;font-size:13px}
 .btn:disabled{opacity:.5;cursor:default}
 /* layout */
-#top{background:var(--brand);color:#fff;display:flex;align-items:center;gap:14px;padding:0 18px;height:48px;position:sticky;top:0;z-index:5}
+#top{background:#fff;color:var(--ink);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 18px;height:48px;position:sticky;top:0;z-index:5}
 #top .logo{display:flex;align-items:center;gap:10px}
-#top .logo img{height:28px;width:28px;object-fit:contain;background:#fff;border-radius:6px;padding:2px}
-#top .logo h1{font-size:16px;letter-spacing:.2px;white-space:nowrap}
+#top .logo img{height:28px;width:28px;object-fit:contain;background:#fff;border-radius:6px;padding:2px;box-shadow:0 0 0 1px var(--line)}
+#top .logo h1{font-family:"Noto Serif KR",Georgia,serif;font-size:16px;font-weight:500;letter-spacing:.2px;white-space:nowrap;color:var(--ink)}
 #top nav{display:flex;gap:2px;margin-left:8px;flex-wrap:nowrap;height:100%;align-items:center}
-#top nav>a,#top nav .dd>button{color:#f3e6e8;text-decoration:none;padding:6px 12px;border-radius:5px;font-size:14px;background:transparent;border:0;white-space:nowrap}
-#top nav>a.on,#top nav>a:hover,#top nav .dd.on>button,#top nav .dd:hover>button,#top nav .dd:focus-within>button{background:rgba(255,255,255,.10);color:#fff}
-#top nav>a.on,#top nav .dd.on>button{box-shadow:inset 0 -2px 0 var(--accent);border-radius:5px 5px 0 0}
+#top nav>a,#top nav .dd>button{color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:5px;font-size:14px;background:transparent;border:0;white-space:nowrap}
+#top nav>a.on,#top nav>a:hover,#top nav .dd.on>button,#top nav .dd:hover>button,#top nav .dd:focus-within>button{background:transparent;color:var(--ink)}
+#top nav>a.on,#top nav .dd.on>button{box-shadow:inset 0 -2px 0 var(--accent);border-radius:0;height:100%;display:flex;align-items:center;font-weight:500}
 #top nav .dd{position:relative;height:100%;display:flex;align-items:center}
-#top nav .dd .menu{display:none;position:absolute;top:100%;left:0;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:0 0 8px 8px;box-shadow:0 6px 18px rgba(0,0,0,.12);padding:6px;z-index:10}
+#top nav .dd .menu{display:none;position:absolute;top:100%;left:0;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:0 0 8px 8px;box-shadow:0 0 0 1px var(--line),0 8px 24px rgba(28,25,23,.08);border:0;padding:6px;z-index:10}
 #top nav .dd:hover .menu,#top nav .dd:focus-within .menu{display:block}
 #top nav .dd .menu a{display:block;color:var(--ink);text-decoration:none;padding:7px 10px;border-radius:5px;font-size:13.5px;white-space:nowrap}
 #top nav .dd .menu a:hover{background:var(--paper)}
-#top nav .dd .menu a.on{background:var(--accent-bg);color:var(--accent-ink);font-weight:600}
-#top .me{margin-left:auto;font-size:12.5px;opacity:.9;display:flex;gap:8px;align-items:center;white-space:nowrap}
-#top .me button{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;white-space:nowrap}
+#top nav .dd .menu a.on{background:var(--paper-2);color:var(--ink);font-weight:500}
+#top .me{margin-left:auto;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;white-space:nowrap}
+#top .me button{background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:5px;padding:3px 9px;font-size:12px;white-space:nowrap}
 #top .me .tag{white-space:nowrap}
 main{max-width:1240px;margin:0 auto;padding:18px 20px 48px}
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
-.card h2{font-size:17px;color:var(--brand);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--paper-2)}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:16px;color:var(--ink);font-weight:600;letter-spacing:-.02em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px}
 .grid label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.stat{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
-.stat div{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
-.stat b{display:block;font-size:20px;font-weight:600;color:var(--brand)}
+.stat{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stat div{background:#fff;padding:10px 12px;outline:1px solid var(--line)}
+.stat b{display:block;font-family:var(--mono);font-size:21px;font-weight:500;color:var(--ink);letter-spacing:-.02em}
 .stat span{font-size:12.5px;color:var(--muted)}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{text-align:left;background:var(--paper-2);padding:8px 8px;font-weight:600;font-size:12.5px;color:var(--brand-ink);position:sticky;top:0;z-index:1}
+th{text-align:left;background:var(--paper);padding:8px 8px;font-weight:500;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1}
 td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
 td.nw,th.nw{white-space:nowrap}
 td .btn.sm{padding:2px 7px;font-size:12px}
-tr:hover td{background:#F6F5F3}
+tr:hover td{background:var(--paper)}
 td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var(--accent)}
-.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:12px;background:var(--paper-2);color:var(--brand-ink)}
-#top .me .tag{background:rgba(255,255,255,.14);color:#fff}
-.tag.ok{background:#e3efe4;color:var(--ok)}.tag.warn{background:#f9e2df;color:var(--warn)}.tag.pend{background:#f3ead2;color:var(--pending)}
+.tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:999px;background:var(--paper-2);color:var(--ink)}
+#top .me .tag{background:var(--paper-2);color:var(--ink)}
+.tag.ok{background:#EAF1EC;color:var(--ok)}.tag.warn{background:var(--accent-bg);color:var(--warn)}.tag.pend{background:#F7EEDC;color:var(--pending)}
 .muted{color:var(--muted);font-size:13px}
 .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:40px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--brand-ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:14px;opacity:0;transition:.25s;pointer-events:none}
@@ -79,7 +84,7 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 .sub{display:flex;gap:6px;margin:-6px 0 14px}
 .row .sub{margin:0}
 .sub a{font-size:13px;color:var(--ink);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:14px}
-.sub a.on{background:var(--accent-bg);color:var(--accent-ink);border-color:var(--accent)}
+.sub a.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 /* transcript */
 .tr{background:#fff;color:#000;font-family:"Noto Sans KR",Arial,sans-serif;font-size:10pt;max-width:1000px;margin:0 auto;padding:28px 34px;border:1px solid var(--line)}
 .tr h1{font-family:Georgia,"Noto Serif KR",serif;font-size:20pt;margin:0;color:#000}
@@ -137,17 +142,17 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 @media print{ #bwList .bw{border:0;max-width:none;margin:0;padding:2mm 2mm 0;height:135mm;overflow:hidden;border-bottom:1px dashed #888;page-break-inside:avoid;font-size:8.5pt} #bwList .bw .sg th,#bwList .bw .sg td{font-size:8.5pt;padding:2px 5px} #bwList .bw .bwh h2{font-size:12.5pt} #bwList .bw:nth-of-type(2n){page-break-after:always;border-bottom:0} }
 #login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 44px;text-align:center;width:min(420px,92vw)}
 #login img{height:72px;margin-bottom:12px}
-#login h1{color:var(--brand);font-size:26px;margin-bottom:6px}
+#login h1{color:var(--ink);font-family:"Noto Serif KR",Georgia,serif;font-weight:500;font-size:26px;margin-bottom:6px}
 #login p{color:var(--muted);margin:0 0 22px}
 .tabs{display:flex;gap:6px;margin-bottom:14px}
 .tabs button{background:transparent;border:1px solid var(--line);border-radius:20px;padding:5px 14px}
-.tabs button.on{background:var(--accent-bg);color:var(--accent-ink);border-color:var(--accent)}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .scroll{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:8px}
 @media(max-width:900px){#top .logo h1{display:none}}
 @media(max-width:620px){#top nav{display:none}}
 .qs{display:flex;gap:8px;align-items:center}.qs input{max-width:320px}
 .qlist{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.qlist a{font-size:13px;text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:3px 10px;background:#fff}
-.qlist a:hover{border-color:var(--accent)}
+.qlist a:hover{border-color:var(--line-2);background:var(--paper)}
 </style>
 </head>
 <body>
@@ -416,7 +421,7 @@ async function viewStudent(id){
     <div class="row" style="margin-top:18px">${ro?"":`<button class="btn" type="submit">저장</button>`}
     ${d.needsReview&&(can.manage()||me.role==="student")?`<button class="btn ghost" type="button" id="confirm">내용이 맞습니다 (확인)</button>`:""}
     ${can.manage()?`<a class="muted" href="#/students">목록으로</a>`:""}</div></form>
-    ${me.role==="student"?`<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"><h3 style="font-size:14px;color:var(--brand);margin:0 0 6px">틀린 곳이 있으면 수정 요청</h3>
+    ${me.role==="student"?`<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)"><h3 style="font-size:14px;color:var(--ink);margin:0 0 6px">틀린 곳이 있으면 수정 요청</h3>
       <form id="rq" class="row"><input name="message" placeholder="예: 주소가 바뀌었어요 → 서울 강남구 …" style="flex:1;min-width:260px" required><button class="btn sm">요청 보내기</button></form>
       <div id="rqList" class="muted" style="margin-top:8px"></div></div>`:""}</div>`;
   if (ro) $("#f").querySelectorAll("input,select").forEach(el=>el.disabled=true);
