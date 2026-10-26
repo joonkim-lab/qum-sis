@@ -9,15 +9,21 @@ service cloud.firestore {
     function member() { return get(/databases/$(db)/documents/memberships/$(email())).data; }
     function inSchool(sid) { return signedIn() && exists(/databases/$(db)/documents/memberships/$(email())) && member().schoolId == sid; }
     function role(sid) { return inSchool(sid) ? member().role : ''; }
-    function isManager(sid) { return isOwner() || role(sid) in ['admin','principal']; }
+    function isManager(sid) { return isOwner() || role(sid) in ['admin','principal','academic']; }   // academic = 학사(교무·카운슬러·헤드티처)
     function isPrincipal(sid) { return isOwner() || role(sid) == 'principal'; }
     function isStaff(sid) { return isManager(sid) || role(sid) == 'teacher'; }
     function isSelf(sid, studentId) { return role(sid) == 'student' && member().studentId == studentId; }
+    // 교사 권한 담임: memberships.house = 담임반 ID → 그 반 학생만
+    function inMyHouse(sid, studentId) { return role(sid) == 'teacher' && member().get('house', null) != null
+      && studentId in get(/databases/$(db)/documents/schools/$(sid)/sections/$(member().house)).data.get('studentIds', []); }
 
     // 멤버십: 본인 것은 읽기, 쓰기는 소유자·교장
     match /memberships/{em} {
       allow read: if signedIn() && (em == email() || isOwner() || resource.data.schoolId != null && isPrincipal(resource.data.schoolId));
       allow write: if isOwner() || (request.resource.data.schoolId != null && isPrincipal(request.resource.data.schoolId));
+      // 학사·행정은 담임반 연결(house)만 바꿀 수 있음
+      allow update: if resource.data.schoolId != null && isManager(resource.data.schoolId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['house']);
     }
 
     match /schools/{sid} {
@@ -50,13 +56,17 @@ service cloud.firestore {
         allow create: if isStaff(sid) || isSelf(sid, request.resource.data.studentId);
         allow update, delete: if isManager(sid) || (isSelf(sid, resource.data.studentId) && resource.data.approved != true);
       }
-      match /incidents/{id} {          // 징계·사건 기록 — 읽기 교직원, 추가 행정·교장, 수정·삭제 교장만
-        allow read: if isStaff(sid);
+      match /incidents/{id} {          // 징계·사건 기록 — 읽기 학사·행정·교장 + 담임(자기 반 학생만), 추가 학사·행정·교장, 수정·삭제 교장만
+        allow read: if isManager(sid) || inMyHouse(sid, resource.data.studentId);
         allow create: if isManager(sid);
         allow update, delete: if isPrincipal(sid);
       }
-      match /comments/{id} {           // 세특·교사 코멘트
+      match /comments/{id} {           // 세특·교사 코멘트·월간 담임 의견
         allow read, write: if isStaff(sid);
+      }
+      match /mentors/{id} {            // 과목 담당 교사(On-Site Mentor) — 학기마다 이어받음
+        allow read: if isStaff(sid);
+        allow write: if isManager(sid);
       }
       match /sections/{id} {           // 반(담임반·과목반) — 교직원 편집, 학생은 보기
         allow read: if isStaff(sid) || role(sid) == 'student';
