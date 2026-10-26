@@ -16,6 +16,10 @@ service cloud.firestore {
     // 교사 권한 담임: memberships.house = 담임반 ID → 그 반 학생만
     function inMyHouse(sid, studentId) { return role(sid) == 'teacher' && member().get('house', null) != null
       && studentId in get(/databases/$(db)/documents/schools/$(sid)/sections/$(member().house)).data.get('studentIds', []); }
+    // 교사 열람 범위: scopes/{email}.studentIds = 담임반 + 맡은 과목 수강생 (학사·행정이 앱에서 계산)
+    function inScope(sid, studentId) { return role(sid) == 'teacher'
+      && studentId in get(/databases/$(db)/documents/schools/$(sid)/scopes/$(email())).data.get('studentIds', []); }
+    function canSee(sid, studentId) { return isManager(sid) || inScope(sid, studentId); }
 
     // 멤버십: 본인 것은 읽기, 쓰기는 소유자·교장
     match /memberships/{em} {
@@ -32,7 +36,7 @@ service cloud.firestore {
       allow update: if isPrincipal(sid);
 
       match /students/{id} {
-        allow read: if isStaff(sid) || isSelf(sid, id);
+        allow read: if canSee(sid, id) || isSelf(sid, id);
         allow create, delete: if isManager(sid);
         allow update: if isManager(sid) || (isSelf(sid, id) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['needsReview','reviewedBy','reviewedAt']));   // 학생은 '확인'만, 수정은 requests로
       }
@@ -44,16 +48,18 @@ service cloud.firestore {
         allow write: if isManager(sid);
       }
       match /grades/{id} {
-        allow read: if isStaff(sid) || isSelf(sid, resource.data.studentId);
-        allow write: if isStaff(sid);
+        allow read: if canSee(sid, resource.data.studentId) || isSelf(sid, resource.data.studentId);
+        allow create: if canSee(sid, request.resource.data.studentId);
+        allow update: if canSee(sid, resource.data.studentId) && canSee(sid, request.resource.data.studentId);
+        allow delete: if canSee(sid, resource.data.studentId);
       }
-      match /attendance/{id} {
-        allow read: if isStaff(sid) || isSelf(sid, resource.data.studentId);
-        allow write: if isStaff(sid);
+      match /attendance/{id} {         // 입력은 출결 원본 시트(동기화) — 앱은 보기 전용
+        allow read: if canSee(sid, resource.data.studentId) || isSelf(sid, resource.data.studentId);
+        allow write: if isManager(sid);
       }
       match /activities/{id} {         // 수상·시험·활동·봉사 — 학생 본인 입력, 행정 승인
-        allow read: if isStaff(sid) || isSelf(sid, resource.data.studentId);
-        allow create: if isStaff(sid) || isSelf(sid, request.resource.data.studentId);
+        allow read: if canSee(sid, resource.data.studentId) || isSelf(sid, resource.data.studentId);
+        allow create: if canSee(sid, request.resource.data.studentId) || isSelf(sid, request.resource.data.studentId);
         allow update, delete: if isManager(sid) || (isSelf(sid, resource.data.studentId) && resource.data.approved != true);
       }
       match /incidents/{id} {          // 징계·사건 기록 — 읽기 학사·행정·교장 + 담임(자기 반 학생만), 추가 학사·행정·교장, 수정·삭제 교장만
@@ -61,8 +67,16 @@ service cloud.firestore {
         allow create: if isManager(sid);
         allow update, delete: if isPrincipal(sid);
       }
-      match /comments/{id} {           // 세특·교사 코멘트·월간 담임 의견
-        allow read, write: if isStaff(sid);
+      match /comments/{id} {           // 세특·교사 코멘트·월간 담임 의견 (studentId "__common" = 과목·학년 공통 문단)
+        allow read: if isManager(sid) || (isStaff(sid) && (resource.data.studentId == '__common' || inScope(sid, resource.data.studentId)));
+        allow create: if isManager(sid) || (isStaff(sid) && (request.resource.data.studentId == '__common' || inScope(sid, request.resource.data.studentId)));
+        allow update: if isManager(sid) || (isStaff(sid) && request.resource.data.studentId == resource.data.studentId
+          && (resource.data.studentId == '__common' || inScope(sid, resource.data.studentId)));
+        allow delete: if isManager(sid) || (isStaff(sid) && (resource.data.studentId == '__common' || inScope(sid, resource.data.studentId)));
+      }
+      match /scopes/{em} {             // 교사 열람 범위 — 본인 것 읽기, 계산·저장은 학사·행정·교장
+        allow read: if isManager(sid) || (isStaff(sid) && em == email());
+        allow write: if isManager(sid);
       }
       match /mentors/{id} {            // 과목 담당 교사(On-Site Mentor) — 학기마다 이어받음
         allow read: if isStaff(sid);
@@ -72,9 +86,10 @@ service cloud.firestore {
         allow read: if isStaff(sid) || role(sid) == 'student';
         allow write: if isStaff(sid);
       }
-      match /progress/{id} {           // 과목별 진도 상태 — 교사 입력, 학생 본인 열람
-        allow read: if isStaff(sid) || isSelf(sid, resource.data.studentId);
-        allow write: if isStaff(sid);
+      match /progress/{id} {           // 과목별 진도 상태 — 교사 입력(범위 안 학생), 학생 본인 열람
+        allow read: if canSee(sid, resource.data.studentId) || isSelf(sid, resource.data.studentId);
+        allow create, update: if canSee(sid, request.resource.data.studentId);
+        allow delete: if canSee(sid, resource.data.studentId);
       }
       match /biweekly/{id} {           // 격주 출결 확인서 담임 의견
         allow read, write: if isStaff(sid);
