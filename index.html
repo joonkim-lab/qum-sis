@@ -101,6 +101,7 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
 .tr td.c{text-align:center}
 .tr.miri-off .miri{display:none}
+.cond-off .cond{display:none}
 .tr .side{display:grid;grid-template-columns:2fr 3fr;gap:4px 18px;align-items:start;margin:0 0 12px}
 .tr .side .ft{font-size:8pt;color:#555}
 .tr .side>div{min-width:0}
@@ -567,7 +568,7 @@ async function viewSettings(){
 }
 
 /* ---------- 공통: 학기·과목·GPA ---------- */
-const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a>${me&&(can.manage()||me.role==="teacher")?`<a href="#/students/${id}/discipline" class="${on==="disc"?"on":""}">징계</a>`:""}<a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a><a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a>${me&&can.settings()?`<a href="#/audit/${id}">변경 이력</a>`:""}</div>`;
+const subNav = (id, on) => `<div class="sub noprint"><a href="#/students/${id}" class="${on==="info"?"on":""}">정보</a><a href="#/students/${id}/grades" class="${on==="grades"?"on":""}">성적</a><a href="#/students/${id}/attendance" class="${on==="att"?"on":""}">출결</a>${me&&(can.manage()||me.role==="teacher")?`<a href="#/students/${id}/discipline" class="${on==="disc"?"on":""}">징계</a>`:""}<a href="#/students/${id}/activities" class="${on==="act"?"on":""}">수상·활동</a><a href="#/transcript/${id}" class="${on==="tr"?"on":""}">Transcript</a>${me&&(can.manage()||me.role==="teacher")?`<a href="#/report//${school.termCode}/${id}">Progress Report</a>`:""}<a href="#/miri/${id}" class="${on==="miri"?"on":""}">학습성장기록부</a>${me&&can.settings()?`<a href="#/audit/${id}">변경 이력</a>`:""}</div>`;
 const slug = t => String(t).toLowerCase().replace(/[^a-z0-9가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const courseId = r => r.code ? String(r.code).trim() : (r.title ? "t_"+slug(r.title.replace(/\s+Sem\s*[12].*$/i,"")) : "");
 function termLabel(tc){ const m=/^(\d{4})([FSU])$/.exec(tc||""); if(!m) return tc||""; const y=+m[1];
@@ -902,7 +903,6 @@ async function viewBiweekly(){
       <table class="sg"><thead><tr><th style="width:auto;white-space:normal">출결</th><th>인정 결석 (EA)</th><th>인정 지각 (ET)</th><th>무단 결석 (UA)</th><th>무단 지각 (UT)</th></tr></thead>
         <tbody><tr><td>이번 2주</td><td class="c">${p2["e.a"]}</td><td class="c">${p2["e.t"]}</td><td class="c">${p2["u.a"]}</td><td class="c">${p2["u.t"]}</td></tr>
         <tr><td>학기 누적 (${termLabel(term)})</td><td class="c"><b>${pt["e.a"]}</b></td><td class="c"><b>${pt["e.t"]}</b></td><td class="c"><b>${pt["u.a"]}</b></td><td class="c"><b>${pt["u.t"]}</b></td></tr></tbody></table>
-      ${progRows?`<table class="sg"><thead><tr><th style="width:auto">과목 진도</th><th>현재 점수</th><th>상태</th><th style="width:auto">메모</th><th>기준일</th></tr></thead><tbody>${progRows}</tbody></table>`:""}
       <table class="sg"><tr><th style="vertical-align:top;padding-top:7px">담임 의견</th><td><div class="cm" contenteditable data-cm="${st.id}">${esc(comments[st.id]||"")}</div></td></tr></table>
       <table class="sg sign3"><thead><tr><th style="width:auto">확인 및 동의</th><th style="width:45%">서명</th><th style="width:25%">날짜</th></tr></thead><tbody><tr><td>학생</td><td></td><td></td></tr><tr><td>학부모</td><td></td><td></td></tr><tr><td>담임 교사</td><td></td><td></td></tr></tbody></table>
     </div>`; };
@@ -1263,19 +1263,25 @@ async function viewReport(){
   sectionCache=null; const secs=await loadSections();
   const parts=location.hash.replace(/^#\/?/,"").split("/"); const term=parts[2]||school.termCode;
   const houses=secs.filter(s=>s.kind==="house"&&s.termCode===term).sort((a,b)=>a.title.localeCompare(b.title));
-  const h=houses.find(x=>x.id===parts[1])||(me.role==="teacher"?houses.find(x=>x.teacherEmail===me.email):null)||null;
-  const go=()=>{ location.hash=`#/report/${$("#rH").value}/${$("#rT").value.trim()}`; };
-  const head=`<div class="noprint card" style="max-width:760px;margin:0 auto 12px"><h2>Progress Report (학업 보고서)</h2>
+  const one=parts[3]||""; const mode=parts[4]==="s"?"s":"m"; const month=/^\d{4}-\d{2}$/.test(parts[5]||"")?parts[5]:todayISO().slice(0,7);
+  const mStart=month+"-01", mEnd=month+"-31", monthKo=`${month.slice(0,4)}년 ${+month.slice(5)}월`;
+  let h=houses.find(x=>x.id===parts[1])||(one?houses.find(x=>(x.studentIds||[]).includes(one)):null)||(me.role==="teacher"&&!one?houses.find(x=>x.teacherEmail===me.email):null)||null;
+  if (!h && one){ const st=await getDoc(ref("students",one)); if (st.exists()) h={id:"",title:HOUSE_NAME(st.data().grade),teacherEmail:"",studentIds:[one]}; }
+  const go=()=>{ location.hash=`#/report/${$("#rH").value}/${$("#rT").value.trim()}/${one}/${$("#rMode").value}/${$("#rM")?$("#rM").value:month}`; };
+  const head=`<div class="noprint card" style="max-width:760px;margin:0 auto 12px"><h2>Progress Report — ${mode==="s"?"학기 보고서 (교사 의견 포함)":"월간 보고서 (점수·진도)"}</h2>
     <div class="row"><select id="rH" style="max-width:220px"><option value="">담임반 선택</option>${houses.map(x=>`<option value="${x.id}" ${h&&x.id===h.id?"selected":""}>${esc(x.title)}</option>`).join("")}</select><input id="rT" value="${esc(term)}" style="max-width:90px" title="학기 코드">
-      ${h?`<button class="btn sm" id="pr">인쇄 / PDF 저장</button><a class="btn sm ghost" href="#/comments/${esc(term)}/${encodeURIComponent("담임 종합")}/pr/${h.id}">담임 종합 의견 쓰기</a>`:""}</div>
-    <p class="muted" style="margin:8px 0 0">학생당 A4 한 장. 과목 의견은 '세특·의견' 화면에서 종류를 <b>Progress Report 의견</b>으로 놓고 과목별로 한꺼번에 씁니다. 미리 과목의 '배운 내용'은 통과한 주차 단원으로 자동으로 채워집니다.</p></div>`;
-  if (!h){ $("#view").innerHTML=head+(houses.length?"":`<p class="muted" style="text-align:center">이 학기 담임반이 없습니다. '반·진도'에서 먼저 만드세요.</p>`); $("#rH").onchange=go; $("#rT").onchange=go; return; }
-  const ids=h.studentIds||[];
-  const [U, ss, gs, cs, as, ps] = await Promise.all([loadUnits(), getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), getDocs(query(col("comments"), where("termCode","==",term))), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term)))]);
+      <select id="rMode" style="max-width:170px"><option value="m" ${mode==="m"?"selected":""}>월간 (매달)</option><option value="s" ${mode==="s"?"selected":""}>학기 (의견 포함, 학기 1회)</option></select>
+      ${mode==="m"?`<input type="month" id="rM" value="${month}" style="max-width:150px">`:""}
+      ${h?`<label style="font-size:13px"><input type="checkbox" id="condOn" style="width:auto"> 생활 기록 포함</label><button class="btn sm" id="pr">인쇄 / PDF 저장</button>${one?`<a class="btn sm ghost" href="#/students/${esc(one)}">학생 화면</a>`:""}${mode==="s"?`<a class="btn sm ghost" href="#/comments/${esc(term)}/${encodeURIComponent("담임 종합")}/pr/${h.id}">담임 종합 의견 쓰기</a>`:""}`:""}</div>
+    <p class="muted" style="margin:8px 0 0">${mode==="m"?"매달: 과목 점수·진도·출결(이번 달 + 학기 누적). 선생님 의견은 넣지 않습니다.":"학기 1회: 학생당 A4 한 장. 과목 의견은 '세특·의견' 화면에서 종류를 <b>Progress Report 의견</b>으로 놓고 과목별로 한꺼번에 씁니다. 미리 과목의 '배운 내용'은 통과한 주차 단원으로 자동으로 채워집니다."}</p></div>`;
+  if (!h){ $("#view").innerHTML=head+(houses.length?"":`<p class="muted" style="text-align:center">이 학기 담임반이 없습니다. '반·진도'에서 먼저 만드세요.</p>`); ["rH","rT","rMode","rM"].forEach(i=>{ if($("#"+i)) $("#"+i).onchange=go; }); return; }
+  const ids=one?[one]:(h.studentIds||[]);
+  const [U, ss, gs, cs, as, ps, is] = await Promise.all([loadUnits(), getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), getDocs(query(col("comments"), where("termCode","==",term))), getDocs(query(col("attendance"), where("termCode","==",term))), getDocs(query(col("progress"), where("termCode","==",term))), getDocs(col("incidents"))]);
+  const incAll=is.docs.map(d=>d.data()).sort((a,b)=>String(a.date).localeCompare(b.date));
   const gnum=g=>parseInt(g)||99;
   const studs=ss.docs.map(d=>({id:d.id,...d.data()})).filter(s=>ids.includes(s.id)).sort((a,b)=>gnum(a.grade)-gnum(b.grade)||String(a.last_en).localeCompare(b.last_en));
   const grades=gs.docs.map(d=>d.data()); const att=as.docs.map(d=>d.data()); const prog=ps.docs.map(d=>d.data());
-  const cm={}; cs.docs.forEach(d=>{ const x=d.data(); if (x.kind==="pr") cm[x.studentId+"|"+x.subject]=x.text; });
+  const cm={}; if (mode==="s") cs.docs.forEach(d=>{ const x=d.data(); if (x.kind==="pr") cm[x.studentId+"|"+x.subject]=x.text; });
   const us = x => x? `${x.slice(0,4)}.${x.slice(5,7)}.${x.slice(8,10)}.` : "";
   const teacherName=(h.teacherEmail||"").split("@")[0];
   const page=st=>{
@@ -1284,21 +1290,24 @@ async function viewReport(){
     const us_=mine.filter(r=>r.source!=="miri").sort((a,b)=>areaRank(a.code)-areaRank(b.code)||String(a.title).localeCompare(b.title));
     const stOf=r=>{ const k=(r.courseId||courseId(r)||slug(r.title)).replace(/[\/\s.]/g,"_"); const p=prog.filter(x=>x.studentId===st.id&&x.courseId===k&&x.status).sort((a,b)=>String(b.date).localeCompare(a.date))[0];
       const s=(p&&(!r.auto||(p.date||"")>=(r.geniusAsOf||"")))?p.status:r.auto; return s?PROG[s]?.l||s:""; };
-    const t={"e.a":0,"e.t":0,"u.a":0,"u.t":0}; att.filter(a=>a.studentId===st.id).forEach(a=>t[finalCode(a)]++);
+    const t={"e.a":0,"e.t":0,"u.a":0,"u.t":0}, tm={"e.a":0,"e.t":0,"u.a":0,"u.t":0}; att.filter(a=>a.studentId===st.id).forEach(a=>{ t[finalCode(a)]++; if (a.date>=mStart&&a.date<=mEnd) tm[finalCode(a)]++; });
     const miriRows=miri.map(r=>{ const u=unitsOf(U,r); return `<tr><td class="c" style="white-space:nowrap">${esc(r.subjectKo)}<br><span class="muted" style="font-size:7.5pt">${esc(r.level||"")}</span></td><td class="c">${r.score??""}</td><td class="c">${r.score!=null?miriGrade(r.score):""}</td>
       <td><div class="units">${u.length?u.map(x=>`${x.w}주 ${esc(x.t)}`).join("<br>"):"<span class='muted'>통과한 주차 없음</span>"}</div>${cm[st.id+"|"+r.subjectKo]?`<div class="tcm">${esc(cm[st.id+"|"+r.subjectKo])}</div>`:""}</td></tr>`; }).join("");
-    const usRows=us_.map(r=>{ const k=stripSem(r.title); return `<tr><td>${esc(k)}${r.weighted?' <span class="muted">(Honors/AP)</span>':""}</td><td class="c">${r.score??""}</td><td class="c">${/^[A-F]|^P$/.test(r.grade||"")?esc(r.grade):""}</td><td class="c nw">${esc(stOf(r))}</td><td>${esc(cm[st.id+"|"+k]||"")}</td></tr>`; }).join("");
-    return `<div class="bw prp"><div class="bwh"><div><h2>학업 성취 보고서 <span style="font-size:10pt;font-weight:400">Progress Report</span></h2><div>[${termKo(term)}]</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}</div></div>
+    const usRows=us_.map(r=>{ const k=stripSem(r.title); return `<tr><td>${esc(k)}${r.weighted?' <span class="muted">(Honors/AP)</span>':""}</td><td class="c">${r.score??""}</td><td class="c">${/^[A-F]|^P$/.test(r.grade||"")?esc(r.grade):""}</td><td class="c nw">${esc(stOf(r))}</td>${mode==="s"?`<td>${esc(cm[st.id+"|"+k]||"")}</td>`:""}</tr>`; }).join("");
+    return `<div class="bw prp"><div class="bwh"><div><h2>${mode==="s"?"학업 성취 보고서":"월간 학업 보고서"} <span style="font-size:10pt;font-weight:400">${mode==="s"?"Progress Report":"Monthly Progress Report"}</span></h2><div>[${termKo(term)}]${mode==="m"?` &nbsp; ${monthKo}`:""}</div></div><div class="sch">${esc(school.schoolNameKo||school.schoolName)}</div></div>
       <table class="sg"><tr><th>학생</th><td>${esc(st.last_en)}, ${esc(st.first_en)} ${st.name_ko?`(${esc(st.name_ko)})`:""}</td><th>학년</th><td class="c">${esc(st.grade)}</td><th>담임반</th><td>${esc(h.title)}</td><th>담임</th><td>${esc(teacherName)}</td></tr></table>
-      ${miriRows?`<div class="prh">한국 교육과정 (미리)</div><table class="sg"><thead><tr><th>과목</th><th>점수</th><th>성취도</th><th style="width:auto">배운 내용 · 선생님 의견</th></tr></thead><tbody>${miriRows}</tbody></table>`:""}
-      ${usRows?`<div class="prh">미국 교육과정</div><table class="sg"><thead><tr><th style="width:auto">과목</th><th>현재 점수</th><th>성적</th><th>진도</th><th style="width:45%">선생님 의견</th></tr></thead><tbody>${usRows}</tbody></table>`:""}
-      <table class="sg"><thead><tr><th style="width:auto">출결 (학기 누적)</th><th>인정 결석</th><th>인정 지각</th><th>무단 결석</th><th>무단 지각</th></tr></thead><tbody><tr><td>${termLabel(term)}</td><td class="c">${t["e.a"]}</td><td class="c">${t["e.t"]}</td><td class="c">${t["u.a"]}</td><td class="c">${t["u.t"]}</td></tr></tbody></table>
-      <table class="sg"><tr><th style="vertical-align:top;padding-top:6px">담임 종합 의견</th><td style="line-height:1.55;height:60px;vertical-align:top">${esc(cm[st.id+"|담임 종합"]||"")}</td></tr></table>
+      ${miriRows?`<div class="prh">한국 교육과정 (미리)</div><table class="sg"><thead><tr><th>과목</th><th>점수</th><th>성취도</th><th style="width:auto">${mode==="s"?"배운 내용 · 선생님 의견":"배운 내용"}</th></tr></thead><tbody>${miriRows}</tbody></table>`:""}
+      ${usRows?`<div class="prh">미국 교육과정</div><table class="sg"><thead><tr><th style="width:auto">과목</th><th>현재 점수</th><th>성적</th><th>진도</th>${mode==="s"?`<th style="width:45%">선생님 의견</th>`:""}</tr></thead><tbody>${usRows}</tbody></table>`:""}
+      <table class="sg"><thead><tr><th style="width:auto">출결 (학기 누적)</th><th>인정 결석</th><th>인정 지각</th><th>무단 결석</th><th>무단 지각</th></tr></thead><tbody>${mode==="m"?`<tr><td>${monthKo}</td><td class="c">${tm["e.a"]}</td><td class="c">${tm["e.t"]}</td><td class="c">${tm["u.a"]}</td><td class="c">${tm["u.t"]}</td></tr>`:""}<tr><td>학기 누적 (${termLabel(term)})</td><td class="c">${t["e.a"]}</td><td class="c">${t["e.t"]}</td><td class="c">${t["u.a"]}</td><td class="c">${t["u.t"]}</td></tr></tbody></table>
+      ${(()=>{ const ir=incAll.filter(x=>x.studentId===st.id); return `<div class="cond"><div class="prh">생활 기록 (입학 후 누적)</div><table class="sg"><thead><tr><th style="width:80px">날짜</th><th style="width:70px">단계</th><th style="width:auto">내용</th><th style="width:90px">공식 성적표</th></tr></thead><tbody>${ir.map(x=>`<tr><td class="c nw">${us(x.date)}</td><td class="c nw">Action ${esc(x.action)}</td><td>${esc(x.category)}${x.behavior?" · "+esc(x.behavior):""}</td><td class="c nw">${x.record?"<b>기재</b>":"기재 안 함"}</td></tr>`).join("")||`<tr><td colspan="4" class="c muted">기록 없음</td></tr>`}</tbody></table>
+      <div style="font-size:7.5pt;color:#444;margin:3px 0 6px">위 기록은 모두 학교 내부 기록으로 보관됩니다. 학교는 학생의 성장을 기대하며 Action 1–3을 공식 성적표에 기재하지 않습니다. 같은 행동이 반복되면 규정에 따라 상위 단계로 다뤄질 수 있습니다.</div></div>`; })()}
+      ${mode==="s"?`<table class="sg"><tr><th style="vertical-align:top;padding-top:6px">담임 종합 의견</th><td style="line-height:1.55;height:60px;vertical-align:top">${esc(cm[st.id+"|담임 종합"]||"")}</td></tr></table>`:""}
       <div style="font-size:7.5pt;color:#444;margin:3px 0 6px">미리 점수는 주차별 평가 최고점의 평균이며 성취도는 A(60–100)·B(50–59)·C(40–49)·F(39 이하)입니다. 진도: On Track = 계획대로 · Behind = 밀린 과제 5–10개 · Behind (10+) = 11개 이상.</div>
       <table class="sg sign3"><thead><tr><th style="width:auto">확인</th><th style="width:45%">서명</th><th style="width:25%">날짜</th></tr></thead><tbody><tr><td>학부모</td><td></td><td></td></tr><tr><td>담임 교사</td><td></td><td></td></tr></tbody></table></div>`; };
-  $("#view").innerHTML=head+`<div id="prList">${studs.map(page).join("")||`<p class="muted" style="text-align:center">이 반에 학생이 없습니다.</p>`}</div>`;
-  $("#rH").onchange=go; $("#rT").onchange=go;
-  $("#pr").onclick=()=>{ const t=document.title; document.title=`ProgressReport_${h.title}_${term}`; window.print(); document.title=t; };
+  $("#view").innerHTML=head+`<div id="prList" class="cond-off">${studs.map(page).join("")||`<p class="muted" style="text-align:center">이 반에 학생이 없습니다.</p>`}</div>`;
+  ["rH","rT","rMode","rM"].forEach(i=>{ if($("#"+i)) $("#"+i).onchange=go; });
+  $("#condOn").onchange=e=>$("#prList").classList.toggle("cond-off",!e.target.checked);
+  $("#pr").onclick=()=>{ const t=document.title; document.title=one?`ProgressReport_${studs[0]?.last_en||""}${studs[0]?.first_en||""}_${mode==="m"?month:term}`.replace(/\s+/g,""):`ProgressReport_${h.title}_${mode==="m"?month:term}`; window.print(); document.title=t; };
 }
 
 /* ---------- 선택과목 성적 일괄 입력 (과거 자체 선택과목: DIY·R&D 등) ---------- */
