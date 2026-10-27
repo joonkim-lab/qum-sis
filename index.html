@@ -280,7 +280,7 @@ async function resolveMember(user){
     sid = m.exists() ? m.data().schoolId : DEFAULT_SCHOOL;
     const s = await getDoc(doc(db,"schools",sid));
     if (!s.exists()) await setDoc(doc(db,"schools",sid), {
-      name:"Qum Academic System", nameKo:"쿰 아카데믹 시스템", schoolName:"Qum Educlesia", schoolNameKo:"이오에스 미래 리더스",
+      schoolName:"Qum Educlesia", schoolNameKo:"이오에스 미래 리더스",
       logoUrl:"", color:"#23262B", accent:"#C8553D", address:"", phone:"", ceeb:"", principal:"Joon Kim",
       termCode:"2026F", nextId:9001, createdAt:serverTimestamp()
     });
@@ -292,12 +292,14 @@ async function resolveMember(user){
   return {email, name:user.displayName, role:m.data().role, studentId:m.data().studentId||null};
 }
 
+const SYSTEM_NAME = "Qum Academic System";
 async function loadSchool(){
   school = (await getDoc(doc(db,"schools",sid))).data();
   document.documentElement.style.setProperty("--brand", school.color || "#23262B");
   document.documentElement.style.setProperty("--accent", school.accent || "#C8553D");
-  $("#topTitle").textContent = school.name; $("#loginTitle").textContent = school.name;
-  document.title = school.name;
+  // 시스템 이름은 고정(학교 설정에서 바꾸지 않음)
+  $("#topTitle").textContent = SYSTEM_NAME; $("#loginTitle").textContent = SYSTEM_NAME;
+  document.title = SYSTEM_NAME;
   for (const id of ["topLogo","loginLogo"]) { const el=$("#"+id); el.hidden=!school.logoUrl; el.src=school.logoUrl||""; }
 }
 
@@ -587,7 +589,7 @@ function parseDelimited(text){
 /* ---------- 학교 설정 ---------- */
 async function viewSettings(){
   const s = school;
-  const F = [["name","시스템 이름(첫 화면)"],["nameKo","시스템 이름(한글)"],["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["principalKo","교장 한글명(미리 성적표)"],["accreditation","인증 문구(성적표 하단)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
+  const F = [["schoolName","학교 이름(영문, 성적표용)"],["schoolNameKo","학교 이름(한글)"],["logoUrl","로고 URL"],["color","주 색상","color"],["accent","포인트 색상","color"],["address","주소(성적표용)"],["phone","전화"],["ceeb","CEEB 코드"],["principal","교장 영문명(서명란)"],["principalKo","교장 한글명(미리 성적표)"],["accreditation","인증 문구(성적표 하단)"],["termCode","현재 학기 코드(2026F)"],["nextId","다음 신입생 ID","number"]];
   const members = await getDocs(query(collection(db,"memberships"), where("schoolId","==",sid)));
   $("#view").innerHTML = `<div class="card"><h2>학교 설정</h2><form id="f"><div class="grid">${F.map(([k,l,t])=>`<div><label>${l}</label><input name="${k}" type="${t||"text"}" value="${esc(s[k])}"></div>`).join("")}</div>
     <div class="row" style="margin-top:18px"><button class="btn" type="submit">저장</button></div></form></div>
@@ -596,7 +598,7 @@ async function viewSettings(){
     ${members.docs.map(d=>`<tr><td>${esc(d.id)}</td><td>${ROLES[d.data().role]||d.data().role}</td><td>${esc(d.data().studentId)}</td><td>${d.id===OWNER?"":`<button class="btn sm ghost" data-del="${d.id}">삭제</button>`}</td></tr>`).join("")}
     </tbody></table>
     <form id="addm" class="row" style="margin-top:12px"><input name="email" placeholder="이메일" style="max-width:260px"><select name="role" style="max-width:120px">${Object.entries(ROLES).filter(([k])=>k!=="owner").map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><input name="studentId" placeholder="학생이면 ID" style="max-width:120px"><button class="btn sm">추가</button></form>
-    <p class="muted">학생은 자기 ID만 보고 고칠 수 있고, 교사는 보기만, 행정·교장은 전체.</p>
+    <p class="muted">교장·학사·행정은 전교, 교사는 담임반 학생과 맡은 과목 수강생만(징계는 담임반만), 학생은 자기 것만 봅니다.</p>
     <div class="row" style="margin-top:8px"><button class="btn sm ghost" id="bulkStu">재학생 전원 학생 계정 만들기 (학교 이메일 기준)</button><span class="muted">이미 있는 계정은 건너뜀</span></div></div>`;
   $("#bulkStu").onclick=async()=>{ const ss=await getDocs(col("students")); let n=0,b=writeBatch(db);
     for (const d of ss.docs){ const st=d.data(); if(!st.email||(st.status&&st.status!=="active")) continue; const em=st.email.toLowerCase(); if (members.docs.some(m=>m.id===em)) continue;
