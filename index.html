@@ -101,6 +101,8 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 .tr th{background:#ddd;color:#000;position:static;border-bottom:1px solid #000;padding:4px 6px;text-align:center}
 .tr td.c{text-align:center}
 .tr.miri-off .miri{display:none}
+.tr{position:relative;isolation:isolate}
+.tr>.wm{position:absolute;left:50%;top:50%;width:60%;max-width:480px;transform:translate(-50%,-50%);opacity:.07;z-index:-1;pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .cond-off .cond{display:none}
 .tr .side{display:grid;grid-template-columns:2fr 3fr;gap:4px 18px;align-items:start;margin:0 0 12px}
 .tr .side .ft{font-size:8pt;color:#555}
@@ -129,7 +131,7 @@ td[contenteditable]{outline:none;background:#FFFCFA;border-bottom:1px dashed var
 .tr .sign .left{padding-top:34px}
 .tr .sign .sp{height:34px}
 .tr .sign .line{border-top:1px solid #000;width:340px;padding-top:3px;text-align:center}
-@media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none;font-size:9pt} .tr table{font-size:8.5pt} .tr h1{font-size:18pt} @page{size:A4;margin:12mm 10mm} }
+@media print{ body{background:#fff} #top,.foot,.noprint{display:none!important} main{padding:0;max-width:none} .tr{border:0;padding:0;max-width:none;font-size:9pt} .tr table{font-size:8.5pt} .tr h1{font-size:18pt} .tr>.wm{position:fixed;width:120mm;max-width:none} @page{size:A4;margin:12mm 10mm} }
 /* 격주 출결 확인서 (A4 반장 × 2) */
 .bw{background:#fff;color:#000;font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;max-width:760px;margin:0 auto 14px;padding:16px 20px;border:1px solid var(--line)}
 .bw .bwh{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:5px;margin-bottom:8px}
@@ -1073,7 +1075,7 @@ async function viewMiri(id){
       cs.filter(c=>!MIRI_ORDER.includes(c.subject)).sort((a,b)=>String(a.subject).localeCompare(b.subject)).forEach(c=>out.push(`<div><b>(${sem}학기)${esc(c.subject||"공통")}:</b> ${esc(c.text)}</div>`)); }
     return out.join("")||`<div class="muted">기록 없음</div>`; };
   $("#view").innerHTML=`<div class="noprint row" style="max-width:860px;margin:0 auto 12px">${subNav(id,"miri")}<button class="btn sm" id="pr">인쇄 / PDF 저장</button></div>
-  <div class="tr sgdoc" style="max-width:860px">
+  <div class="tr sgdoc" style="max-width:860px"><img class="wm" src="img/wm-eos.png" alt="">
     <h1 style="text-align:center;font-size:19pt;margin:0 0 18px;font-family:'Noto Serif KR',serif">학습성장기록부</h1>
     <table class="sg" style="margin-bottom:14px"><tr><th style="width:90px">학교</th><td>${esc(school.schoolNameKo||school.schoolName)}</td><th style="width:90px">학번</th><td>${esc(id)}</td><th style="width:110px">학년 (학령)</th><td>${(()=>{const now=new Date(); const ay=now.getMonth()+1>=3?now.getFullYear():now.getFullYear()-1; const g=kGradeOf(ay); return g?`${kGradeLabel(g)} <span class="muted">(미국 ${esc(d.grade)}학년)</span>`:esc(d.grade);})()}</td></tr></table>
     <h3>1. 인적·학적사항</h3>
@@ -1269,7 +1271,7 @@ async function viewTranscript(id){
   const today=new Date().toISOString().slice(0,10);
   const schoolBlock=`${esc(school.schoolName)}\n${esc(school.address||"")}\n${school.phone?"Tel: "+esc(school.phone):""}${school.ceeb?" | CEEB: "+esc(school.ceeb):""}`;
   $("#view").innerHTML=`<div class="noprint row" style="max-width:1000px;margin:0 auto 12px">${subNav(id,"tr")}<select id="trLevel" style="max-width:170px;padding:5px 8px"><option value="hs" ${level==="hs"?"selected":""}>High School (9–12)</option><option value="ms" ${level==="ms"?"selected":""}>Middle School (6–8)</option></select><button class="btn sm" id="pr">인쇄 / PDF 저장</button><div style="flex-basis:100%;height:0"></div>${can.manage()?`<label style="font-size:13px"><input type="checkbox" id="offOn" style="width:auto"> <b>Official</b>(서명용)</label>`:""}${attHtml?`<label style="font-size:13px"><input type="checkbox" id="attOn" style="width:auto"> 출결 포함</label>`:""}${incHtml?`<label id="incLbl" hidden style="font-size:13px"><input type="checkbox" id="incOn" style="width:auto"> 징계 포함</label>`:""}${miriHtml?`<label style="font-size:13px"><input type="checkbox" id="miriOn" style="width:auto"> 미리 포함</label>`:""}<span class="muted">브라우저 인쇄 창에서 'PDF로 저장'</span></div>
-  <div class="tr miri-off">
+  <div class="tr miri-off"><img class="wm" id="trWm" src="img/wm-elite.png" alt="" hidden>
     <div class="hd"><div>${school.logoUrl?`<img src="${esc(school.logoUrl)}" alt="">`:""}<h1 id="trTitle">Unofficial ${level==="ms"?"Middle School ":""}Transcript</h1></div><div class="sch">${schoolBlock}</div></div>
     <div class="info"><div><b>Student</b>${esc(d.last_en)}, ${esc(d.first_en)}</div><div><b>Birthdate</b>${us(d.dob)}</div><div><b>Grade</b>${esc(d.grade)}</div><div><b>Status</b>${d.status==="active"?"FULL TIME":esc(d.status||"").toUpperCase()}</div>
       <div><b>Student ID</b>${esc(id)}</div><div><b>Gender</b>${esc(d.gender)}</div><div><b>Graduating Year</b>${esc(d.gradYear)}</div><div><b>Page</b>1 of 1</div>
@@ -1294,7 +1296,7 @@ async function viewTranscript(id){
   </div>`;
   const mo=$("#miriOn"); if (mo) mo.onchange=()=>{ document.querySelector(".tr").classList.toggle("miri-off",!mo.checked); };
   $("#trLevel").onchange=e=>{ location.hash=`#/transcript/${id}/${e.target.value}`; };
-  const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trTitle").textContent=(on?"Official ":"Unofficial ")+(level==="ms"?"Middle School ":"")+"Transcript";
+  const oo=$("#offOn"); if (oo) oo.onchange=()=>{ const on=oo.checked; $("#trWm").hidden=!on; $("#trTitle").textContent=(on?"Official ":"Unofficial ")+(level==="ms"?"Middle School ":"")+"Transcript";
     $("#trNote").textContent=on?"* Official transcript. Valid only with the signature of the school official and the school seal.":"* This transcript is unofficial unless signed and sealed by a School Official.";
     $("#trSig").innerHTML=on?`<b>${esc(school.principal)}</b>, General Principal Rev. &nbsp;&nbsp; ${us(today)}`:`Printed on ${us(today)}`; $("#trSig").style.borderTop=on?"1px solid #000":"0"; };
   const ao=$("#attOn"), io=$("#incOn"); if (ao) ao.onchange=()=>{ $("#attBox").hidden=!ao.checked; if ($("#incLbl")) $("#incLbl").hidden=!ao.checked; if (!ao.checked && io){ io.checked=false; $("#incRows").hidden=true; $("#incBlank").hidden=false; } };
