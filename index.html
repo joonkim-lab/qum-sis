@@ -1353,6 +1353,7 @@ async function viewAudit(){
 /* ---------- Genius 갱신 (행정이 2주마다 붙여넣기) ---------- */
 const autoOf = b => b==null||isNaN(b) ? null : b<=4 ? "ontrack" : b<=10 ? "behind" : "far";
 const normT = t => stripSem(t).toLowerCase().replace(/[®™©]/g,"").replace(/[^a-z0-9가-힣]+/g," ").trim();
+const baseT = t => normT(String(t||"").replace(/\s*[(（].*$/,""));   // Section 이름의 괄호 앞부분 (예: "Economics (EOS Korea …)" → economics)
 const normN = n => String(n||"").toLowerCase().replace(/[^a-z가-힣,]+/g," ").replace(/\s*,\s*/g,",").replace(/\s+/g," ").trim();
 async function viewGenius(){
   const term=school.termCode; let rows=[], plan=[];
@@ -1362,8 +1363,9 @@ async function viewGenius(){
     <textarea id="gp" rows="6" placeholder="Genius 표를 붙여넣으세요 (탭 구분)" style="margin-top:8px"></textarea>
     <div class="row" style="margin-top:8px"><button class="btn ghost" id="gparse">미리보기</button><span class="muted">점수·밀린 과제 수·진도 상태(0–4 On Track · 5–10 Behind · 11+ Behind 10+)만 바꿉니다. 성적(A·B…)과 학점은 건드리지 않습니다.</span></div></div>
     <div class="card" id="gmap" hidden></div><div class="card" id="gprev" hidden></div>`;
-  const [ss, gs, cs] = await Promise.all([getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), loadCourses()]);
+  const [ss, gs, cs, as_] = await Promise.all([getDocs(col("students")), getDocs(query(col("grades"), where("termCode","==",term))), loadCourses(), getDocs(col("accounts"))]);
   const studs=ss.docs.map(d=>({id:d.id,...d.data()}));
+  const gidIdx={}; as_.docs.forEach(d=>{ const g=String(d.data().genius_login||"").trim(); if (g) (gidIdx[g]=gidIdx[g]||new Set()).add(d.id); });   // Genius 학생번호 → 쿰 학생
   const nameIdx={}; const add=(k,s)=>{ k=normN(k); if(!k) return; (nameIdx[k]=nameIdx[k]||new Set()).add(s.id); };
   studs.forEach(s=>{ add(`${s.last_en},${s.first_en}`,s); add(`${s.first_en} ${s.last_en}`,s); add(`${s.last_en} ${s.first_en}`,s); if (s.name_ko) add(s.name_ko,s); if (s.nickname) add(`${s.last_en},${s.nickname}`,s); });
   let termGrades=gs.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.source!=="miri");
@@ -1383,12 +1385,15 @@ async function viewGenius(){
     const num=v=>{ const x=parseFloat(String(v??"").replace(/[^0-9.\-]/g,"")); return isNaN(x)?null:x; };
     plan=rows.map(r=>{ const title=String(r[M.course]||"").trim(); if(!title) return null;
       let cands=[]; const idv=String(r[M.id]||"").trim(); if (idv && studs.some(s=>s.id===idv)) cands=[idv]; else cands=[...(nameIdx[normN(r[M.stu])]||[])];
+      if (!cands.length){ const gk=[idv,String(r[M.stu]||"").trim()].find(k=>k&&gidIdx[k]); if (gk) cands=[...gidIdx[gk]]; }   // 이름으로 못 찾으면 계정의 Genius 로그인(학생번호)
       const nt=normT(title); let match=null;
       if (cands.length>1){ const hit=cands.filter(c=>termGrades.some(g=>g.studentId===c&&normT(g.title)===nt)); if (hit.length===1) cands=hit; }
       const stid=cands.length===1?cands[0]:"";
-      if (stid) match=termGrades.find(g=>g.studentId===stid&&normT(g.title)===nt)||null;
+      if (stid){ const mine=termGrades.filter(g=>g.studentId===stid);
+        match=mine.find(g=>normT(g.title)===nt)||null;
+        if (!match){ const bt=baseT(title), hit=mine.filter(g=>baseT(g.title)===bt); if (hit.length===1) match=hit[0]; } }
       const behind=M.behind? num(r[M.behind]) : null;
-      return {raw:r[M.stu]||idv, cands, stid, title, match, score:M.score?num(r[M.score]):null, pct:(M.pct?num(r[M.pct]):null) ?? (M.assign?pctOfAssign(r[M.assign]):null), behind:behind==null?null:Math.max(0,Math.round(behind))}; }).filter(Boolean);
+      return {raw:r[M.stu]||idv, cands, stid, title, match, score:M.score?num(r[M.score]):null, pct:((M.pct?num(r[M.pct]):null) ?? (M.assign?pctOfAssign(r[M.assign]):null)) || null, behind:behind==null?null:Math.max(0,Math.round(behind))}; }).filter(Boolean);
     drawPlan(term2); };
   const drawPlan=(term2)=>{
     const ok=plan.filter(p=>p.stid), upd=ok.filter(p=>p.match), neu=ok.filter(p=>!p.match), bad=plan.filter(p=>!p.stid);
@@ -1398,11 +1403,11 @@ async function viewGenius(){
       <div class="scroll" style="max-height:60vh"><table><thead><tr><th>Genius 학생</th><th>SIS 학생</th><th>과목</th><th>점수</th><th>진행률</th><th>밀린</th><th>상태</th><th>구분</th></tr></thead><tbody>
       ${plan.map((p,i)=>`<tr ${p.stid?"":'style="background:#fff5f5"'}><td class="nw">${esc(p.raw)}</td><td class="nw">${p.stid?esc(sname(p.stid)):`<select data-pick="${i}" style="max-width:220px;padding:3px 6px"><option value="">— 고르기 —</option>${(p.cands.length?p.cands.map(c=>studs.find(s=>s.id===c)).filter(Boolean):studs.filter(s=>s.status==="active"||!s.status)).sort((a,b)=>String(a.last_en).localeCompare(b.last_en)).map(s=>`<option value="${s.id}">${esc(s.last_en)}, ${esc(s.first_en)} (${esc(s.grade)}) ${esc(s.id)}</option>`).join("")}</select>`}</td>
         <td>${esc(p.title)}</td><td class="c">${p.score??""}${p.match&&p.match.score!=null&&p.match.score!==p.score?` <span class="muted">(${p.match.score})</span>`:""}</td><td class="c">${p.pct!=null?p.pct+"%":""}</td><td class="c">${p.behind??""}</td><td class="nw">${PROG[autoOf(p.behind)]?.l||""}</td><td class="nw">${!p.stid?'<span class="warn">학생?</span>':p.match?"갱신":'<span class="tag">새 과목</span>'}</td></tr>`).join("")}</tbody></table></div>`;
-    document.querySelectorAll("[data-pick]").forEach(s=>s.onchange=()=>{ const p=plan[+s.dataset.pick]; p.stid=s.value; p.match=termGrades.find(g=>g.studentId===p.stid&&normT(g.title)===normT(p.title))||null; drawPlan(term2); });
+    document.querySelectorAll("[data-pick]").forEach(s=>s.onchange=()=>{ const p=plan[+s.dataset.pick]; p.stid=s.value; p.match=termGrades.find(g=>g.studentId===p.stid&&normT(g.title)===normT(p.title))||termGrades.find(g=>g.studentId===p.stid&&baseT(g.title)===baseT(p.title))||null; drawPlan(term2); });
     $("#gsave").onclick=async()=>{ const asOf=$("#gd").value||todayISO(); let b=writeBatch(db), n=0, nn=0;
       for (const p of plan.filter(x=>x.stid)){ const g={geniusAsOf:asOf}; if (p.score!=null) g.score=p.score; if (p.pct!=null) g.pct=p.pct; if (p.behind!=null){ g.behind=p.behind; g.auto=autoOf(p.behind); }
         if (p.match) b.update(ref("grades",p.match.id),g);
-        else { const c=cs.find(x=>normT(x.title)===normT(p.title)); const cid=c? c.id : courseId({title:p.title}); const st=studs.find(s=>s.id===p.stid);
+        else { const c=cs.find(x=>normT(x.title)===normT(p.title))||cs.find(x=>baseT(x.title)===baseT(p.title)); const cid=c? c.id : courseId({title:p.title}); const st=studs.find(s=>s.id===p.stid);
           b.set(ref("grades",`${p.stid}_${term2}_${cid}`.replace(/[\/\s]/g,"_")),{studentId:p.stid,courseId:cid,code:c?.code||"",title:p.title,school:school.schoolName,gLevel:parseInt(st?.grade)||null,termCode:term2,grade:"IP",credit:c?.credit??0.5,weighted:!!c?.weighted,source:c?.platform==="cw"?"cw":"apex",...g,needsReview:true,importedAt:serverTimestamp(),importedBy:"genius-refresh"},{merge:true}); nn++; }
         if (++n%400===0){ await b.commit(); b=writeBatch(db); } }
       await b.commit(); await rebuildScopes(term2).catch(e=>console.warn(e)); toast(`${n}줄 반영 (새 과목 ${nn}) · 교사 열람 범위 갱신`); location.hash="#/sections"; };
