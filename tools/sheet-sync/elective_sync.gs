@@ -35,6 +35,7 @@ const sameTitle_ = (a, b) => a === b || (Math.min(a.length, b.length) >= 10 && (
 const normName_ = n => String(n || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z]/g, '');
 const termKey_ = t => { const m = /^(\d{4})([FSU])$/.exec(t || ''); return m ? +m[1] + ({ F: 0.5, S: 0, U: 0.25 })[m[2]] : 0; };
 const isLive_ = t => termKey_(t) >= termKey_(LIVE_FROM);
+const isPE_ = t => /(^|[^a-z])(pe|p\.e\.)([^a-z]|$)|physical education|pe log/i.test(String(t || ''));   // 체육은 자동 동기화에서 뺌(체육 학점표로 따로)
 const letterOf_ = s => s >= 90 ? 'A' : s >= 80 ? 'B' : s >= 70 ? 'C' : s >= 60 ? 'D' : 'F';
 
 function api_(method, path, body) {
@@ -62,6 +63,12 @@ function run_(dry) {
   const issues = [];
   const stat = { rows: 0, missingPast: 0, changed: 0, update: 0, same: 0, create: 0, remove: 0, noStudent: 0, onlyInSis: 0 };
   try {
+    // 시트가 지난번과 똑같으면 Firestore를 읽지 않고 끝냄(무료 한도 보호)
+    const props = PropertiesService.getScriptProperties();
+    const fp = Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(
+      ['Grades', 'Courses', ALIAS_SHEET].map(n => { const x = ss.getSheetByName(n); return x && x.getLastRow() > 0 ? x.getDataRange().getValues() : []; }))));
+    if (!dry && props.getProperty('fp_elective') === fp) return;
+
     // 학생: qum-sis 명부에서 Username·이름 → Genius ID
     const byUser = {}, byName = {}, ids = {};
     query_('students').forEach(s => {
@@ -103,6 +110,7 @@ function run_(dry) {
       const rowNo = i + 2;
       const [term, gidRaw, user, name, course, , , , score, letterRaw] = r;
       if (!term && !name && !course) return;
+      if (isPE_(course)) return;
       stat.rows++;
       let sid = String(gidRaw || '').trim();
       if (!sid) {
@@ -126,6 +134,7 @@ function run_(dry) {
     const remote = {};
     terms.forEach(t => query_('grades', ['termCode', t]).forEach(d => {
       if (sv_(d.f.source) !== 'elective') return;
+      if (isPE_(sv_(d.f.title))) return;
       remote[d.id] = { id: d.id, sid: sv_(d.f.studentId), term: t, title: sv_(d.f.title), courseId: sv_(d.f.courseId), grade: sv_(d.f.grade), fromSheet: sv_(d.f.syncedFrom) === 'sheet', used: false };
     }));
     const remoteList = Object.values(remote);
@@ -171,6 +180,7 @@ function run_(dry) {
     if (!dry) {
       for (let i = 0; i < writes.length; i += 400) api_('post', ':commit', { writes: writes.slice(i, i + 400) });
       idFill.forEach(([rowNo, sid]) => sh.getRange(rowNo, 2).setValue(Number(sid) || sid));
+      if (!idFill.length) props.setProperty('fp_elective', fp);
     }
     const head = dry ? '미리보기 (아직 안 보냄)' : 'OK (보냄)';
     log_(ss, `${head} · 시트 ${stat.rows}줄 · 연결됨 ${stat.same + stat.update} (그중 성적 바뀜 ${stat.changed}) · 새로 추가 ${stat.create} · 지난 학기 qum-sis에 없음 ${stat.missingPast} · 삭제 ${stat.remove} · 학생 못 찾음 ${stat.noStudent} · qum-sis에만 있음 ${stat.onlyInSis} · ID 자동 채움 ${idFill.length}`, issues);
