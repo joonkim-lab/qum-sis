@@ -1358,7 +1358,7 @@ const normN = n => String(n||"").toLowerCase().replace(/[^a-z가-힣,]+/g," ").r
 async function viewGenius(){
   const term=school.termCode; let rows=[], plan=[];
   $("#view").innerHTML=`<div class="card"><h2>Genius 갱신 — 이번 학기 점수·밀린 과제</h2>
-    <ol class="muted" style="line-height:1.7;margin-top:0"><li>Genius 로그인 → <b>Enrollments → Basic Search</b> (Status: ACTIVE) → <b>Get Data</b></li><li>결과 표를 머리줄까지 마우스로 끌어 선택 → 복사(⌘C / Ctrl+C)</li><li>아래 칸에 붙여넣고 '미리보기' → 열 짝 확인 → '반영'</li></ol>
+    <ol class="muted" style="line-height:1.7;margin-top:0"><li>Genius 로그인 → <b>Enrollments → Basic Search</b> (Status: ACTIVE) → <b>Get Data</b> (Customize columns 에 CourseProgress·StudentID 열이 켜져 있어야 함)</li><li>결과 표를 머리줄까지 마우스로 끌어 선택 → 복사(⌘C / Ctrl+C)</li><li>아래 칸에 붙여넣고 '미리보기' → 열 짝 확인 → '반영'</li></ol>
     <div class="row"><label>학기 <input id="gt" value="${esc(term)}" style="max-width:90px"></label><label>기준일 <input type="date" id="gd" value="${todayISO()}" style="max-width:160px"></label></div>
     <textarea id="gp" rows="6" placeholder="Genius 표를 붙여넣으세요 (탭 구분)" style="margin-top:8px"></textarea>
     <div class="row" style="margin-top:8px"><button class="btn ghost" id="gparse">미리보기</button><span class="muted">점수·밀린 과제 수·진도 상태(0–4 On Track · 5–10 Behind · 11+ Behind 10+)만 바꿉니다. 성적(A·B…)과 학점은 건드리지 않습니다.</span></div></div>
@@ -1369,13 +1369,14 @@ async function viewGenius(){
   const nameIdx={}; const add=(k,s)=>{ k=normN(k); if(!k) return; (nameIdx[k]=nameIdx[k]||new Set()).add(s.id); };
   studs.forEach(s=>{ add(`${s.last_en},${s.first_en}`,s); add(`${s.first_en} ${s.last_en}`,s); add(`${s.last_en} ${s.first_en}`,s); if (s.name_ko) add(s.name_ko,s); if (s.nickname) add(`${s.last_en},${s.nickname}`,s); });
   let termGrades=gs.docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.source!=="miri");
-  const COLS={stu:["학생 (이름 또는 ID)",/student|name|이름|학생/i], id:["학생 ID (있으면)",/^(student ?)?id$|genius ?id|sis ?id/i], course:["과목",/course|class|title|subject|과목/i], score:["현재 점수",/grade to date|score|grade|%|avg|percent|점수/i], pct:["진행률",/progress|complete|진행/i], behind:["밀린 과제 수",/behind|late|past ?due|missing|overdue|밀린/i], assign:["Assignments (24 of 43)",/assignment/i]};
+  const COLS={stu:["학생 (이름 또는 ID)",/student|name|이름|학생/i], id:["학생 ID (있으면)",/student.?id|genius ?id|sis ?id/i], course:["과목",/course|class|title|subject|과목/i], score:["현재 점수",/grade to date|score|grade|%|avg|percent|점수/i], pct:["진행률",/progress|complete|진행/i], behind:["밀린 과제 수",/behind|late|past ?due|missing|overdue|밀린/i], assign:["Assignments (24 of 43)",/assignment/i]};
   $("#gparse").onclick=async()=>{
     const term2=$("#gt").value.trim(); if (term2!==term){ termGrades=(await getDocs(query(col("grades"), where("termCode","==",term2)))).docs.map(d=>({id:d.id,...d.data()})).filter(r=>r.source!=="miri"); }
     const lines=$("#gp").value.replace(/\r/g,"").split("\n").filter(l=>l.includes("\t"));
     if (lines.length<2) return toast("탭으로 나뉜 표가 아닙니다. 표를 머리줄까지 선택해 복사하세요");
     rows=parseDelimited(lines.join("\n")); const hdr=Object.keys(rows[0]);
-    const guess=k=>hdr.find(h=>COLS[k][1].test(h)&&!(k==="score"&&COLS.pct[1].test(h)))||"";
+    const isSid=h=>/student.?id/i.test(h);   // 맨 앞 「ID」(Genius 수강 번호)는 학생 ID 후보가 아님
+    const guess=k=>(k==="id"?hdr.find(isSid):null)||hdr.find(h=>COLS[k][1].test(h)&&!(k==="score"&&COLS.pct[1].test(h))&&!(k==="stu"&&isSid(h))&&!(k==="course"&&COLS.pct[1].test(h)))||"";
     $("#gmap").hidden=false; $("#gmap").innerHTML=`<h2>열 짝 맞추기 <span class="muted" style="font-size:14px">${rows.length}줄</span></h2><div class="row">${Object.entries(COLS).map(([k,[l]])=>`<label style="font-size:13px">${l}<br><select data-m="${k}" style="max-width:220px"><option value="">(없음)</option>${hdr.map(h=>`<option ${h===guess(k)?"selected":""}>${esc(h)}</option>`).join("")}</select></label>`).join("")}<button class="btn sm" id="gplan" style="align-self:flex-end">짝 확인 → 대조</button></div>`;
     $("#gplan").onclick=()=>buildPlan(term2); buildPlan(term2);
   };
